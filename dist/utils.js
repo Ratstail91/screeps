@@ -1,3 +1,5 @@
+const MAX_REMOTES = 4;
+
 function roleLength(creeps, role, origin) {
 	const collection = _.filter(creeps, (creep) => {
 		return creep.memory.role && creep.memory.role == role && creep.memory.origin == origin
@@ -120,6 +122,7 @@ function findRampartsAt(creep, pos) {
 }
 
 module.exports = {
+	MAX_REMOTES: MAX_REMOTES,
 	roleLength: roleLength,
 	domesticSpawn: domesticSpawn,
 	getStorage: getStorage,

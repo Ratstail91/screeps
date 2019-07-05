@@ -58,21 +58,26 @@ function run(creep) {
 
 	//targets
 	let energy = creep.room.find(FIND_DROPPED_RESOURCES);
+	let tombstones = creep.room.find(FIND_TOMBSTONES, { filter: tombstone => tombstone.store[RESOURCE_ENERGY] > 0 });
 	let storage = creep.room.find(FIND_HOSTILE_STRUCTURES, {filter: (structure) => structure.structureType == STRUCTURE_STORAGE});
 
 	//filter out what is already unreachable
 	energy = energy.filter(target => !creep.memory.exclude[target.id]);
+	tombstones = tombstones.filter(target => !creep.memory.exclude[target.id]);
 	storage = storage.filter(target => !creep.memory.exclude[target.id]);
 
 	//working?
-	creep.memory.working = (storage.length > 0 || energy.length > 0) && creep.carry.energy != creep.carryCapacity;
+	creep.memory.working = (storage.length > 0 || tombstones.length > 0 || energy.length > 0) && creep.carry.energy != creep.carryCapacity;
 
 	if(creep.memory.working) {
 		energy = excludeUnreachable(creep, energy);
+		tombstones = excludeUnreachable(creep, tombstones);
 		storage = excludeUnreachable(creep, storage);
 
 		if(energy.length && creep.pickup(energy[0]) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(energy[0], { reusePath: 10, visualizePathStyle: {}});
+		} else if (tombstones.length && creep.withdraw(tombstones[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(tombstones[0], { reusePath: 10, visualizePathStyle: {}});
 		} else if (storage.length && creep.withdraw(storage[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(storage[0], { reusePath: 10, visualizePathStyle: {}});
 		}

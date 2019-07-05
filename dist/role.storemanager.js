@@ -69,7 +69,11 @@ function getSources(creep) {
 		return (structure.structureType == STRUCTURE_CONTAINER) && structure.store[RESOURCE_ENERGY] > 0
 	}});
 
-	return [...energy, ...tombstones, ...containers];
+	const storage = creep.room.find(FIND_STRUCTURES, { filter: structure =>
+		structure.structureType == STRUCTURE_STORAGE && structure.store[RESOURCE_ENERGY] < structure.storeCapacity
+	});
+
+	return [...energy, ...tombstones, ...containers, ...storage];
 }
 
 function getDestinations(creep) {

@@ -1,4 +1,4 @@
-const { domesticSpawn, roleLength } = require('utils');
+const { MAX_REMOTES, domesticSpawn, roleLength } = require('utils');
 const roleHarvester = require('role.harvester');
 
 const ROLE_NAME = 'repairer';
@@ -9,6 +9,17 @@ function run(creep) {
 		creep.memory.working = false;
 	} else if (!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
 		creep.memory.working = true;
+	}
+
+	//initialize the repairer's internals
+	if (creep.memory.repairRemote == undefined) {
+		creep.memory.repairRemote = 0;
+	}
+
+	//if not in the target room
+	if (creep.room.find(FIND_FLAGS, {filter: flag => flag.name == `remote${creep.memory.repairRemote}`}).length == 0) {
+		creep.moveTo(Game.flags[`remote${creep.memory.repairRemote}`], {reusePath: 10});
+		return;
 	}
 
 	//repair a structure
@@ -22,7 +33,15 @@ function run(creep) {
 				creep.moveTo(repTargets[0], {reusePath: 10});
 			}
 		} else {
-			roleHarvester.run(creep);
+			//if no targets to repair while working
+			creep.memory.repairRemote++;
+			if (creep.memory.repairRemote >= MAX_REMOTES) {
+				creep.memory.repairRemote = 0;
+			}
+
+			//harvest in this room
+			creep.memory.remote = creep.memory.repairRemote;
+			creep.memory.source = null;
 		}
 	} else {
 		roleHarvester.run(creep);

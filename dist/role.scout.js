@@ -16,7 +16,15 @@ function spawn(origin, max, roleName, type = 'small') {
 
 		case 'tough':
 			body = [
-				//800 total
+				//1280 total
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
+				MOVE, TOUGH, //60
 				MOVE, TOUGH, //60
 				MOVE, TOUGH, //60
 				MOVE, TOUGH, //60
@@ -47,7 +55,7 @@ function run(creep) {
 		creep.moveTo(Game.flags['rallypointoverride'], { visualizePathStyle: {}});
 		return;
 	}
-	
+
 	//exclude unreachable items from targets (cached because CPU)
 	const isObject = (a) => (!!a) && (a.constructor === Object);
 	if (!isObject(creep.memory.exclude)) {

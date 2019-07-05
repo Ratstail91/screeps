@@ -16,6 +16,7 @@ function run(creep) {
 	if (creep.memory.working) {
 		if (!creep.room.controller.my) {
 			roleHarvester.run(creep);
+			return;
 		}
 
 		if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {

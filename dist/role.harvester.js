@@ -1,7 +1,6 @@
-const { domesticSpawn, getStorage } = require('utils');
+const { MAX_REMOTES, domesticSpawn, getStorage } = require('utils');
 
 const ROLE_NAME = 'harvester';
-const MAX_REMOTES = 4;
 
 function run(creep) {
 	//working?
@@ -35,9 +34,14 @@ function run(creep) {
 		const harvestResults = creep.harvest(sources[creep.memory.source]);
 
 		if(harvestResults == ERR_NOT_IN_RANGE) {
-			creep.moveTo(sources[creep.memory.source], {reusePath: 10, visualizePathStyle: {stroke: '#ff00ff' }});
+			const moveResult = creep.moveTo(sources[creep.memory.source], {reusePath: 10, visualizePathStyle: {stroke: '#ff00ff' }});
+			//no path to this source
+			if (moveResult == ERR_NO_PATH) {
+				creep.memory.remote = null;
+				creep.memory.source = null;
+			}
 		}
-		
+
 		if (harvestResults == ERR_NOT_ENOUGH_RESOURCES) {
 			//go to a random source
 			creep.memory.remote = null;
