@@ -74,16 +74,16 @@ module.exports.loop = function () {
 		} else {
 			//domestic types
 			if (roleHarvester.spawn('Spawn1', 5, 'small', null, null) != OK)
-			if (roleBuilder.spawn('Spawn1', 10, 'small', null, null) != OK)
-			if (roleUpgrader.spawn('Spawn1', 15, 'small', 0, 1) != OK)
+			if (roleBuilder.spawn('Spawn1', 15, 'small', null, null) != OK)
+			if (roleUpgrader.spawn('Spawn1', 15, 'small', null, null) != OK)
 			if (roleRepairer.spawn('Spawn1', 2, 'small', 0, null) != OK)
 
 			//combat types
-//			if (roleScout.spawn('Spawn1', 5, 'tough') != OK)
-//			if (roleScavenger.spawn('Spawn1', 10, 'truck') != OK)
+			if (roleScout.spawn('Spawn1', 2, 'small') != OK)
+			if (roleScavenger.spawn('Spawn1', 2, 'small') != OK)
 
 			//utility types
-//			if (roleSignwriter.spawn('Spawn1', 1) != OK)
+			if (roleSignwriter.spawn('Spawn1', 1) != OK)
 //			if (roleClaimer.spawn('Spawn1', 2) != OK)
 //			if (roleStoragemanager.spawn('Spawn1', 2) != OK)
 				; //this is odd

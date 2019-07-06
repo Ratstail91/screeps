@@ -25,7 +25,7 @@ function run(creep) {
 	//repair a structure
 	if (creep.memory.working) {
 		const repTargets = creep.room.find(FIND_STRUCTURES, {
-			filter: (target) => target.hits < target.hitsMax
+			filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL
 		});
 
 		if (repTargets.length > 0) {

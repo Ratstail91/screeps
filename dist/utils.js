@@ -72,6 +72,10 @@ function getStorage(creep) {
 }
 
 function defendSpawn(spawnName) {
+	if (!Game.spawns[spawnName]) {
+		return;
+	}
+
 	const hostiles = Game.spawns[spawnName].room.find(FIND_HOSTILE_CREEPS);
 
 	if (hostiles.length == 0) {
