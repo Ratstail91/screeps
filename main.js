@@ -74,8 +74,8 @@ module.exports.loop = function () {
 		} else {
 			//domestic types
 			if (roleHarvester.spawn('Spawn1', 5, 'small', null, null) != OK)
-			if (roleBuilder.spawn('Spawn1', 15, 'small', null, null) != OK)
-			if (roleUpgrader.spawn('Spawn1', 15, 'small', null, null) != OK)
+			if (roleBuilder.spawn('Spawn1', 10, 'small', null, null) != OK)
+			if (roleUpgrader.spawn('Spawn1', 10, 'small', null, null) != OK)
 			if (roleRepairer.spawn('Spawn1', 2, 'small', 0, null) != OK)
 
 			//combat types

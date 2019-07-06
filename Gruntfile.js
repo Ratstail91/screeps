@@ -13,7 +13,10 @@ module.exports = function(grunt) {
 				ptr: false
 			},
 			dist: {
-				src: ['dist/*.js']
+				src: [
+					'*.js',
+					'!Gruntfile.js'
+				]
 			}
 		}
 	});

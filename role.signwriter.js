@@ -20,7 +20,7 @@ function spawn(origin, max, roleName) {
 }
 
 function run(creep) {
-	if (creep.room.controller && creep.room.controller.sign && creep.room.controller.sign.text != SIGN_TEXT) {
+	if (!creep.room.controller.sign || (creep.room.controller && creep.room.controller.sign && creep.room.controller.sign.text != SIGN_TEXT)) {
 		if (creep.signController(creep.room.controller, SIGN_TEXT) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(creep.room.controller.pos, { reusePath: 10, visualizePathStyle: { stroke: '#0000ff' }});
 		}
