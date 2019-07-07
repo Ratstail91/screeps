@@ -118,8 +118,8 @@ function handleSpawn(spawnName) {
 			; //DO NOTHING
 	} else { //large - 20 extension and up
 		//large domestic types
-		if (roleHarvester.spawn(spawnName, 10, 'large', null, null) != OK)
-		if (roleBuilder.spawn(spawnName, 15, 'large', null, null) != OK)
+		if (roleHarvester.spawn(spawnName, 5, 'large', null, null) != OK)
+		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleRepairer.spawn(spawnName, 2, 'large', 0, null) != OK)
 
