@@ -9,7 +9,7 @@ const roleClaimer = require('role.claimer');
 const roleStoremanager = require('role.storemanager');
 
 const { defendSpawn } = require('utils');
-const { autoBuild } = require('screeps.autobuilder');
+const { autoBuild, placeConstructionSites } = require('screeps.autobuilder');
 
 const profiler = require('screeps.profiler');
 
@@ -78,6 +78,11 @@ function handleSpawn(spawnName) {
 	//build spawn
 	autoBuild(Game.spawns[spawnName], 'basic');
 
+	//build ramparts manually at level 4+
+	if (Game.spawns[spawnName].room.controller.level >= 4) {
+		placeConstructionSites(Game.spawns[spawnName], require('ramparts4.autobuild'));
+	}
+
 	//handle creeps
 	if (Object.keys(Game.creeps).length < 4) { //start up
 		//emergency!
@@ -108,8 +113,8 @@ function handleSpawn(spawnName) {
 		if (roleRepairer.spawn(spawnName, 2, 'medium', 0, null) != OK)
 
 		//combat types
-		if (roleScout.spawn(spawnName, 2, 'small') != OK)
-		if (roleScavenger.spawn(spawnName, 1, 'small') != OK)
+		if (roleScout.spawn(spawnName, 2, 'medium') != OK)
+		if (roleScavenger.spawn(spawnName, 1, 'medium') != OK)
 
 		//utility types
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
@@ -121,7 +126,7 @@ function handleSpawn(spawnName) {
 		if (roleHarvester.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
-		if (roleRepairer.spawn(spawnName, 2, 'large', 0, null) != OK)
+		if (roleRepairer.spawn(spawnName, 10, 'medium', 0, null) != OK)
 
 		//strong combat types
 		if (roleScout.spawn(spawnName, 2, 'large') != OK)
