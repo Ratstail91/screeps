@@ -76,7 +76,7 @@ function handleSpawn(spawnName) {
 	defendSpawn(spawnName);
 
 	//build spawn
-	autoBuild(Game.spawns['Spawn1'], 'basic');
+	autoBuild(Game.spawns[spawnName], 'basic');
 
 	//handle creeps
 	if (Object.keys(Game.creeps).length < 4) { //start up
