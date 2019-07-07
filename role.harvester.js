@@ -1,4 +1,4 @@
-const { MAX_REMOTES, domesticSpawn, getStorage } = require('utils');
+const { MAX_REMOTES, domesticSpawn, getStores } = require('utils');
 
 const ROLE_NAME = 'harvester';
 
@@ -57,13 +57,13 @@ function run(creep) {
 		}
 
 		//get the storages
-		const storage = getStorage(creep);
+		const stores = getStores(creep);
 
-		const transferResult = creep.transfer(storage[0], RESOURCE_ENERGY);
+		const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
 
 		if(transferResult == ERR_NOT_IN_RANGE) {
-			creep.moveTo(storage[0], {reusePath: 10, visualizePathStyle: {stroke: '#ff00ff' }});
-		} else if ((transferResult == ERR_FULL || storage.length == 0) && creep.room.controller.my) {
+			creep.moveTo(stores[0], {reusePath: 10, visualizePathStyle: {stroke: '#ff00ff' }});
+		} else if ((transferResult == ERR_FULL || stores.length == 0) && creep.room.controller.my) {
 			creep.memory.dumpEnergy = true;
 		}
 	}

@@ -1,4 +1,4 @@
-const { roleLength, getStorage, excludeUnreachable } = require('utils');
+const { roleLength, getStores, excludeUnreachable } = require('utils');
 
 const ROLE_NAME = 'scavenger';
 
@@ -101,17 +101,17 @@ function notWorking(creep) {
 	}
 
 	//get the stores
-	const storage = getStorage(creep);
+	const stores = getStores(creep);
 
-	const transferResult = creep.transfer(storage[0], RESOURCE_ENERGY);
+	const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
 
 	if(transferResult == ERR_NOT_IN_RANGE && creep.carry.energy != 0) {
-		creep.moveTo(storage[0], { reusePath: 10, visualizePathStyle: {}});
+		creep.moveTo(stores[0], { reusePath: 10, visualizePathStyle: {}});
 		return;
 	}
 
-	//no storage, empty belly, go rally (or go home)
-	if (storage.length == 0 || transferResult == ERR_INVALID_TARGET || creep.carry.energy == 0) {
+	//no stores, empty belly, go rally (or go home)
+	if (stores.length == 0 || transferResult == ERR_INVALID_TARGET || creep.carry.energy == 0) {
 		if (Game.flags['collectionpoint']) {
 			if (creep.moveTo(Game.flags['collectionpoint'], { reusePath: 10, visualizePathStyle: {}}) == ERR_NO_PATH) {
 				creep.moveTo(Game.flags['home'], { reusePath: 10, visualizePathStyle: {}});

@@ -51,13 +51,17 @@ function domesticSpawn(origin, max, roleName, type = 'small', remote = null, sou
 	);
 }
 
-function getStorage(creep) {
-	const structures = creep.room.find(FIND_STRUCTURES, { filter: structure =>
-		(structure.structureType == STRUCTURE_SPAWN ||
-			structure.structureType == STRUCTURE_EXTENSION ||
-			structure.structureType == STRUCTURE_TOWER) &&
-			structure.energy < structure.energyCapacity &&
-			structure.my
+function getStores(creep) {
+	const towers = creep.room.find(FIND_STRUCTURES, { filter: structure =>
+		structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity && structure.my
+	});
+
+	const spawns = creep.room.find(FIND_STRUCTURES, { filter: structure =>
+		structure.structureType == STRUCTURE_SPAWN && structure.energy < structure.energyCapacity && structure.my
+	});
+
+	const extensions = creep.room.find(FIND_STRUCTURES, { filter: structure =>
+		structure.structureType == STRUCTURE_EXTENSION && structure.energy < structure.energyCapacity && structure.my
 	});
 
 	const containers = creep.room.find(FIND_STRUCTURES, { filter: structure =>
@@ -68,7 +72,7 @@ function getStorage(creep) {
 		structure.structureType == STRUCTURE_STORAGE && structure.store[RESOURCE_ENERGY] < structure.storeCapacity
 	});
 
-	return [...structures, ...containers, ...storage];
+	return [...towers, ...spawns, ...extensions, ...containers, ...storage];
 }
 
 function defendSpawn(spawnName) {
@@ -131,7 +135,7 @@ module.exports = {
 	MAX_REMOTES: MAX_REMOTES,
 	roleLength: roleLength,
 	domesticSpawn: domesticSpawn,
-	getStorage: getStorage,
+	getStores: getStores,
 	defendSpawn: defendSpawn,
 	excludeUnreachable: excludeUnreachable
 };
