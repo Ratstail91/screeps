@@ -2,7 +2,7 @@ const { roleLength, getStores, excludeUnreachable } = require('utils');
 
 const ROLE_NAME = 'scavenger';
 
-function spawn(origin, max, roleName, type = 'small') {
+function spawn(origin, max, roleName, type = 'medium') {
 	if (roleLength(Game.creeps, roleName, origin) >= max) {
 		return;
 	}
@@ -10,12 +10,12 @@ function spawn(origin, max, roleName, type = 'small') {
 	//determine the size to use
 	let body;
 	switch(type) {
-		case 'small':
+		case 'medium':
 			//500
 			body = [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY];
 			break;
 
-		case 'truck':
+		case 'large':
 			body = [
 				//1300 total
 				MOVE, CARRY, //100

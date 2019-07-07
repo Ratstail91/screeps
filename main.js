@@ -100,7 +100,7 @@ function handleSpawn(spawnName) {
 		if (roleScout.spawn(spawnName, 2, 'small') != OK)
 		if (roleScavenger.spawn(spawnName, 1, 'small') != OK)
 			; //DO NOTHING
-	} else { //medium - 10 extensions and up
+	} else if (Game.spawns[spawnName].room.energyCapacityAvailable < 1300) { //medium - 10 extensions
 		//medium domestic types
 		if (roleHarvester.spawn(spawnName, 10, 'medium', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 15, 'medium', null, null) != OK)
@@ -110,6 +110,22 @@ function handleSpawn(spawnName) {
 		//combat types
 		if (roleScout.spawn(spawnName, 2, 'small') != OK)
 		if (roleScavenger.spawn(spawnName, 1, 'small') != OK)
+
+		//utility types
+		if (roleSignwriter.spawn(spawnName, 1) != OK)
+		if (roleClaimer.spawn(spawnName, 2) != OK)
+		if (roleStoremanager.spawn(spawnName, 2) != OK)
+			; //DO NOTHING
+	} else { //large - 20 extension and up
+		//large domestic types
+		if (roleHarvester.spawn(spawnName, 10, 'large', null, null) != OK)
+		if (roleBuilder.spawn(spawnName, 15, 'large', null, null) != OK)
+		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
+		if (roleRepairer.spawn(spawnName, 2, 'large', 0, null) != OK)
+
+		//strong combat types
+		if (roleScout.spawn(spawnName, 2, 'large') != OK)
+		if (roleScavenger.spawn(spawnName, 1, 'large') != OK)
 
 		//utility types
 		if (roleSignwriter.spawn(spawnName, 1) != OK)

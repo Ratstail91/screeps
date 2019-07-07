@@ -2,7 +2,7 @@ const { roleLength, excludeUnreachable } = require('utils');
 
 const ROLE_NAME = 'scout';
 
-function spawn(origin, max, roleName, type = 'small') {
+function spawn(origin, max, roleName, type = 'medium') {
 	if (roleLength(Game.creeps, roleName, origin) >= max) {
 		return;
 	}
@@ -10,12 +10,12 @@ function spawn(origin, max, roleName, type = 'small') {
 	//determine the size to use
 	let body;
 	switch(type) {
-		case 'small':
+		case 'medium':
 			//500
 			body = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH, TOUGH];
 			break;
 
-		case 'tough':
+		case 'large':
 			body = [
 				//1280 total
 				MOVE, TOUGH, //60
