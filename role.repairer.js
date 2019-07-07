@@ -16,14 +16,14 @@ function run(creep) {
 		creep.memory.repairRemote = 0;
 	}
 
-	//if not in the target room
-	if (creep.room.find(FIND_FLAGS, {filter: flag => flag.name == `remote${creep.memory.repairRemote}`}).length == 0) {
-		creep.moveTo(Game.flags[`remote${creep.memory.repairRemote}`], {reusePath: 10});
-		return;
-	}
-
 	//repair a structure
 	if (creep.memory.working) {
+		//if not in the target room
+		if (creep.room.find(FIND_FLAGS, {filter: flag => flag.name == `remote${creep.memory.repairRemote}`}).length == 0) {
+			creep.moveTo(Game.flags[`remote${creep.memory.repairRemote}`], {reusePath: 10});
+			return;
+		}
+
 		const repTargets = creep.room.find(FIND_STRUCTURES, {
 			filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL
 		});
