@@ -9,6 +9,7 @@ const roleClaimer = require('role.claimer');
 const roleStoremanager = require('role.storemanager');
 
 const { defendSpawn } = require('utils');
+const { autoBuild } = require('screeps.autobuilder');
 
 const profiler = require('screeps.profiler');
 
@@ -73,6 +74,9 @@ function handleSpawn(spawnName) {
 	}
 
 	defendSpawn(spawnName);
+
+	//build spawn
+	autoBuild(Game.spawns['Spawn1'], 'basic');
 
 	//handle creeps
 	if (Object.keys(Game.creeps).length < 4) { //start up
