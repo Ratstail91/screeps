@@ -11,6 +11,7 @@ function spawn(origin, max, roleName, type = 'small') {
 	let body;
 	switch(type) {
 		case 'small':
+			//500
 			body = [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY];
 			break;
 
@@ -59,25 +60,30 @@ function run(creep) {
 	//targets
 	let energy = creep.room.find(FIND_DROPPED_RESOURCES);
 	let tombstones = creep.room.find(FIND_TOMBSTONES, { filter: tombstone => tombstone.store[RESOURCE_ENERGY] > 0 });
-	let storage = creep.room.find(FIND_HOSTILE_STRUCTURES, {filter: (structure) => structure.structureType == STRUCTURE_STORAGE});
+	let containers = creep.room.find(FIND_STRUCTURES, { filter: container => container.structureType == STRUCTURE_CONTAINER && container.store[RESOURCE_ENERGY] > 0 });
+	let storage = creep.room.find(FIND_HOSTILE_STRUCTURES, {filter: (structure) => structure.structureType == STRUCTURE_STORAGE && structure.store[RESOURCE_ENERGY] > 0 });
 
 	//filter out what is already unreachable
 	energy = energy.filter(target => !creep.memory.exclude[target.id]);
 	tombstones = tombstones.filter(target => !creep.memory.exclude[target.id]);
+	containers = containers.filter(target => !creep.memory.exclude[target.id]);
 	storage = storage.filter(target => !creep.memory.exclude[target.id]);
 
 	//working?
-	creep.memory.working = (storage.length > 0 || tombstones.length > 0 || energy.length > 0) && creep.carry.energy != creep.carryCapacity;
+	creep.memory.working = (storage.length > 0 || containers.length > 0 || tombstones.length > 0 || energy.length > 0) && creep.carry.energy != creep.carryCapacity;
 
 	if(creep.memory.working) {
 		energy = excludeUnreachable(creep, energy);
 		tombstones = excludeUnreachable(creep, tombstones);
+		containers = excludeUnreachable(creep, containers);
 		storage = excludeUnreachable(creep, storage);
 
 		if(energy.length && creep.pickup(energy[0]) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(energy[0], { reusePath: 10, visualizePathStyle: {}});
 		} else if (tombstones.length && creep.withdraw(tombstones[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(tombstones[0], { reusePath: 10, visualizePathStyle: {}});
+		} else if (containers.length && creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+			creep.moveTo(containers[0], { reusePath: 10, visualizePathStyle: {}});
 		} else if (storage.length && creep.withdraw(storage[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(storage[0], { reusePath: 10, visualizePathStyle: {}});
 		}
@@ -88,19 +94,19 @@ function run(creep) {
 }
 
 function notWorking(creep) {
-	//get the storages
+	//full belly, not home, scurry home
+	if (creep.carry.energy == creep.carryCapacity && creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home'}).length == 0) {
+		creep.moveTo(Game.flags['home'], { reusePath: 10, visualizePathStyle: {}});
+		return;
+	}
+
+	//get the stores
 	const storage = getStorage(creep);
 
 	const transferResult = creep.transfer(storage[0], RESOURCE_ENERGY);
 
 	if(transferResult == ERR_NOT_IN_RANGE && creep.carry.energy != 0) {
 		creep.moveTo(storage[0], { reusePath: 10, visualizePathStyle: {}});
-		return;
-	}
-
-	//no storage, full belly, go home
-	if (creep.carry.energy == creep.carryCapacity) {
-		creep.moveTo(Game.flags['home'], { reusePath: 10, visualizePathStyle: {}});
 		return;
 	}
 

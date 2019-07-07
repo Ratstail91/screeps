@@ -72,10 +72,6 @@ function getStorage(creep) {
 }
 
 function defendSpawn(spawnName) {
-	if (!Game.spawns[spawnName]) {
-		return;
-	}
-
 	const hostiles = Game.spawns[spawnName].room.find(FIND_HOSTILE_CREEPS);
 
 	if (hostiles.length == 0) {
@@ -98,6 +94,12 @@ function excludeUnreachable(creep, targets, loops = 100) {
 
 		//paths connect?
 		const pathResult = creep.room.findPath(creep.pos, targets[0].pos);
+
+		//if sitting on the target
+		if (pathResult.length == 0) {
+			continue;
+		}
+
 		const pathEndPos = creep.room.getPositionAt(pathResult[pathResult.length-1].x, pathResult[pathResult.length-1].y);
 
 		if (!pathEndPos.isEqualTo(targets[0].pos)) {

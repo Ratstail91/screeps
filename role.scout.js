@@ -11,6 +11,7 @@ function spawn(origin, max, roleName, type = 'small') {
 	let body;
 	switch(type) {
 		case 'small':
+			//500
 			body = [MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, TOUGH, TOUGH, TOUGH, TOUGH];
 			break;
 

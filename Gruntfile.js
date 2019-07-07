@@ -14,8 +14,11 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
-					'*.js',
-					'!Gruntfile.js'
+					'*.js*',
+					'!Gruntfile.js',
+					'!auth.json',
+					'!package.json',
+					'!package-lock.json'
 				]
 			}
 		}
