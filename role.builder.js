@@ -13,13 +13,17 @@ function run(creep) {
 
 	//build a structure
 	if (creep.memory.working) {
-		const constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+		const constructionSites = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART });
+		const rampartConstructionSites = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType == STRUCTURE_RAMPART });
 
-		if (!constructionSite) {
+		//NOTE: build ramparts last
+		const allSites = [...constructionSites, ...rampartConstructionSites];
+
+		if (allSites.length == 0) {
 			roleHarvester.run(creep);
 		} else {
-			 if (creep.build(constructionSite) == ERR_NOT_IN_RANGE) {
-				creep.moveTo(constructionSite, {reusePath: 10});
+			 if (creep.build(allSites[0]) == ERR_NOT_IN_RANGE) {
+				creep.moveTo(allSites[0], {reusePath: 10});
 			}
 		}
 	} else {
