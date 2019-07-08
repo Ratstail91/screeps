@@ -21,13 +21,13 @@ function run(creep) {
 
 		if (allSites.length == 0) {
 			//mimic the repairers a little bit
-			const repTargets = creep.room.find(FIND_STRUCTURES, {
-				filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL
+			const repTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+				filter: (target) => target.hits < target.hitsMax && target.structureType == STRUCTURE_RAMPART
 			});
 
-			if (repTargets.length > 0) {
-				if(creep.repair(repTargets[0]) == ERR_NOT_IN_RANGE) {
-					creep.moveTo(repTargets[0], {reusePath: 10});
+			if (repTarget) {
+				if(creep.repair(repTarget) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(repTarget, {reusePath: 10});
 				}
 			} else {
 				roleHarvester.run(creep);

@@ -123,15 +123,15 @@ function handleSpawn(spawnName) {
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
 		if (roleClaimer.spawn(spawnName, 2) != OK)
 			; //DO NOTHING
-	} else { //large - 20 extension and up
+	} else if (Game.spawns[spawnName].room.energyCapacityAvailable < 1800 || true) { //large - 20 extensions
 		//priority types
-		if (roleStoremanager.spawn(spawnName, 2) != OK)
+		if (roleStoremanager.spawn(spawnName, 3) != OK)
 
 		//large domestic types
 		if (roleHarvester.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
-		if (roleRepairer.spawn(spawnName, 10, 'medium', 0, null) != OK)
+		if (roleRepairer.spawn(spawnName, 2, 'medium', 0, null) != OK)
 
 		//strong combat types
 		if (roleScout.spawn(spawnName, 4, 'large') != OK)
@@ -141,6 +141,8 @@ function handleSpawn(spawnName) {
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
 		if (roleClaimer.spawn(spawnName, 2) != OK)
 			; //DO NOTHING
+	} else { //husky - 30 extensions and up
+		//TODO
 	}
 }
 
