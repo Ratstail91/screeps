@@ -102,8 +102,8 @@ function handleSpawn(spawnName) {
 		if (roleRepairer.spawn(spawnName, 2, 'small', 0, null) != OK)
 
 		//combat types
-		if (roleScout.spawn(spawnName, 2, 'small') != OK)
-		if (roleScavenger.spawn(spawnName, 1, 'small') != OK)
+		if (roleScout.spawn(spawnName, 2, 'medium') != OK)
+		if (roleScavenger.spawn(spawnName, 1, 'medium') != OK)
 			; //DO NOTHING
 	} else if (Game.spawns[spawnName].room.energyCapacityAvailable < 1300) { //medium - 10 extensions
 		//priority types
@@ -134,8 +134,8 @@ function handleSpawn(spawnName) {
 		if (roleRepairer.spawn(spawnName, 10, 'medium', 0, null) != OK)
 
 		//strong combat types
-		if (roleScout.spawn(spawnName, 2, 'large') != OK)
-		if (roleScavenger.spawn(spawnName, 1, 'large') != OK)
+		if (roleScout.spawn(spawnName, 4, 'large') != OK)
+		if (roleScavenger.spawn(spawnName, 2, 'large') != OK)
 
 		//utility types
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
