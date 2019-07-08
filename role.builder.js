@@ -20,7 +20,18 @@ function run(creep) {
 		const allSites = [...constructionSites, ...rampartConstructionSites];
 
 		if (allSites.length == 0) {
-			roleHarvester.run(creep);
+			//mimic the repairers a little bit
+			const repTargets = creep.room.find(FIND_STRUCTURES, {
+				filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL
+			});
+
+			if (repTargets.length > 0) {
+				if(creep.repair(repTargets[0]) == ERR_NOT_IN_RANGE) {
+					creep.moveTo(repTargets[0], {reusePath: 10});
+				}
+			} else {
+				roleHarvester.run(creep);
+			}
 		} else {
 			 if (creep.build(allSites[0]) == ERR_NOT_IN_RANGE) {
 				creep.moveTo(allSites[0], {reusePath: 10});
