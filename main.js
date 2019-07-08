@@ -106,6 +106,9 @@ function handleSpawn(spawnName) {
 		if (roleScavenger.spawn(spawnName, 1, 'small') != OK)
 			; //DO NOTHING
 	} else if (Game.spawns[spawnName].room.energyCapacityAvailable < 1300) { //medium - 10 extensions
+		//priority types
+		if (roleStoremanager.spawn(spawnName, 2) != OK)
+
 		//medium domestic types
 		if (roleHarvester.spawn(spawnName, 10, 'medium', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 15, 'medium', null, null) != OK)
@@ -119,9 +122,11 @@ function handleSpawn(spawnName) {
 		//utility types
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
 		if (roleClaimer.spawn(spawnName, 2) != OK)
-		if (roleStoremanager.spawn(spawnName, 2) != OK)
 			; //DO NOTHING
 	} else { //large - 20 extension and up
+		//priority types
+		if (roleStoremanager.spawn(spawnName, 2) != OK)
+
 		//large domestic types
 		if (roleHarvester.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
@@ -135,7 +140,6 @@ function handleSpawn(spawnName) {
 		//utility types
 		if (roleSignwriter.spawn(spawnName, 1) != OK)
 		if (roleClaimer.spawn(spawnName, 2) != OK)
-		if (roleStoremanager.spawn(spawnName, 2) != OK)
 			; //DO NOTHING
 	}
 }
