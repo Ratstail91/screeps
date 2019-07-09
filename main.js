@@ -128,7 +128,7 @@ function handleSpawn(spawnName) {
 		if (roleStoremanager.spawn(spawnName, 3) != OK)
 
 		//large domestic types
-		if (roleHarvester.spawn(spawnName, 10, 'large', null, null) != OK)
+		if (roleHarvester.spawn(spawnName, 10, 'medium', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleRepairer.spawn(spawnName, 2, 'medium', 0, null) != OK)
