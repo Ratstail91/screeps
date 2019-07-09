@@ -1,14 +1,18 @@
-//spawn is a spawn point to build around
-function autoBuild(spawn, ftag) {
-	//one spawn can have multiple tagged building paths
-	const entryName = `${spawn.name}${ftag}`;
+//point is an object to build around
+function autoBuild(point, ftag) {
+	if (!point.room || !point.pos || !point.name) {
+		throw new Error('autoBuild cannot build around point');
+	}
+
+	//one point can have multiple tagged building paths
+	const entryName = `${point.name}${ftag}`;
 
 	//initialize autoBuildLevels
 	Memory.autoBuildLevels = Memory.autoBuildLevels || {};
 	Memory.autoBuildLevels[entryName] = Memory.autoBuildLevels[entryName] + 0 || 0;
 
 	//assume controller levels only go up
-	if (spawn.room.controller.level <= Memory.autoBuildLevels[entryName]) {
+	if (point.room.controller.level <= Memory.autoBuildLevels[entryName]) {
 		return;
 	}
 
@@ -21,14 +25,18 @@ function autoBuild(spawn, ftag) {
 	const fname = `${ftag}${Memory.autoBuildLevels[entryName]}.autobuild`;
 
 	//actually run the build function
-	placeConstructionSites(spawn, require(fname));
+	placeConstructionSites(point, require(fname));
 }
 
-//spawn is a spawn point to build around
+//point is an object to build around
 //buildData is an array of objects: [{ x: number, y: number: structureType: number }]
-function placeConstructionSites(spawn, buildData) {
+function placeConstructionSites(point, buildData) {
+	if (!point.room || !point.pos) {
+		throw new Error('placeConstructionSites cannot build around point');
+	}
+
 	for (let i = 0; i < buildData.length; i++) {
-		spawn.room.createConstructionSite(buildData[i].x + spawn.pos.x, buildData[i].y + spawn.pos.y, buildData[i].structureType);
+		point.room.createConstructionSite(buildData[i].x + point.pos.x, buildData[i].y + point.pos.y, buildData[i].structureType);
 	}
 }
 

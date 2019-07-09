@@ -76,17 +76,17 @@ function handleSpawn(spawnName) {
 	defendSpawn(spawnName);
 
 	//build spawn
-	autoBuild(Game.spawns[spawnName], 'basic');
+	autoBuild(Game.spawns[spawnName], 'bunker');
 
 	//build ramparts manually at level 4+
 	if (Game.spawns[spawnName].room.controller.level >= 4) {
-		placeConstructionSites(Game.spawns[spawnName], require('ramparts4.autobuild'));
+		placeConstructionSites(Game.spawns[spawnName], require('bunkerramparts.autobuild'));
 	}
 
 	//handle creeps
-	if (Object.keys(Game.creeps).length < 4) { //start up
+	if (Object.keys(Game.creeps).length < 10) { //start up
 		//emergency!
-		roleHarvester.spawn(spawnName, 4, 'small', 0, 0);
+		roleHarvester.spawn(spawnName, 10, 'small', 0, null);
 	} else if (Game.spawns[spawnName].room.energyCapacityAvailable < 500) { //tiny - no extensions
 		//small domestic types only
 		if (roleHarvester.spawn(spawnName, 10, 'small', null, null) != OK)
@@ -128,7 +128,7 @@ function handleSpawn(spawnName) {
 		if (roleStoremanager.spawn(spawnName, 3) != OK)
 
 		//large domestic types
-		if (roleHarvester.spawn(spawnName, 5, 'large', null, null) != OK)
+		if (roleHarvester.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleBuilder.spawn(spawnName, 10, 'large', null, null) != OK)
 		if (roleUpgrader.spawn(spawnName, 5, 'large', null, null) != OK)
 		if (roleRepairer.spawn(spawnName, 2, 'medium', 0, null) != OK)
