@@ -22,7 +22,7 @@ function run(creep) {
 		if (allSites.length == 0) {
 			//mimic the repairers a little bit
 			const repTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-				filter: (target) => target.hits < target.hitsMax && target.structureType == STRUCTURE_RAMPART
+				filter: (target) => target.structureType == STRUCTURE_RAMPART && target.hits < 10000
 			});
 
 			if (repTarget) {

@@ -25,7 +25,7 @@ function run(creep) {
 		}
 
 		const repTargets = creep.room.find(FIND_STRUCTURES, {
-			filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL
+			filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL && target.structureType != STRUCTURE_RAMPART
 		});
 
 		if (repTargets.length > 0) {
