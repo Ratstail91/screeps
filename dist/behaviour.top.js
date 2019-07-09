@@ -1,8 +1,8 @@
 const _ = require('lodash');
 
-const { TOP: MODULE_NAME, UPGRADE } = require('module_names');
+const { TOP: BEHAVIOUR_NAME, UPGRADE } = require('behaviour_names');
 
-const upgrade = require('module.upgrade');
+const upgrade = require('behaviour.upgrade');
 
 function run(creep) {
 	if (creep.memory[UPGRADE] && creep.memory[UPGRADE].lock) {

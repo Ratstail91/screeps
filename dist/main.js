@@ -1,5 +1,5 @@
 const handleSpawn = require('spawns');
-const handleModule = require('modules');
+const handleBehaviours = require('behaviours');
 
 //for updating existing creeps
 function updateCreep(creep) {
@@ -11,7 +11,7 @@ function updateCreep(creep) {
 		case 'builder':
 		case 'repairer':
 			creep.memory['HARVEST'] = { remote: null, source: null };
-			creep.memory.modules = ['TOP', 'HARVEST', 'STORE', 'UPGRADE', 'BOTTOM'];
+			creep.memory.behaviours = ['TOP', 'HARVEST', 'STORE', 'UPGRADE', 'BOTTOM'];
 			break;
 
 		//ignore (too niche to be worth upgrading)
@@ -42,8 +42,8 @@ module.exports.loop = () => {
 		updateCreep(creep);
 
 		//if a module returns false, break the loop
-		for (const index in creep.memory.modules) {
-			if (!handleModule(creep, creep.memory.modules[index])) {
+		for (const index in creep.memory.behaviours) {
+			if (!handleBehaviours(creep, creep.memory.behaviours[index])) {
 				break;
 			}
 		}

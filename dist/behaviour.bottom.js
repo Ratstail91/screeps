@@ -1,4 +1,4 @@
-const { BOTTOM: MODULE_NAME } = require('module_names');
+const { BOTTOM: BEHAVIOUR_NAME } = require('behaviour_names');
 
 function run(creep) {
 	//no-op

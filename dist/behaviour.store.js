@@ -1,4 +1,4 @@
-const { STORE: MODULE_NAME } = require('module_names');
+const { STORE: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const { getStores } = require('utils');
 
@@ -28,7 +28,7 @@ function run(creep) {
 		return true;
 	}
 
-	throw new Error(`Unknown state in ${MODULE_NAME} for ${creep.name}: transferResult ${transferResult}, stores length ${stores.length}, my controller ${creep.room.controller.my}`);
+	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: transferResult ${transferResult}, stores length ${stores.length}, my controller ${creep.room.controller.my}`);
 }
 
 module.exports = run;
