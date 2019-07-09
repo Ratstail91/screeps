@@ -150,9 +150,9 @@ profiler.enable();
 module.exports.loop = function () {
 	profiler.wrap(() => {
 		handleSpawn('Spawn1');
-	
+
 		assignRoleRoutines();
-	
+
 		//delete memory of dead creeps
 		for(const name in Memory.creeps) {
 			if(!Game.creeps[name]) {
