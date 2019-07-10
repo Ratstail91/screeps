@@ -32,7 +32,7 @@ function run(creep) {
 		return true;
 	}
 
-	//get the storages
+	//get the stores
 	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores)
 		.filter(store => !checkIsStoreFull(store));
 

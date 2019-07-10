@@ -43,8 +43,8 @@ function handleSpawn(spawn) {
 		return createCreep(spawn, [HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'upgrader');
 	}
 
-	if (!population.restock || population.restock < 2) {
-		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restock', {
+	if (!population.restocker || population.restocker < 2) {
+		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restocker', {
 			DEPOSIT: {
 				stores: [TOWER, SPAWN, EXTENSION]
 			},
