@@ -1,6 +1,6 @@
 const { UPGRADE: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { MAX_REMOTES, REUSE_PATH } = require('constants');
+const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 

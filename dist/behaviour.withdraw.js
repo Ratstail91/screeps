@@ -1,6 +1,6 @@
-const { STORE: BEHAVIOUR_NAME } = require('behaviour_names');
+const { WITHDRAW: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores } = require('utils');
+const { getStores, EXTENSION, CONTAINER, STORAGE } = require('utils');
 
 const { REUSE_PATH } = require('constants');
 
@@ -15,10 +15,10 @@ function run(creep) {
 	}
 
 	//get the storages
-	const stores = getStores(creep);
-	const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
+	const stores = getStores(creep, [EXTENSION, CONTAINER, STORAGE]);
+	const transferResult = creep.withdraw(stores[0], RESOURCE_ENERGY);
 
-	if (transferResult == OK) {
+	if (transferResult == OK || transferResult == ERR_NOT_ENOUGH_RESOURCES) {
 		//everything is OK
 		return false;
 	} else if(transferResult == ERR_NOT_IN_RANGE) {
