@@ -1,10 +1,7 @@
 module.exports = {
-	//top and bottom of the stack
-	TOP: 'TOP',
-	BOTTOM: 'BOTTOM',
-
 	//moving around the rooms
 //	PATROL: 'PATROL',
+//	TARGET: 'TARGET',
 
 	//harvesting
 	HARVEST: 'HARVEST',
