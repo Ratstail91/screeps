@@ -1,12 +1,24 @@
 const { WITHDRAW: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores, TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE } = require('utils');
+const { getStores, checkIsStoreEmpty, CONTAINER, STORAGE } = require('utils');
 
 const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
+	//initialize new creeps
+	if (!creep.memory[BEHAVIOUR_NAME]) {
+		creep.memory[BEHAVIOUR_NAME] = {
+			skipIfNotEmpty: false
+		};
+	}
+
+	//skip withdrawing if not empty
+	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && _.sum(creep.carry) > 0) {
+		return true;
+	}
+
 	//if not at home, go home
 	const homeFlags = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home' });
 	if (homeFlags.length == 0) {
@@ -21,10 +33,12 @@ function run(creep) {
 	}
 
 	//get the stores
-	const stores = getStores(creep, [CONTAINER, STORAGE]);
+	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores || [CONTAINER, STORAGE])
+		.filter(store => !checkIsStoreEmpty(store));
+
 	const transferResult = creep.withdraw(stores[0], RESOURCE_ENERGY);
 
-	if (transferResult == OK || transferResult == ERR_NOT_ENOUGH_RESOURCES) {
+	if (transferResult == OK) {
 		//everything is OK
 		return false;
 	} else if(transferResult == ERR_NOT_IN_RANGE) {

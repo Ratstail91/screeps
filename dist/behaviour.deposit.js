@@ -1,12 +1,24 @@
 const { DEPOSIT: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores } = require('utils');
+const { getStores, checkIsStoreFull } = require('utils');
 
 const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
+	//initialize new creeps
+	if (!creep.memory[BEHAVIOUR_NAME]) {
+		creep.memory[BEHAVIOUR_NAME] = {
+			skipIfNotFull: false
+		};
+	}
+
+	//skip depositing if not full
+	if (creep.memory[BEHAVIOUR_NAME].skipIfNotFull && _.sum(creep.carry) != creep.carryCapacity) {
+		return true;
+	}
+
 	//if not at home, go home
 	const homeFlags = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home' });
 	if (homeFlags.length == 0) {
@@ -21,7 +33,9 @@ function run(creep) {
 	}
 
 	//get the storages
-	const stores = getStores(creep);
+	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores)
+		.filter(store => !checkIsStoreFull(store));
+
 	const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
 
 	if (transferResult == OK) {

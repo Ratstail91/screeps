@@ -1,12 +1,13 @@
 const { HARVEST, UPGRADE, DEPOSIT, WITHDRAW, BUILD, REPAIR } = require('behaviour_names');
+const { TOWER, SPAWN, EXTENSION } = require('utils');
 
-function createCreep(spawn, behaviours, body, tag) {
+function createCreep(spawn, behaviours, body, tag, memory = {}) {
 	//TODO: add verification, part matching between behaviours and body
-	return spawn.spawnCreep(body, tag + Game.time, { memory: {
+	return spawn.spawnCreep(body, tag + Game.time, { memory: Object.assign({}, memory, {
 		behaviours: behaviours,
 		origin: spawn.name,
 		tag: tag
-	}});
+	})});
 }
 
 function getPopulationByTags(spawn) {
@@ -26,20 +27,31 @@ function getPopulationByTags(spawn) {
 function handleSpawn(spawn) {
 	population = getPopulationByTags();
 
-	if (!population.harvester || population.harvester < 30) {
-		return createCreep(spawn, [HARVEST, DEPOSIT, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'harvester');
+	if (!population.harvester || population.harvester < 10) {
+		return createCreep(spawn, [DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'harvester', {
+			DEPOSIT: {
+				skipIfNotFull: true
+			}
+		});
 	}
 
-	if (!population.builder || population.builder < 10) {
+	if (!population.builder || population.builder < 2) {
 		return createCreep(spawn, [HARVEST, BUILD, REPAIR, DEPOSIT, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'builder');
 	}
 
-	if (!population.upgrader || population.upgrader < 10) {
+	if (!population.upgrader || population.upgrader < 2) {
 		return createCreep(spawn, [HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'upgrader');
 	}
 
 	if (!population.restock || population.restock < 2) {
-		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restock');
+		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restock', {
+			DEPOSIT: {
+				stores: [TOWER, SPAWN, EXTENSION]
+			},
+			WITHDRAW: {
+				skipIfNotEmpty: true
+			}
+		});
 	}
 }
 
