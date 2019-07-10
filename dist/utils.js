@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const TOWER = 'TOWER';
 const SPAWN = 'SPAWN';
 const EXTENSION = 'EXTENSION';

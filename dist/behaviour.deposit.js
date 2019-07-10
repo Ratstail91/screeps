@@ -10,8 +10,14 @@ function run(creep) {
 	//if not at home, go home
 	const homeFlags = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home' });
 	if (homeFlags.length == 0) {
+		//TODO: replace the home flag with the origin spawn position
 		creep.moveTo(Game.flags['home'], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
+	}
+
+	//can't deposit on an empty stomach
+	if (_.sum(creep.carry) == 0) {
+		return true;
 	}
 
 	//get the storages

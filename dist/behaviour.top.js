@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const { TOP: BEHAVIOUR_NAME, UPGRADE, BUILD } = require('behaviour_names');
 
 const upgrade = require('behaviour.upgrade');
