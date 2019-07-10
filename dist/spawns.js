@@ -2,11 +2,11 @@ const { HARVEST, STORE, UPGRADE } = require('behaviour_names');
 
 function createCreep(spawn, behaviours, body, tag) {
 	//TODO: add verification, part matching between behaviours and body
-	return spawn.createCreep(body, tag + Game.time, {
+	return spawn.spawnCreep(body, tag + Game.time, { memory: {
 		origin: spawn.name,
 		behaviours: behaviours,
 		tag: tag
-	});
+	}});
 }
 
 function getPopulationByTags() {

@@ -12,10 +12,12 @@ function updateCreep(creep) {
 		case 'builder':
 		case 'repairer':
 			creep.memory.behaviours = ['HARVEST', 'STORE', 'UPGRADE'];
+			creep.memory.role = null;
 			break;
 
 		case 'upgrader':
 			creep.memory.behaviours = ['HARVEST', 'UPGRADE'];
+			creep.memory.role = null;
 			break;
 
 		//ignore (too niche to be worth upgrading)
@@ -27,9 +29,6 @@ function updateCreep(creep) {
 		default:
 			break;
 	}
-
-	//finally
-	creep.memory.role = null;
 }
 
 function handleCreep(creep) {
