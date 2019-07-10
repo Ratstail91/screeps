@@ -7,7 +7,6 @@ const bottom = require('behaviour.bottom');
 function updateCreep(creep) {
 	switch(creep.memory.role) {
 		//domestics
-		case undefined:
 		case 'harvester':
 		case 'builder':
 		case 'repairer':
