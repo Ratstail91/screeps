@@ -2,10 +2,11 @@ const { HARVEST, STORE, UPGRADE } = require('behaviour_names');
 
 function createCreep(spawn, behaviours, body, tag) {
 	//TODO: add verification, part matching between behaviours and body
-	return spawn.createCreep(body, tag + Game.time, { memory: {
+	return spawn.createCreep(body, tag + Game.time, {
+		origin: spawn.name,
 		behaviours: behaviours,
 		tag: tag
-	}});
+	});
 }
 
 function getPopulationByTags() {
@@ -14,7 +15,7 @@ function getPopulationByTags() {
 
 	//count all arbitrary tags (store them in tags, defined above)
 	Object.keys(Game.creeps)
-		.filter(key => Game.creeps[key].memory.tag)
+		.map(key => Game.creeps[key].memory.tag)
 		.forEach(tag => population[tag] = population[tag] + 1 || 1)
 	;
 
