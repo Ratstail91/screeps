@@ -1,4 +1,4 @@
-const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, TARGET } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION } = require('utils');
 
 function createCreep(spawn, behaviours, body, tag, memory = {}) {
@@ -62,6 +62,18 @@ function handleSpawn(spawn) {
 		return createCreep(spawn, [TARGET], [MOVE], 'targeter', {
 			TARGET: {
 				targetFlag: 'followme'
+			}
+		});
+	}
+
+	if (!population.patroller) {
+		return createCreep(spawn, [PATROL], [MOVE], 'patroller', {
+			PATROL: {
+				targetFlags: [
+					'patrol0',
+					'patrol1',
+					'patrol2'
+				]
 			}
 		});
 	}

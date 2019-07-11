@@ -13,7 +13,7 @@ module.exports = {
 	REPAIR: 'REPAIR',
 
 	//moving around the rooms
-//	PATROL: 'PATROL',
+	PATROL: 'PATROL',
 	TARGET: 'TARGET',
 
 	//run or fight
