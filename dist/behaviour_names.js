@@ -18,7 +18,7 @@ module.exports = {
 
 	//run or fight
 	FEAR: 'FEAR',
-//	BRAVE: 'BRAVE',
+	BRAVE: 'BRAVE',
 
 	//call for help/respond to calls for help
 //	CRY: 'CRY',

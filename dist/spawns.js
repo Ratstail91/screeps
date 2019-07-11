@@ -1,4 +1,4 @@
-const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION } = require('utils');
 
 const { serialize } = require('behaviour.fear');
@@ -28,6 +28,10 @@ function getPopulationByTags(spawn) {
 
 function handleSpawn(spawn) {
 	population = getPopulationByTags();
+
+	if (!population.guards || population.guards < 5) {
+		return createCreep(spawn, [BRAVE], [TOUGH, TOUGH, TOUGH, ATTACK, MOVE, MOVE, MOVE, MOVE], 'guards');
+	}
 
 	if (!population.harvester || population.harvester < 20) {
 		return createCreep(spawn, [DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'harvester', {
