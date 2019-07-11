@@ -17,6 +17,7 @@ function run(creep) {
 		});
 	}
 
+	//if no repair targets
 	if (!repairTarget) {
 		return true;
 	}

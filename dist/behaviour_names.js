@@ -4,7 +4,7 @@ module.exports = {
 	UPGRADE: 'UPGRADE',
 
 	//handling energy
-//	COLLECT: 'COLLECT',
+	PICKUP: 'PICKUP',
 	DEPOSIT: 'DEPOSIT',
 	WITHDRAW: 'WITHDRAW',
 

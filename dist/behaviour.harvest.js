@@ -14,7 +14,7 @@ function run(creep) {
 	}
 
 	//if belly is full, pass the logic to the next behaviour
-	if (creep.carry.energy == creep.carryCapacity) {
+	if (_.sum(creep.carry) == creep.carryCapacity) {
 		return true;
 	}
 

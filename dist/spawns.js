@@ -1,4 +1,4 @@
-const { HARVEST, UPGRADE, DEPOSIT, WITHDRAW, BUILD, REPAIR } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION } = require('utils');
 
 function createCreep(spawn, behaviours, body, tag, memory = {}) {
@@ -52,6 +52,10 @@ function handleSpawn(spawn) {
 				skipIfNotEmpty: true
 			}
 		});
+	}
+
+	if (!population.collector || population.collector < 2) {
+		return createCreep(spawn, [PICKUP, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'collector');
 	}
 }
 
