@@ -27,7 +27,7 @@ function getPopulationByTags(spawn) {
 function handleSpawn(spawn) {
 	population = getPopulationByTags();
 
-	if (!population.harvester || population.harvester < 10) {
+	if (!population.harvester || population.harvester < 20) {
 		return createCreep(spawn, [DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'harvester', {
 			DEPOSIT: {
 				skipIfNotFull: true
@@ -43,7 +43,7 @@ function handleSpawn(spawn) {
 		return createCreep(spawn, [HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'upgrader');
 	}
 
-	if (!population.restocker || population.restocker < 2) {
+	if (!population.restocker) {
 		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restocker', {
 			DEPOSIT: {
 				stores: [TOWER, SPAWN, EXTENSION]
