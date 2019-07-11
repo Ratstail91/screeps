@@ -6,11 +6,9 @@ const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
 	//initialize new creeps
-	if (!creep.memory[BEHAVIOUR_NAME]) {
-		creep.memory[BEHAVIOUR_NAME] = {
-			lock: false
-		};
-	}
+	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		_lock: false
+	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//NOTE: building ramparts last
 	let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART });
@@ -26,8 +24,8 @@ function run(creep) {
 	const buildResult = creep.build(constructionSite);
 
 	if (buildResult == OK) {
-		//everything is OK, send a 'lock' message to TOP
-		creep.memory[BEHAVIOUR_NAME].lock = true;
+		//everything is OK, send a '_lock' message to TOP
+		creep.memory[BEHAVIOUR_NAME]._lock = true;
 		return false;
 	} else if (buildResult == ERR_NOT_IN_RANGE) {
 		//TODO: move to closest?

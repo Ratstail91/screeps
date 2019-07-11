@@ -1,5 +1,7 @@
-const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION } = require('utils');
+
+const { serialize } = require('behaviour.fear');
 
 function createCreep(spawn, behaviours, body, tag, memory = {}) {
 	//TODO: add verification, part matching between behaviours and body
@@ -39,7 +41,7 @@ function handleSpawn(spawn) {
 		return createCreep(spawn, [HARVEST, BUILD, REPAIR, DEPOSIT, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'builder');
 	}
 
-	if (!population.upgrader || population.upgrader < 2) {
+	if (!population.upgrader) {
 		return createCreep(spawn, [HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'upgrader');
 	}
 
@@ -54,7 +56,7 @@ function handleSpawn(spawn) {
 		});
 	}
 
-	if (!population.collector || population.collector < 2) {
+	if (!population.collector) {
 		return createCreep(spawn, [PICKUP, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'collector');
 	}
 
@@ -76,6 +78,18 @@ function handleSpawn(spawn) {
 					'patrol2'
 				],
 //				stopInRoom: true
+			}
+		});
+	}
+
+	if (!population.runner) {
+		return createCreep(spawn, [FEAR, TARGET], [MOVE], 'runner', {
+			FEAR: {
+				returnHome: true,
+				onSafe: serialize((creep) => console.log(`${creep.name} is home safe`))
+			},
+			TARGET: {
+				targetFlag: 'runnerme'
 			}
 		});
 	}

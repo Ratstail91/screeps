@@ -4,18 +4,18 @@ const upgrade = require('behaviour.upgrade');
 const build = require('behaviour.build');
 
 function run(creep) {
-	if (creep.memory[UPGRADE] && creep.memory[UPGRADE].lock) {
+	if (creep.memory[UPGRADE] && creep.memory[UPGRADE]._lock) {
 		//prevent permanent locking if something goes haywire
-		creep.memory[UPGRADE].lock = false;
+		creep.memory[UPGRADE]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
 			return upgrade(creep);
 		}
 	}
 
-	if (creep.memory[BUILD] && creep.memory[BUILD].lock) {
+	if (creep.memory[BUILD] && creep.memory[BUILD]._lock) {
 		//prevent permanent locking if something goes haywire
-		creep.memory[BUILD].lock = false;
+		creep.memory[BUILD]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
 			return build(creep);

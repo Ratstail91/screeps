@@ -17,7 +17,7 @@ module.exports = {
 	TARGET: 'TARGET',
 
 	//run or fight
-//	FEAR: 'FEAR',
+	FEAR: 'FEAR',
 //	BRAVE: 'BRAVE',
 
 	//call for help/respond to calls for help
@@ -25,7 +25,5 @@ module.exports = {
 //	CARE: 'CARE',
 
 	//TODO: claimer
-	//TODO: scavenger
 	//TODO: sign writer
-	//TODO: store manager
 };

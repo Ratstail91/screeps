@@ -8,11 +8,9 @@ const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
 	//initialize new creeps
-	if (!creep.memory[BEHAVIOUR_NAME]) {
-		creep.memory[BEHAVIOUR_NAME] = {
-			skipIfNotFull: false
-		};
-	}
+	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		skipIfNotFull: false
+	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//skip depositing if not full
 	if (creep.memory[BEHAVIOUR_NAME].skipIfNotFull && _.sum(creep.carry) != creep.carryCapacity) {

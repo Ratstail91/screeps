@@ -6,12 +6,10 @@ const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
 	//initialize new creeps
-	if (!creep.memory[BEHAVIOUR_NAME]) {
-		creep.memory[BEHAVIOUR_NAME] = {
-			remote: null,
-			source: null
-		};
-	}
+	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		remote: null,
+		source: null
+	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//if belly is full, pass the logic to the next behaviour
 	if (_.sum(creep.carry) == creep.carryCapacity) {
@@ -30,8 +28,14 @@ function run(creep) {
 		return false;
 	}
 
-	//harvest energy
-	const sources = creep.room.find(FIND_SOURCES);
+	//harvest energy (sorted)
+	const sources = creep.room.find(FIND_SOURCES).sort((a, b) => {
+		if (a.pos.x == b.pos.x) {
+			return a.pos.y < b.pos.y;
+		} else {
+			return a.pos.x < b.pos.x;
+		}
+	});
 
 	//target a random source to free up real estate
 	if (creep.memory[BEHAVIOUR_NAME].source == null || creep.memory[BEHAVIOUR_NAME].source >= sources.length) {
