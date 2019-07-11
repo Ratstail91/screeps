@@ -14,7 +14,7 @@ module.exports = {
 
 	//moving around the rooms
 //	PATROL: 'PATROL',
-//	TARGET: 'TARGET',
+	TARGET: 'TARGET',
 
 	//run or fight
 //	FEAR: 'FEAR',
