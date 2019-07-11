@@ -61,7 +61,8 @@ function handleSpawn(spawn) {
 	if (!population.targeter) {
 		return createCreep(spawn, [TARGET], [MOVE], 'targeter', {
 			TARGET: {
-				targetFlag: 'followme'
+				targetFlag: 'followme',
+//				stopInRoom: true
 			}
 		});
 	}
@@ -73,7 +74,8 @@ function handleSpawn(spawn) {
 					'patrol0',
 					'patrol1',
 					'patrol2'
-				]
+				],
+//				stopInRoom: true
 			}
 		});
 	}

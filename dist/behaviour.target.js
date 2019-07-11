@@ -16,9 +16,11 @@ function run(creep) {
 	//initialize new creeps
 	if (!creep.memory[BEHAVIOUR_NAME]) {
 		creep.memory[BEHAVIOUR_NAME] = {
+			stopInRoom: false,
 			targetFlag: null,
 			lastPath: null,
-			lastPathTime: null
+			lastPathTime: null,
+			correctRoom: false
 		};
 	}
 
@@ -29,6 +31,16 @@ function run(creep) {
 	if (!flag || creep.pos.getRangeTo(flag) == 0) {
 		creep.memory[BEHAVIOUR_NAME].lastPath = null;
 		creep.memory[BEHAVIOUR_NAME].lastPathTime = null;
+		return true;
+	}
+
+	//no longer correct room
+	if (creep.memory[BEHAVIOUR_NAME].correctRoom && creep.pos.getRangeTo(flag) == Infinity) {
+		creep.memory[BEHAVIOUR_NAME].correctRoom = false;
+	}
+
+	//stop if setting true && in the correct room (set elsewhere to allow stepping off of the entry)
+	if (creep.memory[BEHAVIOUR_NAME].stopInRoom && creep.memory[BEHAVIOUR_NAME].correctRoom) {
 		return true;
 	}
 
@@ -45,6 +57,11 @@ function run(creep) {
 
 	//handle the result
 	if (moveResult == OK) {
+		//if using stopInRoom, set the flag to true when correct room found
+		if (creep.memory[BEHAVIOUR_NAME].stopInRoom && creep.pos.getRangeTo(flag) != Infinity) {
+			creep.memory[BEHAVIOUR_NAME].correctRoom = true;
+		}
+
 		//DO NOTHING
 		return false;
 	} else if (moveResult == ERR_NOT_FOUND) {

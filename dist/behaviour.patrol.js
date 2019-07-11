@@ -16,8 +16,9 @@ function run(creep) {
 	//initialize new creeps
 	if (!creep.memory[BEHAVIOUR_NAME]) {
 		creep.memory[BEHAVIOUR_NAME] = {
-			targetCounter: 0,
+			stopInRoom: false,
 			targetFlags: null,
+			targetCounter: 0,
 			lastPath: null,
 			lastPathTime: null
 		};
@@ -47,8 +48,8 @@ function run(creep) {
 
 	//handle the result
 	if (moveResult == OK) {
-		//if at the target flag: increment the target
-		if (creep.pos.getRangeTo(targetFlag) == 0) {
+		//if at the target flag: increment the target (also works in the correct room)
+		if (creep.pos.getRangeTo(targetFlag) == 0 || (creep.memory[BEHAVIOUR_NAME].stopInRoom && creep.pos.getRangeTo(targetFlag) != Infinity)) {
 			creep.memory[BEHAVIOUR_NAME].targetCounter++;
 			if (creep.memory[BEHAVIOUR_NAME].targetCounter >= creep.memory[BEHAVIOUR_NAME].targetFlags.length) {
 				creep.memory[BEHAVIOUR_NAME].targetCounter = 0;
