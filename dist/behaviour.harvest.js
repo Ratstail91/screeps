@@ -1,6 +1,7 @@
 const { HARVEST: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { MAX_REMOTES, REUSE_PATH } = require('constants');
+const { REUSE_PATH } = require('constants');
+const { countRemotes } = require('utils.remotes');
 
 const pathStyle = { stroke: '#ff00ff' };
 
@@ -18,13 +19,15 @@ function run(creep) {
 
 	//move to a specified (or random) remote
 	if (creep.memory[BEHAVIOUR_NAME].remote == null) {
-		creep.memory[BEHAVIOUR_NAME].remote = Math.floor(Math.random() * MAX_REMOTES);
+		creep.memory[BEHAVIOUR_NAME].remote = Math.floor(Math.random() * countRemotes(creep.memory.origin));
 		creep.memory[BEHAVIOUR_NAME].source = null;
 	}
 
-	const remoteFlag = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == `remote${creep.memory[BEHAVIOUR_NAME].remote}` });
+	const remoteFlagName = `${creep.memory.origin}remote${creep.memory[BEHAVIOUR_NAME].remote}`;
+
+	const remoteFlag = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == remoteFlagName });
 	if (remoteFlag.length == 0) {
-		creep.moveTo(Game.flags[`remote${creep.memory[BEHAVIOUR_NAME].remote}`], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+		creep.moveTo(Game.flags[remoteFlagName], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
 	}
 

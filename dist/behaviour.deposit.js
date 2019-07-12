@@ -18,10 +18,9 @@ function run(creep) {
 	}
 
 	//if not at home, go home
-	const homeFlags = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home' });
-	if (homeFlags.length == 0) {
-		//TODO: replace the home flag with the origin spawn position
-		creep.moveTo(Game.flags['home'], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+	const homeSpawns = creep.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType == STRUCTURE_SPAWN && structure.name == creep.memory.origin });
+	if (homeSpawns.length == 0) {
+		creep.moveTo(Game.spawns[creep.memory.origin], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
 	}
 

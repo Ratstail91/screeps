@@ -15,26 +15,25 @@ function deserialize(str) {
 function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
-		homeFlagName: 'home',
 		returnHome: false,
 		onSafe: '(creep) => null',
 		_runningHome: false,
 		_sawLastTick: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 
-	const homeFlag = Game.flags[creep.memory[BEHAVIOUR_NAME].homeFlagName];
+	const originSpawn = Game.spawns[creep.memory.origin];
 
 	//if you're running home
 	if (creep.memory[BEHAVIOUR_NAME]._runningHome) {
 		//if you've reached home room
-		if (creep.pos.getRangeTo(homeFlag) != Infinity) {
+		if (creep.pos.getRangeTo(originSpawn) != Infinity) {
 			creep.memory[BEHAVIOUR_NAME]._runningHome = false;
 			//if you're safe, call onSafe
 			if (creep.room.find(FIND_HOSTILE_CREEPS).length == 0 && creep.memory[BEHAVIOUR_NAME].onSafe) {
 				deserialize(creep.memory[BEHAVIOUR_NAME].onSafe)(creep);
 			}
 		}
-		creep.moveTo(homeFlag, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle }); //last, to step off the exit too
+		creep.moveTo(originSpawn, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle }); //last, to step off the exit too
 		return false;
 	}
 
@@ -60,7 +59,7 @@ function run(creep) {
 	}
 
 	//run towards home
-	creep.moveTo(homeFlag, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+	creep.moveTo(originSpawn, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 
 	//no fall through
 	return false;

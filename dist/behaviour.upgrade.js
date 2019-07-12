@@ -12,9 +12,9 @@ function run(creep) {
 
 	//if can't upgrade this controller, go home
 	if (!creep.room.controller.my) {
-		const homeFlags = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == 'home' });
-		if (homeFlags.length == 0) {
-			creep.moveTo(Game.flags['home'], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+		const originSpawns = creep.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType == STRUCTURE_SPAWN && structure.name == creep.memory.origin });
+		if (originSpawns.length == 0) {
+			creep.moveTo(Game.spawns[creep.memory.origin], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 			return false;
 		}
 	}
