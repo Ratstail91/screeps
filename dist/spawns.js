@@ -3,12 +3,12 @@ const { TOWER, SPAWN, EXTENSION } = require('utils.store');
 
 const { serialize } = require('behaviour.fear');
 
-function createCreep(spawn, behaviours, body, tag, memory = {}) {
+function spawnCreep(spawn, name, behaviours, body, tags, memory = {}) {
 	//TODO: add verification, part matching between behaviours and body
-	return spawn.spawnCreep(body, tag + Game.time, { memory: Object.assign({}, memory, {
+	return spawn.spawnCreep(body, name + Game.time, { memory: Object.assign({}, memory, {
 		behaviours: behaviours,
 		origin: spawn.name,
-		tag: tag
+		tags: tags
 	})});
 }
 
@@ -17,93 +17,49 @@ function getPopulationByTags(spawn) {
 	const population = {};
 
 	//count all arbitrary tags (store them in tags, defined above)
-	Object.keys(Game.creeps)
+	Object.values(Game.creeps)
 		.filter(creep => !spawn || creep.memory.origin == spawn.name)
-		.map(key => Game.creeps[key].memory.tag)
-		.forEach(tag => population[tag] = population[tag] + 1 || 1)
+		.map(creep => creep.memory.tags)
+		.forEach(tags => {
+			tags.forEach(tag => population[tag] = population[tag] + 1 || 1)
+		})
 	;
 
 	return population;
 }
 
+//TODO: get population by origin - a more accurate snapshot than tags
+
 function handleSpawn(spawn) {
-	population = getPopulationByTags();
+	population = getPopulationByTags(spawn);
 
-	if (!population.inspector) {
-		return createCreep(spawn, [CARE, TARGET], [MOVE], 'inspector', {
-			TARGET: {
-				targetFlag: 'followme',
-//				stopInRoom: true
-			}
-		});
-	}
+	//NOTE: basic kickstart routine
 
-	if (!population.guards || population.guards < 2) {
-		return createCreep(spawn, [CRY, BRAVE], [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK], 'guards');
-	}
-
-	if (!population.harvester || population.harvester < 20) {
-		return createCreep(spawn, [DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'harvester', {
+	//spawn harvesters
+	if (!population.harvester || population.harvester < 10) {
+		//small for now
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true
 			}
 		});
 	}
 
-	if (!population.builder || population.builder < 2) {
-		return createCreep(spawn, [HARVEST, BUILD, REPAIR, DEPOSIT, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'builder');
+	//spawn upgraders
+	if (!population.upgrader || population.upgrader < 5) {
+		//small for now
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['upgrader']);
 	}
 
-	if (!population.upgrader) {
-		return createCreep(spawn, [HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], 'upgrader');
-	}
-
-	if (!population.restocker) {
-		return createCreep(spawn, [WITHDRAW, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'restocker', {
-			DEPOSIT: {
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipIfNotEmpty: true
-			}
-		});
-	}
-
-	if (!population.collector) {
-		return createCreep(spawn, [PICKUP, DEPOSIT], [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY], 'collector');
-	}
-
-	if (!population.targeter) {
-		return createCreep(spawn, [TARGET], [MOVE], 'targeter', {
-			TARGET: {
-				targetFlag: 'followme',
-//				stopInRoom: true
-			}
-		});
-	}
-
-	if (!population.patroller) {
-		return createCreep(spawn, [PATROL], [MOVE], 'patroller', {
-			PATROL: {
-				targetFlags: [
-					'patrol0',
-					'patrol1',
-					'patrol2'
-				],
-//				stopInRoom: true
-			}
-		});
-	}
-
-	if (!population.runner) {
-		return createCreep(spawn, [FEAR, TARGET], [MOVE], 'runner', {
-			FEAR: {
-				returnHome: true,
-				onSafe: serialize((creep) => console.log(`${creep.name} is home safe`))
-			},
-			TARGET: {
-				targetFlag: 'runnerme'
-			}
+	//spawn patrolling guards that respond to cries
+	if (!population.patroller || population.patroller < 2) {
+		return spawnCreep(spawn, 'patroller', [CARE, BRAVE, PATROL], [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK], ['patroller', 'responder'], {
+			targetFlags: [
+				'Spawn1remote0',
+				'Spawn1remote1',
+				'Spawn1remote2',
+				'Spawn1remote3',
+			]
 		});
 	}
 }
