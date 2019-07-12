@@ -17,13 +17,6 @@ function run(creep) {
 		return true;
 	}
 
-	//if not at home, go home
-	const originSpawns = creep.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType == STRUCTURE_SPAWN && structure.name == creep.memory.origin });
-	if (originSpawns.length == 0) {
-		creep.moveTo(Game.spawns[creep.memory.origin], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
-		return false;
-	}
-
 	//can't withdraw on an full stomach
 	if (_.sum(creep.carry) == creep.carryCapacity) {
 		return true;

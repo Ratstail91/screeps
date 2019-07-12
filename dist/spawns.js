@@ -35,25 +35,13 @@ function handleSpawn(spawn) {
 
 	//NOTE: basic kickstart routine
 
-	//spawn harvesters
-	if (!population.harvester || population.harvester < 10) {
-		//small for now
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['harvester'], {
-			DEPOSIT: {
-				skipIfNotFull: true
-			}
-		});
-	}
-
-	//spawn upgraders
-	if (!population.upgrader || population.upgrader < 5) {
-		//small for now
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['upgrader']);
-	}
-
 	//spawn patrolling guards that respond to cries
-	if (!population.patroller || population.patroller < 2) {
-		return spawnCreep(spawn, 'patroller', [CARE, BRAVE, PATROL], [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK], ['patroller', 'responder'], {
+	if (!population.patroller || population.patroller < 4) {
+		return spawnCreep(spawn, 'patroller', [BRAVE, TARGET, CARE, PATROL], [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK], ['patroller', 'responder'], {
+			TARGET: {
+				targetFlag: 'rallypoint',
+				override: true
+			},
 			PATROL: {
 				targetFlags: [
 					'Spawn1remote0',
@@ -63,6 +51,23 @@ function handleSpawn(spawn) {
 				]
 			}
 		});
+	}
+
+	//spawn harvesters
+	if (!population.harvester || population.harvester < 10) {
+		//small for now
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['harvester'], {
+			DEPOSIT: {
+				skipIfNotFull: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn upgraders
+	if (!population.upgrader || population.upgrader < 5) {
+		//small for now
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], [MOVE, MOVE, WORK, CARRY], ['upgrader']);
 	}
 }
 

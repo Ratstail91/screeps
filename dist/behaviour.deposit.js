@@ -9,7 +9,8 @@ const pathStyle = { stroke: '#ff00ff' };
 function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
-		skipIfNotFull: false
+		skipIfNotFull: false,
+		returnHomeFirst: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//skip depositing if not full
@@ -17,16 +18,18 @@ function run(creep) {
 		return true;
 	}
 
-	//if not at home, go home
-	const homeSpawns = creep.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType == STRUCTURE_SPAWN && structure.name == creep.memory.origin });
-	if (homeSpawns.length == 0) {
-		creep.moveTo(Game.spawns[creep.memory.origin], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
-		return false;
-	}
-
 	//can't deposit on an empty stomach
 	if (_.sum(creep.carry) == 0) {
 		return true;
+	}
+
+	if (creep.memory[BEHAVIOUR_NAME].returnHomeFirst) {
+		//if not at home, go home
+		const homeSpawns = creep.room.find(FIND_MY_STRUCTURES, { filter: structure => structure.structureType == STRUCTURE_SPAWN && structure.name == creep.memory.origin });
+		if (homeSpawns.length == 0) {
+			creep.moveTo(Game.spawns[creep.memory.origin], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+			return false;
+		}
 	}
 
 	//get the stores

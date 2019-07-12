@@ -45,7 +45,7 @@ function run(creep) {
 	creep.memory[BEHAVIOUR_NAME]._lastPath.shift(); //remove one for poly
 
 	//handle the result
-	if (moveResult == OK) {
+	if (moveResult == OK || moveResult == ERR_TIRED) {
 		//if at the target flag: increment the target (also works in the correct room)
 		if (creep.pos.getRangeTo(targetFlag) == 0 || (creep.memory[BEHAVIOUR_NAME].stopInRoom && creep.pos.getRangeTo(targetFlag) != Infinity)) {
 			creep.memory[BEHAVIOUR_NAME]._targetCounter++;

@@ -17,6 +17,7 @@ function run(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		stopInRoom: false,
 		targetFlag: null,
+		override: false,
 		_lastPath: null,
 		_lastPathTime: null,
 		_correctRoom: false
@@ -25,11 +26,14 @@ function run(creep) {
 	//get the flag || undefined
 	const flag = Game.flags[creep.memory[BEHAVIOUR_NAME].targetFlag];
 
-	//fall through if no flag set || at flag
-	if (!flag || creep.pos.getRangeTo(flag) == 0) {
-		creep.memory[BEHAVIOUR_NAME]._lastPath = null;
-		creep.memory[BEHAVIOUR_NAME]._lastPathTime = null;
-		return true;
+	//if override and flag, skip this
+	if (!(creep.memory[BEHAVIOUR_NAME].override && flag)) {
+		//fall through if no flag set || at flag
+		if (!flag || creep.pos.getRangeTo(flag) == 0) {
+			creep.memory[BEHAVIOUR_NAME]._lastPath = null;
+			creep.memory[BEHAVIOUR_NAME]._lastPathTime = null;
+			return true;
+		}
 	}
 
 	//no longer correct room
@@ -54,7 +58,7 @@ function run(creep) {
 	creep.memory[BEHAVIOUR_NAME]._lastPath.shift(); //remove one for poly
 
 	//handle the result
-	if (moveResult == OK) {
+	if (moveResult == OK || moveResult == ERR_TIRED) {
 		//if using stopInRoom, set the flag to true when correct room found
 		if (creep.memory[BEHAVIOUR_NAME].stopInRoom && creep.pos.getRangeTo(flag) != Infinity) {
 			creep.memory[BEHAVIOUR_NAME]._correctRoom = true;
