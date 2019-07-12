@@ -1,6 +1,6 @@
 const { DEPOSIT: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores, checkIsStoreFull } = require('utils');
+const { getStores, checkIsStoreFull } = require('utils.store');
 
 const { REUSE_PATH } = require('constants');
 

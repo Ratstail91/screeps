@@ -1,6 +1,6 @@
 const { WITHDRAW: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores, checkIsStoreEmpty, CONTAINER, STORAGE } = require('utils');
+const { getStores, checkIsStoreEmpty, CONTAINER, STORAGE } = require('utils.store');
 
 const { REUSE_PATH } = require('constants');
 
