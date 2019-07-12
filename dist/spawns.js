@@ -54,12 +54,14 @@ function handleSpawn(spawn) {
 	//spawn patrolling guards that respond to cries
 	if (!population.patroller || population.patroller < 2) {
 		return spawnCreep(spawn, 'patroller', [CARE, BRAVE, PATROL], [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, ATTACK], ['patroller', 'responder'], {
-			targetFlags: [
-				'Spawn1remote0',
-				'Spawn1remote1',
-				'Spawn1remote2',
-				'Spawn1remote3',
-			]
+			PATROL: {
+				targetFlags: [
+					'Spawn1remote0',
+					'Spawn1remote1',
+					'Spawn1remote2',
+					'Spawn1remote3',
+				]
+			}
 		});
 	}
 }
