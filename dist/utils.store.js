@@ -5,8 +5,12 @@ const CONTAINER = 'CONTAINER';
 const STORAGE = 'STORAGE';
 const TOMBSTONE = 'TOMBSTONE';
 
-function getStores(creep, types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE]) {
+function getStores(creep, types) {
 	let result = [];
+
+	if (!types) {
+		types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE];
+	}
 
 	types.forEach(type => {
 		switch(type) {

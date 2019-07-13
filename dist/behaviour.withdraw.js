@@ -41,6 +41,15 @@ function run(creep) {
 	} else if(transferResult == ERR_NOT_IN_RANGE) {
 		creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
+	} else if (transferResult == ERR_NOT_ENOUGH_RESOURCES) {
+		//something else in there?
+		for (let i = 0; i < RESOURCES_ALL.length; i++) {
+			if (creep.withdraw(stores[0], RESOURCES_ALL[i]) == OK) {
+				return false;
+			}
+
+			throw new Error('Failed to withdraw misc. resources');
+		}
 	} else if (transferResult == ERR_FULL || stores.length == 0) {
 		return true;
 	}

@@ -1,4 +1,4 @@
 module.exports = {
 	//screeps specific constants
-	REUSE_PATH: 10
+	REUSE_PATH: 20
 };

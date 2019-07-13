@@ -5,6 +5,16 @@ const { REUSE_PATH } = require('constants');
 const pathStyle = { stroke: '#ff00ff' };
 
 function run(creep) {
+	//initialize new creeps
+	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		_lock: false
+	}, creep.memory[BEHAVIOUR_NAME]);
+
+	//can't repair on an empty stomach
+	if (_.sum(creep.carry) == 0) {
+		return true;
+	}
+
 	//NOTE: building ramparts last, skipping walls
 	let repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL && target.structureType != STRUCTURE_RAMPART
@@ -12,7 +22,7 @@ function run(creep) {
 
 	if (!repairTarget) {
 		//NOTE: only rep ramparts to 10k (for now)
-		let repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 			filter: (target) => target.hits < 10000 && target.structureType == STRUCTURE_RAMPART
 		});
 	}
@@ -25,11 +35,12 @@ function run(creep) {
 	const repairResult = creep.repair(repairTarget);
 
 	if (repairResult == OK) {
-		//DO NOTHING
+		//everything is OK, send a '_lock' message to TOP
+		creep.memory[BEHAVIOUR_NAME]._lock = true;
 		return false;
 	} else if (repairResult == ERR_NOT_IN_RANGE) {
 		//TODO: move to closest?
-		creep.moveTo(allSites[0], { reusePath: REUSE_PATH, visalizePathStyle: pathStyle });
+		creep.moveTo(repairTarget, { reusePath: REUSE_PATH, visalizePathStyle: pathStyle });
 		return false;
 	}
 

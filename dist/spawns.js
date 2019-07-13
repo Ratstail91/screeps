@@ -1,5 +1,6 @@
 const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TOMBSTONE } = require('utils.store');
+const { autoBuild, placeConstructionSites } = require('autobuilder');
 
 const { serialize } = require('behaviour.fear');
 
@@ -111,7 +112,7 @@ function stage1(spawn, creeps, population) {
 
 	//spawn builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, DEPOSIT, UPGRADE], tinyBody, ['builder'], {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['builder'], {
 			DEPOSIT: {
 				returnHomeFirst: true
 			}
@@ -205,7 +206,8 @@ function stage3(spawn, creeps, population) {
 	if (!population.restocker || population.restocker < 2) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
-				returnHomeFirst: true
+				returnHomeFirst: true,
+				stores: [TOWER, SPAWN, EXTENSION]
 			},
 			WITHDRAW: {
 				skipOwnRoom: false,
@@ -221,7 +223,7 @@ function stage3(spawn, creeps, population) {
 
 	//spawn builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, DEPOSIT, UPGRADE], mediumBody, ['builder'], {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['builder'], {
 			DEPOSIT: {
 				returnHomeFirst: true
 			}
@@ -247,9 +249,9 @@ function stage4(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//if not enough incoming energy to start this stage
-	if (population.harvester < 20) {
-		return kickstart(spawn, creeps, population);
-	}
+//	if (population.harvester < 20) {
+//		return kickstart(spawn, creeps, population);
+//	}
 
 	//1300e available
 	const largeBody = [ //1250
@@ -308,7 +310,8 @@ function stage4(spawn, creeps, population) {
 	if (!population.restocker || population.restocker < 2) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
-				returnHomeFirst: true
+				returnHomeFirst: true,
+				stores: [TOWER, SPAWN, EXTENSION]
 			},
 			WITHDRAW: {
 				skipOwnRoom: false,
@@ -324,7 +327,11 @@ function stage4(spawn, creeps, population) {
 
 	//spawn large builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, UPGRADE], largeBody, ['builder']);
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, HARVEST, UPGRADE], largeBody, ['builder'], {
+			DEPOSIT: {
+				returnHomeFirst: true
+			}
+		});
 	}
 
 	//spawn large scouts
@@ -373,8 +380,8 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn medium colonists
-	if (!population.colonist || population.colonist < 2) {
-		return spawnCreep(spawn, 'colonist', [CRY, HARVEST, TARGET, BUILD, REPAIR, UPGRADE], mediumBody, ['colonist'], {
+	if (!population.colonist || population.colonist < 10) {
+		return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, UPGRADE], mediumBody, ['colonist'], {
 			TARGET: {
 				targetFlag: 'claimme',
 				stopInRoom: true
@@ -413,9 +420,18 @@ function stage8(spawn, creeps, population) {
 }
 
 function handleSpawn(spawn) {
+//console.log(JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
+
+	//build spawn
+	autoBuild(spawn, 'basic');
+
+	if (spawn.room.controller.level >= 4 && !Game.time % 10 == 0) {
+		placeConstructionSites(spawn, require('schematic.basicramparts'));
+	}
+
 	//defend the spawn!
 	defendSpawn(spawn);
-console.log(JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
+
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		return;

@@ -10,7 +10,8 @@ function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		skipIfNotFull: false,
-		returnHomeFirst: false
+		returnHomeFirst: false,
+		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//skip depositing if not full
@@ -44,6 +45,15 @@ function run(creep) {
 	} else if(transferResult == ERR_NOT_IN_RANGE) {
 		creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
+	} else if (transferResult == ERR_NOT_ENOUGH_RESOURCES) {
+		//something else in there?
+		for (let i = 0; i < RESOURCES_ALL.length; i++) {
+			if (creep.transfer(stores[0], RESOURCES_ALL[i]) == OK) {
+				return false;
+			}
+
+			throw new Error('Failed to deposit misc. resources');
+		}
 	} else if (transferResult == ERR_FULL || stores.length == 0) {
 		return true;
 	}

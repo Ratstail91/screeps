@@ -9,7 +9,8 @@ function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		remote: null,
-		source: null
+		source: null,
+		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//if belly is full, pass the logic to the next behaviour
@@ -49,7 +50,8 @@ function run(creep) {
 
 	//handle the results of trying to harvest
 	if (harvestResults == OK) {
-		//DO NOTHING
+		//everything is OK, send a '_lock' message to TOP
+		creep.memory[BEHAVIOUR_NAME]._lock = true;
 		return false;
 	} else if(harvestResults == ERR_NOT_IN_RANGE) {
 		const moveResult = creep.moveTo(sources[creep.memory[BEHAVIOUR_NAME].source], {reusePath: REUSE_PATH, visualizePathStyle: pathStyle});
