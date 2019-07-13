@@ -43,13 +43,19 @@ function run(creep) {
 		return false;
 	} else if (transferResult == ERR_NOT_ENOUGH_RESOURCES) {
 		//something else in there?
+		let transferEverythingResult = false;
+
 		for (let i = 0; i < RESOURCES_ALL.length; i++) {
 			if (creep.withdraw(stores[0], RESOURCES_ALL[i]) == OK) {
-				return false;
+				transferEverythingResult = true;
 			}
-
-			throw new Error('Failed to withdraw misc. resources');
 		}
+
+		if (transferEverythingResult) {
+			return false;
+		}
+
+		throw new Error(`Failure to withdraw misc. resources by ${creep.name}`);
 	} else if (transferResult == ERR_FULL || stores.length == 0) {
 		return true;
 	}
