@@ -369,28 +369,31 @@ function stage4(spawn, creeps, population) {
 		});
 	}
 
-	//spawn 1 claimer
-	if (!population.claimer) {
-		return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
-			TARGET: {
-				targetFlag: 'claimme',
-				stopInRoom: true
-			}
-		});
-	}
+	//check for 'claimme' flag
+	if (Game.flags['claimme']) {
+		//spawn 1 claimer
+		if (!population.claimer) {
+			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				}
+			});
+		}
 
-	//spawn medium colonists
-	if (!population.colonist || population.colonist < 10) {
-		return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, UPGRADE], mediumBody, ['colonist'], {
-			TARGET: {
-				targetFlag: 'claimme',
-				stopInRoom: true
-			}
-		});
+		//spawn medium colonists
+		if (!population.colonist || population.colonist < 10) {
+			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT, UPGRADE], mediumBody, ['colonist'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				}
+			});
+		}
 	}
 
 	//fallback to large harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 15) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true,

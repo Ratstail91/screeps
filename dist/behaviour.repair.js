@@ -23,7 +23,7 @@ function run(creep) {
 	if (!repairTarget) {
 		//NOTE: only rep ramparts to 10k (for now)
 		repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-			filter: (target) => target.hits < 10000 && target.structureType == STRUCTURE_RAMPART
+			filter: (target) => target.hits < target.hitsMax && target.structureType == STRUCTURE_RAMPART
 		});
 	}
 
