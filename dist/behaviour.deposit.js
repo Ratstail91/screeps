@@ -46,20 +46,8 @@ function run(creep) {
 		creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
 	} else if (transferResult == ERR_NOT_ENOUGH_RESOURCES) {
-		//something else in there?
-		let transferEverythingResult = false;
-
-		for (let i = 0; i < RESOURCES_ALL.length; i++) {
-			if (creep.transfer(stores[0], RESOURCES_ALL[i]) == OK) {
-				transferEverythingResult = true;
-			}
-		}
-
-		if (transferEverythingResult) {
-			return false;
-		}
-
-		throw new Error(`Failure to deposit misc. resources by ${creep.name}`);
+		//that thing can't go in there...
+		return true;
 	} else if (transferResult == ERR_FULL || stores.length == 0) {
 		return true;
 	}
