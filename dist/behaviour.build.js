@@ -10,6 +10,11 @@ function run(creep) {
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 
+	//can't build on an empty stomach
+	if (_.sum(creep.carry) == 0) {
+		return true;
+	}
+
 	//NOTE: building ramparts last
 	let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART });
 

@@ -9,7 +9,9 @@ const pathStyle = { stroke: '#ff00ff' };
 function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
-		skipIfNotEmpty: false
+		skipIfNotEmpty: false,
+		skipOwnRoom: true,
+		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//skip withdrawing if not empty
@@ -19,6 +21,11 @@ function run(creep) {
 
 	//can't withdraw on an full stomach
 	if (_.sum(creep.carry) == creep.carryCapacity) {
+		return true;
+	}
+
+	//skip in rooms owned by me
+	if (creep.memory[BEHAVIOUR_NAME].skipOwnRoom && creep.room.controller.my) {
 		return true;
 	}
 

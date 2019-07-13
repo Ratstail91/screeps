@@ -3,6 +3,7 @@ const SPAWN = 'SPAWN';
 const EXTENSION = 'EXTENSION';
 const CONTAINER = 'CONTAINER';
 const STORAGE = 'STORAGE';
+const TOMBSTONE = 'TOMBSTONE';
 
 function getStores(creep, types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE]) {
 	let result = [];
@@ -38,6 +39,10 @@ function getStores(creep, types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE])
 					structure.structureType == STRUCTURE_STORAGE
 				}));
 				break;
+
+			case TOMBSTONE:
+				result = result.concat(creep.room.find(FIND_TOMBSTONES));
+				break;
 		}
 	});
 
@@ -45,6 +50,11 @@ function getStores(creep, types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE])
 }
 
 function checkIsStoreEmpty(store) {
+	//check tombstones
+	if (store.deathTime) {
+		return _.sum(store.store) == 0;
+	}
+
 	switch(store.structureType) {
 		case STRUCTURE_TOWER:
 		case STRUCTURE_SPAWN:
@@ -53,14 +63,20 @@ function checkIsStoreEmpty(store) {
 
 		case STRUCTURE_CONTAINER:
 		case STRUCTURE_STORAGE:
+		case TOMBSTONE:
 			return _.sum(store.store) == 0;
 
 		default:
-			throw new Error(`Unknown structureType ${structureType}`);
+			throw new Error(`Unknown store.structureType ${store.structureType}`);
 	}
 }
 
 function checkIsStoreFull(store) {
+	//check tombstones
+	if (store.deathTime) {
+		return _.sum(store.store) != 0;
+	}
+
 	switch(store.structureType) {
 		case STRUCTURE_TOWER:
 		case STRUCTURE_SPAWN:
@@ -72,7 +88,7 @@ function checkIsStoreFull(store) {
 			return _.sum(store.store) == store.storeCapacity;
 
 		default:
-			throw new Error(`Unknown structureType ${structureType}`);
+			throw new Error(`Unknown store.structureType ${store.structureType}`);
 	}
 }
 
@@ -82,6 +98,7 @@ module.exports = {
 	EXTENSION: EXTENSION,
 	CONTAINER: CONTAINER,
 	STORAGE: STORAGE,
+	TOMBSTONE: TOMBSTONE,
 
 	getStores: getStores,
 	checkIsStoreEmpty: checkIsStoreEmpty,
