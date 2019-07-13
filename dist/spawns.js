@@ -112,8 +112,9 @@ function stage1(spawn, creeps, population) {
 
 	//spawn builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['builder'], {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], tinyBody, ['builder'], {
 			DEPOSIT: {
+				skipIfNotFull: true,
 				returnHomeFirst: true
 			}
 		});
@@ -167,7 +168,6 @@ function stage2(spawn, creeps, population) {
 				stores: [TOMBSTONE, STORAGE, CONTAINER]
 			},
 			DEPOSIT: {
-				skipIfNotFull: true,
 				returnHomeFirst: true
 			}
 		});
@@ -206,6 +206,7 @@ function stage3(spawn, creeps, population) {
 	if (!population.restocker || population.restocker < 2) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
+				forceIfNotEmpty: true,
 				returnHomeFirst: true,
 				stores: [TOWER, SPAWN, EXTENSION]
 			},
@@ -223,8 +224,9 @@ function stage3(spawn, creeps, population) {
 
 	//spawn builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['builder'], {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['builder'], {
 			DEPOSIT: {
+				skipIfNotFull: true,
 				returnHomeFirst: true
 			}
 		});
@@ -310,6 +312,7 @@ function stage4(spawn, creeps, population) {
 	if (!population.restocker || population.restocker < 2) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
+				forceIfNotEmpty: true,
 				returnHomeFirst: true,
 				stores: [TOWER, SPAWN, EXTENSION]
 			},
@@ -327,8 +330,9 @@ function stage4(spawn, creeps, population) {
 
 	//spawn large builders
 	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, HARVEST, UPGRADE], largeBody, ['builder'], {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], largeBody, ['builder'], {
 			DEPOSIT: {
+				skipIfNotFull: true,
 				returnHomeFirst: true
 			}
 		});
@@ -363,7 +367,7 @@ function stage4(spawn, creeps, population) {
 				stores: [TOMBSTONE, STORAGE, CONTAINER]
 			},
 			DEPOSIT: {
-				skipIfNotFull: true,
+				forceIfNotEmpty: true,
 				returnHomeFirst: true
 			}
 		});
@@ -387,6 +391,9 @@ function stage4(spawn, creeps, population) {
 				TARGET: {
 					targetFlag: 'claimme',
 					stopInRoom: true
+				},
+				DEPOSIT: {
+					returnHomeFirst: true
 				}
 			});
 		}

@@ -10,12 +10,13 @@ function run(creep) {
 	//initialize new creeps
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		skipIfNotEmpty: false,
+		forceIfNotFull: false,
 		skipOwnRoom: true,
 		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//skip withdrawing if not empty
-	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && _.sum(creep.carry) > 0) {
+	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && !creep.memory[BEHAVIOUR_NAME].forceIfNotFull && _.sum(creep.carry) > 0) {
 		return true;
 	}
 
