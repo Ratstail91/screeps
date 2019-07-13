@@ -11,7 +11,8 @@ function run(creep) {
 	}
 
 	//target energy (and other stuff)
-	const energy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+	let energy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+	energy = energy.resourceType == RESOURCE_ENERGY ? energy : null;
 
 	if (energy) {
 		const pickupResult = creep.pickup(energy);

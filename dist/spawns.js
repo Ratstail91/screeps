@@ -63,7 +63,7 @@ function kickstart(spawn, creeps, population) {
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, COLLECT, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
 			HARVEST: {
 				remote: 0
 			},
