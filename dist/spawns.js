@@ -1,4 +1,4 @@
-const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
 const { TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TOMBSTONE } = require('utils.store');
 
 const { serialize } = require('behaviour.fear');
@@ -35,6 +35,21 @@ function getCreepsByOrigin(spawn) {
 	return creeps;
 }
 
+//defensive towers near spawn
+function defendSpawn(spawn) {
+	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS);
+
+	if (hostiles.length == 0) {
+		return;
+	}
+
+	const username = hostiles[0].owner.username;
+	Game.notify(`User ${username} spotted near ${spawn.name}`);
+
+	const towers = spawn.room.find(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType == STRUCTURE_TOWER });
+	towers.forEach(tower => tower.attack(hostiles[0]));
+}
+
 //spawn routines for each stage of the colony
 function kickstart(spawn, creeps, population) {
 	//NOTE: basic kickstart routine - assume 300 energy available
@@ -47,7 +62,10 @@ function kickstart(spawn, creeps, population) {
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstarter'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
+			HARVEST: {
+				remote: 0
+			},
 			DEPOSIT: {
 				skipIfNotFull: true,
 				returnHomeFirst: true
@@ -57,11 +75,11 @@ function kickstart(spawn, creeps, population) {
 
 	//spawn upgraders
 	if (!population.upgrader || population.upgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], tinyBody, ['upgrader', 'kickstarter']);
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], tinyBody, ['upgrader', 'kickstartUpgrader']);
 	}
 
 	//fallback to harvesters
-	return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstarter'], {
+	return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
 		DEPOSIT: {
 			skipIfNotFull: true,
 			returnHomeFirst: true
@@ -174,24 +192,10 @@ function stage3(spawn, creeps, population) {
 	];
 
 	//spawn harvesters
-	if (!population.harvester || population.harvester < 5) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
-	//spawn upgraders
-	if (!population.upgrader || population.upgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], mediumBody, ['upgrader']);
-	}
-
-	//spawn builders
-	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, DEPOSIT, UPGRADE], mediumBody, ['builder'], {
-			DEPOSIT: {
 				returnHomeFirst: true
 			}
 		});
@@ -210,8 +214,22 @@ function stage3(spawn, creeps, population) {
 		});
 	}
 
+	//spawn upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], mediumBody, ['upgrader']);
+	}
+
+	//spawn builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, DEPOSIT, UPGRADE], mediumBody, ['builder'], {
+			DEPOSIT: {
+				returnHomeFirst: true
+			}
+		});
+	}
+
 	//fallback to harvesters
-	if (!population.harvester || population.harvester < 20) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true,
@@ -225,9 +243,13 @@ function stage3(spawn, creeps, population) {
 }
 
 function stage4(spawn, creeps, population) {
-	//TODO: where does the claimer unit fit in?
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
+
+	//if not enough incoming energy to start this stage
+	if (population.harvester < 20) {
+		return kickstart(spawn, creeps, population);
+	}
 
 	//1300e available
 	const largeBody = [ //1250
@@ -268,24 +290,18 @@ function stage4(spawn, creeps, population) {
 		CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY
 	];
 
+	const claimerBody = [
+		MOVE, CLAIM
+	];
+
 	//spawn medium harvesters
-	if (!population.harvester || population.harvester < 5) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true,
 				returnHomeFirst: true
 			}
 		});
-	}
-
-	//spawn large upgraders
-	if (!population.upgrader || population.upgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], largeBody, ['upgrader']);
-	}
-
-	//spawn large builders
-	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, UPGRADE], largeBody, ['builder']);
 	}
 
 	//spawn medium restockers
@@ -299,6 +315,16 @@ function stage4(spawn, creeps, population) {
 				stores: [TOMBSTONE, CONTAINER, STORAGE]
 			}
 		});
+	}
+
+	//spawn large upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], largeBody, ['upgrader']);
+	}
+
+	//spawn large builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, BUILD, REPAIR, HARVEST, UPGRADE], largeBody, ['builder']);
 	}
 
 	//spawn large scouts
@@ -323,7 +349,7 @@ function stage4(spawn, creeps, population) {
 	if (!population.scavenger) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
 			TARGET: {
-				targetFlag: 'rallypoint',
+				targetFlag: 'collectionpoint',
 				override: true
 			},
 			WITHDRAW: {
@@ -336,8 +362,28 @@ function stage4(spawn, creeps, population) {
 		});
 	}
 
+	//spawn 1 claimer
+	if (!population.claimer) {
+		return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
+			TARGET: {
+				targetFlag: 'claimme',
+				stopInRoom: true
+			}
+		});
+	}
+
+	//spawn medium colonists
+	if (!population.colonist || population.colonist < 2) {
+		return spawnCreep(spawn, 'colonist', [CRY, HARVEST, TARGET, BUILD, REPAIR, UPGRADE], mediumBody, ['colonist'], {
+			TARGET: {
+				targetFlag: 'claimme',
+				stopInRoom: true
+			}
+		});
+	}
+
 	//fallback to large harvesters
-	if (!population.harvester || population.harvester < 15) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 15) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
 			DEPOSIT: {
 				skipIfNotFull: true,
@@ -367,6 +413,9 @@ function stage8(spawn, creeps, population) {
 }
 
 function handleSpawn(spawn) {
+	//defend the spawn!
+	defendSpawn(spawn);
+console.log(JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		return;

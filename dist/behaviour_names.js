@@ -24,6 +24,7 @@ module.exports = {
 	CRY: 'CRY',
 	CARE: 'CARE',
 
-	//TODO: claimer
+	//specialized behaviours
+	CLAIMER: 'CLAIMER',
 	//TODO: sign writer
 };
