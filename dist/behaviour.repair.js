@@ -39,8 +39,7 @@ function run(creep) {
 		creep.memory[BEHAVIOUR_NAME]._lock = true;
 		return false;
 	} else if (repairResult == ERR_NOT_IN_RANGE) {
-		//TODO: move to closest?
-		creep.moveTo(repairTarget, { reusePath: REUSE_PATH, visalizePathStyle: pathStyle });
+		creep.moveTo(repairTarget, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
 	}
 
