@@ -61,7 +61,7 @@ function kickstart(spawn, creeps, population) {
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, PICKUP, DEPOSIT, HARVEST], tinyBody, ['harvester', 'kickstartHarvester'], {
 			HARVEST: {
 				remote: 0
 			},
@@ -78,7 +78,7 @@ function kickstart(spawn, creeps, population) {
 	}
 
 	//fallback to harvesters
-	return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
+	return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], tinyBody, ['harvester', 'kickstartHarvester'], {
 		DEPOSIT: {
 			forceIfNotEmpty: true,
 			returnHomeFirst: true
@@ -92,7 +92,7 @@ function stage1(spawn, creeps, population) {
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], tinyBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -117,7 +117,7 @@ function stage1(spawn, creeps, population) {
 
 	//fallback to harvesters
 	if (!population.harvester || population.harvester < 20) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], tinyBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -174,7 +174,7 @@ function stage3(spawn, creeps, population) {
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -214,7 +214,7 @@ function stage3(spawn, creeps, population) {
 
 	//fallback to harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 20) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -232,7 +232,7 @@ function stage4(spawn, creeps, population) {
 
 	//spawn medium harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -319,7 +319,7 @@ function stage4(spawn, creeps, population) {
 
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
-			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT, UPGRADE], mediumBody, ['colonist'], {
+			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT], mediumBody, ['colonist'], {
 				TARGET: {
 					targetFlag: 'claimme',
 					stopInRoom: true
@@ -334,7 +334,7 @@ function stage4(spawn, creeps, population) {
 
 	//fallback to large harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], largeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -352,7 +352,7 @@ function stage5(spawn, creeps, population) {
 
 	//spawn medium harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 2) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -362,7 +362,7 @@ function stage5(spawn, creeps, population) {
 
 	//spawn large harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], largeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -450,7 +450,7 @@ function stage5(spawn, creeps, population) {
 
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
-			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT, UPGRADE], mediumBody, ['colonist'], {
+			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT], mediumBody, ['colonist'], {
 				TARGET: {
 					targetFlag: 'claimme',
 					stopInRoom: true
@@ -465,7 +465,7 @@ function stage5(spawn, creeps, population) {
 
 	//fallback to huge harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], hugeBody, ['harvester'], {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], hugeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
