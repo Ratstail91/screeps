@@ -106,7 +106,7 @@ function stage1(spawn, creeps, population) {
 	}
 
 	//spawn builders
-	if (!population.builder || population.builder < 5) {
+	if (!population.builder || population.builder < 10) {
 		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], tinyBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -240,7 +240,7 @@ function stage4(spawn, creeps, population) {
 
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
-			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT], mediumBody, ['colonist'], {
+			return spawnCreep(spawn, 'colonist', [CRY, TARGET, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['colonist'], {
 				TARGET: {
 					targetFlag: 'claimme',
 					stopInRoom: true
@@ -366,7 +366,7 @@ function stage5(spawn, creeps, population) {
 
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
-			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT], mediumBody, ['colonist'], {
+			return spawnCreep(spawn, 'colonist', [CRY, TARGET, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['colonist'], {
 				TARGET: {
 					targetFlag: 'claimme',
 					stopInRoom: true
@@ -414,7 +414,7 @@ function stage5(spawn, creeps, population) {
 		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
 	;
 
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 10000) {
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 5000) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -444,7 +444,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn large scouts
-	if (!population.scout || population.scout < 5) {
+	if (!population.scout || population.scout < 10) {
 		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
 			TARGET: {
 				targetFlag: 'rallypoint',
@@ -506,7 +506,7 @@ function stage8(spawn, creeps, population) {
 }
 
 function handleSpawn(spawn) {
-//console.log(JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
+//console.log(spawn.name, JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
 
 	//remove 'claimme' flag (this room has been claimed)
 	spawn.room.find(FIND_FLAGS, { filter: f => f.name == 'claimme'}).forEach(f => f.remove());
