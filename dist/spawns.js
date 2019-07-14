@@ -423,6 +423,7 @@ function stage5(spawn, creeps, population) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
 			TARGET: {
 				targetFlag: 'collectionpoint',
+				stopInRoom: true,
 				override: true
 			},
 			WITHDRAW: {

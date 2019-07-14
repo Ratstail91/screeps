@@ -36,7 +36,9 @@ function run(creep) {
 
 	//get the stores
 	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores)
-		.filter(store => !checkIsStoreFull(store));
+		.filter(store => !checkIsStoreFull(store))
+		.sort((a, b) => creep.pos.getRangeTo(a) - creep.pos.getRangeTo(b))
+	;
 
 	const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
 
