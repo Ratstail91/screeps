@@ -39,7 +39,9 @@ function getCreepsByOrigin(spawn) {
 
 //defensive towers near spawn
 function defendSpawn(spawn) {
-	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS);
+	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS)
+		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
+	;
 
 	if (hostiles.length == 0) {
 		return;

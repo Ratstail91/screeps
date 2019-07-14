@@ -2,11 +2,15 @@ const { BRAVE: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const pathStyle = { stroke: '#ff0000', opacity: 0.8 };
 
-function attackHostiles(creep, filter) {
+function attackHostileCreeps(creep, filter) {
 	const iAmRanged = creep.getActiveBodyparts(RANGED_ATTACK) > 0;
 
 	//handle hostiles based on a filter
-	const closestHostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, { filter: filter });
+	const hostileCreeps = creep.room.find(FIND_HOSTILE_CREEPS)
+		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
+	;
+
+	const closestHostile = creep.pos.findClosestByPath(hostileCreeps, { filter: filter });
 
 	if (closestHostile) {
 		const attackResult = iAmRanged ? creep.rangedAttack(closestHostile) : creep.attack(closestHostile);
@@ -27,9 +31,9 @@ function attackHostiles(creep, filter) {
 
 function run(creep) {
 	return (
-		attackHostiles(creep, (hostile) => hostile.getActiveBodyparts(HEAL) > 0) &&
-		attackHostiles(creep, (hostile) => hostile.getActiveBodyparts(ATTACK) + hostile.getActiveBodyparts(RANGED_ATTACK) > 0) &&
-		attackHostiles(creep, (hostile) => true)
+		attackHostileCreeps(creep, (hostile) => hostile.getActiveBodyparts(HEAL) > 0) &&
+		attackHostileCreeps(creep, (hostile) => hostile.getActiveBodyparts(ATTACK) + hostile.getActiveBodyparts(RANGED_ATTACK) > 0) &&
+		attackHostileCreeps(creep, (hostile) => true)
 	);
 }
 
