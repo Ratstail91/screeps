@@ -508,6 +508,9 @@ function stage8(spawn, creeps, population) {
 function handleSpawn(spawn) {
 //console.log(JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
 
+	//remove 'claimme' flag (this room has been claimed)
+	spawn.room.find(FIND_FLAGS, { filter: f => f.name == 'claimme'}).forEach(f => f.remove());
+
 	//build spawn
 	autoBuild(spawn, 'basic');
 
