@@ -184,7 +184,7 @@ function stage3(spawn, creeps, population) {
 
 	//spawn medium restockers
 	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
+		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
 	;
 
 	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
@@ -275,7 +275,7 @@ function stage4(spawn, creeps, population) {
 
 	//spawn medium restockers
 	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
+		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
 	;
 
 	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 2000) {
@@ -411,7 +411,7 @@ function stage5(spawn, creeps, population) {
 
 	//spawn medium restockers
 	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
+		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
 	;
 
 	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 5000) {
