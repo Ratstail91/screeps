@@ -5,7 +5,7 @@ const CONTAINER = 'CONTAINER';
 const STORAGE = 'STORAGE';
 const TOMBSTONE = 'TOMBSTONE';
 
-function getStores(creep, types) {
+function getStores(point, types) {
 	let result = [];
 
 	if (!types) {
@@ -15,37 +15,37 @@ function getStores(creep, types) {
 	types.forEach(type => {
 		switch(type) {
 			case TOWER:
-				result = result.concat(creep.room.find(FIND_STRUCTURES, { filter: structure =>
+				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_TOWER && structure.my
 				}));
 				break;
 
 			case SPAWN:
-				result = result.concat(creep.room.find(FIND_STRUCTURES, { filter: structure =>
+				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_SPAWN && structure.my
 				}));
 				break;
 
 			case EXTENSION:
-				result = result.concat(creep.room.find(FIND_STRUCTURES, { filter: structure =>
+				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_EXTENSION && structure.my
 				}));
 				break;
 
 			case CONTAINER:
-				result = result.concat(creep.room.find(FIND_STRUCTURES, { filter: structure =>
+				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_CONTAINER
 				}));
 				break;
 
 			case STORAGE:
-				result = result.concat(creep.room.find(FIND_STRUCTURES, { filter: structure =>
+				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_STORAGE
 				}));
 				break;
 
 			case TOMBSTONE:
-				result = result.concat(creep.room.find(FIND_TOMBSTONES));
+				result = result.concat(point.room.find(FIND_TOMBSTONES));
 				break;
 		}
 	});
