@@ -1,4 +1,5 @@
 const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
+const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, claimerBody } = require('spawns.bodies');
 const { TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TOMBSTONE } = require('utils.store');
 const { autoBuild, placeConstructionSites } = require('autobuilder');
 
@@ -6,7 +7,7 @@ const { serialize } = require('behaviour.fear');
 
 function spawnCreep(spawn, name, behaviours, body, tags, memory = {}) {
 	//TODO: add verification, part matching between behaviours and body
-	return spawn.spawnCreep(body, name + Game.time, { memory: Object.assign({}, memory, {
+	return spawn.spawnCreep(body, name + Game.time, { memory: _.merge(memory, {
 		behaviours: behaviours,
 		origin: spawn.name,
 		tags: tags
@@ -58,9 +59,6 @@ function kickstart(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//assume 300e available - tinybody is 250e
-	const tinyBody = [MOVE, MOVE, WORK, CARRY];
-
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
 		return spawnCreep(spawn, 'harvester', [CRY, PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, ['harvester', 'kickstartHarvester'], {
@@ -91,9 +89,6 @@ function kickstart(spawn, creeps, population) {
 function stage1(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//300e available - tinybody is 250e
-	const tinyBody = [MOVE, MOVE, WORK, CARRY];
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
@@ -134,10 +129,6 @@ function stage1(spawn, creeps, population) {
 function stage2(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//550e available
-	const smallLorryBody = [MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY]; //500
-	const smallFightBody = [TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK]; //500
 
 	//spawn scouts
 	if (!population.scout || population.scout < 2) {
@@ -180,17 +171,6 @@ function stage2(spawn, creeps, population) {
 function stage3(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//800e available
-	const mediumLorryBody = [ //800
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY
-	];
-
-	const mediumBody = [ //800
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK
-	];
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
@@ -249,54 +229,6 @@ function stage3(spawn, creeps, population) {
 function stage4(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//if not enough incoming energy to start this stage
-//	if (population.harvester < 20) {
-//		return kickstart(spawn, creeps, population);
-//	}
-
-	//1300e available
-	const largeBody = [ //1250
-		//50 * 11 = 550
-		MOVE, MOVE, MOVE, MOVE, MOVE,
-		MOVE, MOVE, MOVE, MOVE, MOVE,
-		MOVE,
-
-		//50 * 8 = 400
-		CARRY, CARRY, CARRY, CARRY, CARRY,
-		CARRY, CARRY, CARRY,
-
-		//3 * 100 = 300
-		WORK, WORK, WORK
-	];
-
-	const largeFightBody = [ //1200
-		//10 * 10 = 100
-		TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-		TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-
-		//50 * 13 = 650
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		MOVE, MOVE, MOVE,
-
-		//150 * 3 = 450
-		RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK
-	];
-
-	const mediumBody = [ //800
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK
-	];
-
-	const mediumLorryBody = [ //800
-		MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
-		CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY
-	];
-
-	const claimerBody = [
-		MOVE, CLAIM
-	];
 
 	//spawn medium harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
@@ -415,7 +347,133 @@ function stage4(spawn, creeps, population) {
 }
 
 function stage5(spawn, creeps, population) {
-	//
+	creeps = creeps || getCreepsByOrigin(spawn);
+	population = population || getPopulationByTags(creeps);
+
+	//spawn medium harvesters
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 2) {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn large harvesters
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn medium restockers
+	if (!population.restocker || population.restocker < 2) {
+		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true,
+				stores: [TOWER, SPAWN, EXTENSION]
+			},
+			WITHDRAW: {
+				skipOwnRoom: false,
+				stores: [TOMBSTONE, CONTAINER, STORAGE]
+			}
+		});
+	}
+
+	//spawn huge upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], hugeBody, ['upgrader']);
+	}
+
+	//spawn huge builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], hugeBody, ['builder'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn large scouts
+	if (!population.scout || population.scout < 5) {
+		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+			TARGET: {
+				targetFlag: 'rallypoint',
+				override: true
+			},
+			PATROL: {
+				targetFlags: [
+					`${spawn.name}remote0`,
+					`${spawn.name}remote1`,
+					`${spawn.name}remote2`,
+					`${spawn.name}remote3`
+				]
+			}
+		});
+	}
+
+	//spawn medium scavengers
+	if (!population.scavenger) {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+			TARGET: {
+				targetFlag: 'collectionpoint',
+				override: true
+			},
+			WITHDRAW: {
+				stores: [TOMBSTONE, STORAGE, CONTAINER]
+			},
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//check for 'claimme' flag
+	if (Game.flags['claimme']) {
+		//spawn 1 claimer
+		if (!population.claimer) {
+			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				}
+			});
+		}
+
+		//spawn medium colonists
+		if (!population.colonist || population.colonist < 10) {
+			return spawnCreep(spawn, 'colonist', [CRY, REPAIR, BUILD, HARVEST, TARGET, DEPOSIT, UPGRADE], mediumBody, ['colonist'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				},
+				DEPOSIT: {
+					forceIfNotEmpty: true,
+					returnHomeFirst: true
+				}
+			});
+		}
+	}
+
+	//fallback to huge harvesters
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], hugeBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//no fall through this time
+	return null;
 }
 
 function stage6(spawn, creeps, population) {
@@ -459,7 +517,7 @@ function handleSpawn(spawn) {
 	//stages 6, 7 & 8 are not yet implemented
 
 	if (spawn.room.energyCapacityAvailable >= 1800) {
-//		return stage5(spawn, creeps);
+		return stage5(spawn, creeps);
 	}
 
 	if (spawn.room.energyCapacityAvailable >= 1300) {
