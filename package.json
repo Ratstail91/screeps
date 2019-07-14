@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "grunt": "^1.0.4",
-    "grunt-screeps": "^1.4.0"
+    "grunt-screeps": "^1.4.0",
+    "lodash": "^4.17.14"
   }
 }
