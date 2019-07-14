@@ -12,7 +12,7 @@ function run(creep) {
 	}, creep.memory[BEHAVIOUR_NAME]);
 
 	//using _wasLocked to reduce the target number by 40% when not currently repairing it
-	wasLocked = creep.memory[BEHAVIOUR_NAME]._wasLocked;
+	const wasLocked = creep.memory[BEHAVIOUR_NAME]._wasLocked;
 	creep.memory[BEHAVIOUR_NAME]._wasLocked = false;
 
 	//can't repair on an empty stomach

@@ -182,8 +182,12 @@ function stage3(spawn, creeps, population) {
 		});
 	}
 
-	//spawn restockers
-	if (!population.restocker || population.restocker < 2) {
+	//spawn medium restockers
+	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
+		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
+	;
+
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -270,7 +274,11 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn medium restockers
-	if (!population.restocker || population.restocker < 2) {
+	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
+		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
+	;
+
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 2000) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -406,7 +414,7 @@ function stage5(spawn, creeps, population) {
 		.reduce((total, store) => store.store[RESOURCE_ENERGY], 0)
 	;
 
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 10000) {
 		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
