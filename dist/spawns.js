@@ -93,7 +93,7 @@ function stage1(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn harvesters
-	if (!population.harvester || population.harvester < 5) {
+	if (!population.harvester || population.harvester < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], tinyBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -103,12 +103,12 @@ function stage1(spawn, creeps, population) {
 	}
 
 	//spawn upgraders
-	if (!population.upgrader || population.upgrader < 2) {
+	if (!population.upgrader || population.upgrader < 5) {
 		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], tinyBody, ['upgrader']);
 	}
 
 	//spawn builders
-	if (!population.builder || population.builder < 10) {
+	if (!population.builder || population.builder < 5) {
 		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], tinyBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -132,38 +132,40 @@ function stage2(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//spawn scouts
-	if (!population.scout || population.scout < 2) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], smallFightBody, ['scout', 'combat'], {
-			TARGET: {
-				targetFlag: 'rallypoint',
-				override: true
-			},
-			PATROL: {
-				targetFlags: [
-					`${spawn.name}remote0`,
-					`${spawn.name}remote1`,
-					`${spawn.name}remote2`,
-					`${spawn.name}remote3`
-				]
-			}
-		});
-	}
+	//check for combat conditions
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {	//spawn scouts
+		if (!population.scout || population.scout < 2) {
+			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], smallFightBody, ['scout', 'combat'], {
+				TARGET: {
+					targetFlag: 'rallypoint',
+					override: true
+				},
+				PATROL: {
+					targetFlags: [
+						`${spawn.name}remote0`,
+						`${spawn.name}remote1`,
+						`${spawn.name}remote2`,
+						`${spawn.name}remote3`
+					]
+				}
+			});
+		}
 
-	//spawn scavengers
-	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
-			TARGET: {
-				targetFlag: 'rallypoint',
-				override: true
-			},
-			WITHDRAW: {
-				stores: [TOMBSTONE, STORAGE, CONTAINER]
-			},
-			DEPOSIT: {
-				returnHomeFirst: true
-			}
-		});
+		//spawn scavengers
+		if (!population.scavenger) {
+			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
+				TARGET: {
+					targetFlag: 'rallypoint',
+					override: true
+				},
+				WITHDRAW: {
+					stores: [TOMBSTONE, STORAGE, CONTAINER]
+				},
+				DEPOSIT: {
+					returnHomeFirst: true
+				}
+			});
+		}
 	}
 
 	//fall back to stage 1
@@ -174,9 +176,24 @@ function stage3(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//spawn harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
+	//spawn medium harvesters
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn medium upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 5) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], mediumBody, ['upgrader']);
+	}
+
+	//spawn medium builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -203,21 +220,6 @@ function stage3(spawn, creeps, population) {
 		});
 	}
 
-	//spawn upgraders
-	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], mediumBody, ['upgrader']);
-	}
-
-	//spawn builders
-	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['builder'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
 	//fallback to harvesters
 	if (!population.harvester || population.harvester - population.kickstartHarvester < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
@@ -235,6 +237,44 @@ function stage3(spawn, creeps, population) {
 function stage4(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
+
+	//check for combat conditions
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+		//spawn large scouts
+		if (!population.scout || population.scout < 5) {
+			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+				TARGET: {
+					targetFlag: 'rallypoint',
+					override: true
+				},
+				PATROL: {
+					targetFlags: [
+						`${spawn.name}remote0`,
+						`${spawn.name}remote1`,
+						`${spawn.name}remote2`,
+						`${spawn.name}remote3`
+					]
+				}
+			});
+		}
+
+		//spawn medium scavengers
+		if (!population.scavenger) {
+			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+				TARGET: {
+					targetFlag: 'collectionpoint',
+					override: true
+				},
+				WITHDRAW: {
+					stores: [TOMBSTONE, STORAGE, CONTAINER]
+				},
+				DEPOSIT: {
+					forceIfNotEmpty: true,
+					returnHomeFirst: true
+				}
+			});
+		}
+	}
 
 	//check for 'claimme' flag
 	if (Game.flags['claimme']) {
@@ -266,8 +306,23 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn medium harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], mediumBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn large upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 5) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], largeBody, ['upgrader']);
+	}
+
+	//spawn large builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], largeBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -294,58 +349,8 @@ function stage4(spawn, creeps, population) {
 		});
 	}
 
-	//spawn large upgraders
-	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], largeBody, ['upgrader']);
-	}
-
-	//spawn large builders
-	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], largeBody, ['builder'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
-	//spawn large scouts
-	if (!population.scout || population.scout < 5) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
-			TARGET: {
-				targetFlag: 'rallypoint',
-				override: true
-			},
-			PATROL: {
-				targetFlags: [
-					`${spawn.name}remote0`,
-					`${spawn.name}remote1`,
-					`${spawn.name}remote2`,
-					`${spawn.name}remote3`
-				]
-			}
-		});
-	}
-
-	//spawn medium scavengers
-	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
-			TARGET: {
-				targetFlag: 'collectionpoint',
-				override: true
-			},
-			WITHDRAW: {
-				stores: [TOMBSTONE, STORAGE, CONTAINER]
-			},
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
 	//fallback to large harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], largeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -361,6 +366,45 @@ function stage4(spawn, creeps, population) {
 function stage5(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
+
+	//check for combat conditions
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+		//spawn large scouts
+		if (!population.scout || population.scout < 10) {
+			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+				TARGET: {
+					targetFlag: 'rallypoint',
+					override: true
+				},
+				PATROL: {
+					targetFlags: [
+						`${spawn.name}remote0`,
+						`${spawn.name}remote1`,
+						`${spawn.name}remote2`,
+						`${spawn.name}remote3`
+					]
+				}
+			});
+		}
+
+		//spawn medium scavengers
+		if (!population.scavenger) {
+			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+				TARGET: {
+					targetFlag: 'collectionpoint',
+					stopInRoom: true,
+					override: true
+				},
+				WITHDRAW: {
+					stores: [TOMBSTONE, STORAGE, CONTAINER]
+				},
+				DEPOSIT: {
+					forceIfNotEmpty: true,
+					returnHomeFirst: true
+				}
+			});
+		}
+	}
 
 	//check for 'claimme' flag
 	if (Game.flags['claimme']) {
@@ -401,9 +445,24 @@ function stage5(spawn, creeps, population) {
 		});
 	}
 
-	//spawn large harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 5) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], largeBody, ['harvester'], {
+	//spawn huge harvesters
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], hugeBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//spawn huge upgraders
+	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 5) {
+		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], hugeBody, ['upgrader']);
+	}
+
+	//spawn huge builders
+	if (!population.builder || population.builder < 5) {
+		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], hugeBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
 				returnHomeFirst: true
@@ -430,59 +489,8 @@ function stage5(spawn, creeps, population) {
 		});
 	}
 
-	//spawn huge upgraders
-	if (!population.upgrader || population.upgrader - population.kickstartUpgrader < 2) {
-		return spawnCreep(spawn, 'upgrader', [CRY, HARVEST, UPGRADE], hugeBody, ['upgrader']);
-	}
-
-	//spawn huge builders
-	if (!population.builder || population.builder < 5) {
-		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], hugeBody, ['builder'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
-	//spawn large scouts
-	if (!population.scout || population.scout < 10) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
-			TARGET: {
-				targetFlag: 'rallypoint',
-				override: true
-			},
-			PATROL: {
-				targetFlags: [
-					`${spawn.name}remote0`,
-					`${spawn.name}remote1`,
-					`${spawn.name}remote2`,
-					`${spawn.name}remote3`
-				]
-			}
-		});
-	}
-
-	//spawn medium scavengers
-	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
-			TARGET: {
-				targetFlag: 'collectionpoint',
-				stopInRoom: true,
-				override: true
-			},
-			WITHDRAW: {
-				stores: [TOMBSTONE, STORAGE, CONTAINER]
-			},
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
 	//fallback to huge harvesters
-	if (!population.harvester || population.harvester - population.kickstartHarvester < 10) {
+	if (!population.harvester || population.harvester - population.kickstartHarvester < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST], hugeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
