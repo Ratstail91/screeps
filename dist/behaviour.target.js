@@ -17,7 +17,7 @@ function run(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		stopInRoom: false,
 		targetFlag: null,
-		override: false,
+		override: true,
 		_lastPath: null,
 		_lastPathTime: null,
 		_correctRoom: false

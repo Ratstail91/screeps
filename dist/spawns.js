@@ -144,40 +144,36 @@ function stage2(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//check for combat conditions
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {	//spawn scouts
-		if (!population.scout || population.scout < 2) {
-			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], smallFightBody, ['scout', 'combat'], {
-				TARGET: {
-					targetFlag: 'rallypoint',
-					override: true
-				},
-				PATROL: {
-					targetFlags: [
-						`${spawn.name}remote0`,
-						`${spawn.name}remote1`,
-						`${spawn.name}remote2`,
-						`${spawn.name}remote3`
-					]
-				}
-			});
-		}
+	//spawn scouts
+	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], smallFightBody, ['scout', 'combat'], {
+			TARGET: {
+				targetFlag: 'rallypoint'
+			},
+			PATROL: {
+				targetFlags: [
+					`${spawn.name}remote0`,
+					`${spawn.name}remote1`,
+					`${spawn.name}remote2`,
+					`${spawn.name}remote3`
+				]
+			}
+		});
+	}
 
-		//spawn scavengers
-		if (!population.scavenger) {
-			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
-				TARGET: {
-					targetFlag: 'rallypoint',
-					override: true
-				},
-				WITHDRAW: {
-					stores: [TOMBSTONE, STORAGE, CONTAINER]
-				},
-				DEPOSIT: {
-					returnHomeFirst: true
-				}
-			});
-		}
+	//spawn scavengers
+	if (!population.scavenger) {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
+			TARGET: {
+				targetFlag: 'collectionpoint'
+			},
+			WITHDRAW: {
+				stores: [TOMBSTONE, STORAGE, CONTAINER]
+			},
+			DEPOSIT: {
+				returnHomeFirst: true
+			}
+		});
 	}
 
 	//fall back to stage 1
@@ -231,42 +227,37 @@ function stage4(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//check for combat conditions
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
-		//spawn large scouts
-		if (!population.scout || population.scout < 5) {
-			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
-				TARGET: {
-					targetFlag: 'rallypoint',
-					override: true
-				},
-				PATROL: {
-					targetFlags: [
-						`${spawn.name}remote0`,
-						`${spawn.name}remote1`,
-						`${spawn.name}remote2`,
-						`${spawn.name}remote3`
-					]
-				}
-			});
-		}
+	//spawn large scouts
+	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+			TARGET: {
+				targetFlag: 'rallypoint'
+			},
+			PATROL: {
+				targetFlags: [
+					`${spawn.name}remote0`,
+					`${spawn.name}remote1`,
+					`${spawn.name}remote2`,
+					`${spawn.name}remote3`
+				]
+			}
+		});
+	}
 
-		//spawn medium scavengers
-		if (!population.scavenger) {
-			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
-				TARGET: {
-					targetFlag: 'collectionpoint',
-					override: true
-				},
-				WITHDRAW: {
-					stores: [TOMBSTONE, STORAGE, CONTAINER]
-				},
-				DEPOSIT: {
-					forceIfNotEmpty: true,
-					returnHomeFirst: true
-				}
-			});
-		}
+	//spawn medium scavengers
+	if (!population.scavenger) {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+			TARGET: {
+				targetFlag: 'collectionpoint'
+			},
+			WITHDRAW: {
+				stores: [TOMBSTONE, STORAGE, CONTAINER]
+			},
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
 	}
 
 	//check for 'claimme' flag
@@ -341,43 +332,38 @@ function stage5(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//check for combat conditions
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
-		//spawn large scouts
-		if (!population.scout || population.scout < 5) {
-			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
-				TARGET: {
-					targetFlag: 'rallypoint',
-					override: true
-				},
-				PATROL: {
-					targetFlags: [
-						`${spawn.name}remote0`,
-						`${spawn.name}remote1`,
-						`${spawn.name}remote2`,
-						`${spawn.name}remote3`
-					]
-				}
-			});
-		}
+	//spawn large scouts
+	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+			TARGET: {
+				targetFlag: 'rallypoint'
+			},
+			PATROL: {
+			targetFlags: [
+					`${spawn.name}remote0`,
+					`${spawn.name}remote1`,
+					`${spawn.name}remote2`,
+					`${spawn.name}remote3`
+				]
+			}
+		});
+	}
 
-		//spawn medium scavengers
-		if (!population.scavenger) {
-			return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
-				TARGET: {
-					targetFlag: 'collectionpoint',
-					stopInRoom: true,
-					override: true
-				},
-				WITHDRAW: {
-					stores: [TOMBSTONE, STORAGE, CONTAINER]
-				},
-				DEPOSIT: {
-					forceIfNotEmpty: true,
-					returnHomeFirst: true
-				}
-			});
-		}
+	//spawn medium scavengers
+	if (!population.scavenger) {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+			TARGET: {
+				targetFlag: 'collectionpoint',
+				stopInRoom: true
+			},
+			WITHDRAW: {
+				stores: [TOMBSTONE, STORAGE, CONTAINER]
+			},
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
 	}
 
 	//check for 'claimme' flag
