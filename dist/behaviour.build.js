@@ -34,7 +34,7 @@ function run(creep) {
 		return false;
 	} else if (buildResult == ERR_NOT_IN_RANGE) {
 		//TODO: move to closest?
-		creep.moveTo(constructionSite, { reusePath: REUSE_PATH, visalizePathStyle: pathStyle });
+		creep.moveTo(constructionSite, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
 	}
 
