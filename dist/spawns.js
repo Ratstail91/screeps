@@ -176,6 +176,25 @@ function stage3(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
+	//spawn medium restockers
+	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
+		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
+	;
+
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
+		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true,
+				stores: [TOWER, SPAWN, EXTENSION]
+			},
+			WITHDRAW: {
+				skipOwnRoom: false,
+				stores: [TOMBSTONE, CONTAINER, STORAGE]
+			}
+		});
+	}
+
 	//spawn medium harvesters
 	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
@@ -201,6 +220,24 @@ function stage3(spawn, creeps, population) {
 		});
 	}
 
+	//fallback to harvesters
+	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
+		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true
+			}
+		});
+	}
+
+	//fallback to stage 2 for combat types
+	return stage2(spawn, creeps, population);
+}
+
+function stage4(spawn, creeps, population) {
+	creeps = creeps || getCreepsByOrigin(spawn);
+	population = population || getPopulationByTags(creeps);
+
 	//spawn medium restockers
 	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
 		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
@@ -219,24 +256,6 @@ function stage3(spawn, creeps, population) {
 			}
 		});
 	}
-
-	//fallback to harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
-		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true
-			}
-		});
-	}
-
-	//fallback to stage 2 for combat types
-	return stage2(spawn, creeps, population);
-}
-
-function stage4(spawn, creeps, population) {
-	creeps = creeps || getCreepsByOrigin(spawn);
-	population = population || getPopulationByTags(creeps);
 
 	//check for combat conditions
 	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
@@ -280,6 +299,16 @@ function stage4(spawn, creeps, population) {
 	if (Game.flags['claimme']) {
 		let population = getPopulationByTags(getCreepsByOrigin(null));
 
+		//spawn 1 claimer
+		if (!population.claimer) {
+			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				}
+			});
+		}
+
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
 			return spawnCreep(spawn, 'colonist', [CRY, TARGET, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['colonist'], {
@@ -290,16 +319,6 @@ function stage4(spawn, creeps, population) {
 				DEPOSIT: {
 					forceIfNotEmpty: true,
 					returnHomeFirst: true
-				}
-			});
-		}
-
-		//spawn 1 claimer
-		if (!population.claimer) {
-			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
-				TARGET: {
-					targetFlag: 'claimme',
-					stopInRoom: true
 				}
 			});
 		}
@@ -330,25 +349,6 @@ function stage4(spawn, creeps, population) {
 		});
 	}
 
-	//spawn medium restockers
-	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
-	;
-
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 2000) {
-		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true,
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipOwnRoom: false,
-				stores: [TOMBSTONE, CONTAINER, STORAGE]
-			}
-		});
-	}
-
 	//fallback to large harvesters
 	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
@@ -367,10 +367,29 @@ function stage5(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
+	//spawn medium restockers
+	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
+		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
+	;
+
+	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
+		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
+			DEPOSIT: {
+				forceIfNotEmpty: true,
+				returnHomeFirst: true,
+				stores: [TOWER, SPAWN, EXTENSION]
+			},
+			WITHDRAW: {
+				skipOwnRoom: false,
+				stores: [TOMBSTONE, CONTAINER, STORAGE]
+			}
+		});
+	}
+
 	//check for combat conditions
 	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		//spawn large scouts
-		if (!population.scout || population.scout < 10) {
+		if (!population.scout || population.scout < 5) {
 			return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
 				TARGET: {
 					targetFlag: 'rallypoint',
@@ -410,6 +429,16 @@ function stage5(spawn, creeps, population) {
 	if (Game.flags['claimme']) {
 		let population = getPopulationByTags(getCreepsByOrigin(null));
 
+		//spawn 1 claimer
+		if (!population.claimer) {
+			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
+				TARGET: {
+					targetFlag: 'claimme',
+					stopInRoom: true
+				}
+			});
+		}
+
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
 			return spawnCreep(spawn, 'colonist', [CRY, TARGET, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['colonist'], {
@@ -420,16 +449,6 @@ function stage5(spawn, creeps, population) {
 				DEPOSIT: {
 					forceIfNotEmpty: true,
 					returnHomeFirst: true
-				}
-			});
-		}
-
-		//spawn 1 claimer
-		if (!population.claimer) {
-			return spawnCreep(spawn, 'claimer', [TARGET, CLAIMER], claimerBody, ['claimer'], {
-				TARGET: {
-					targetFlag: 'claimme',
-					stopInRoom: true
 				}
 			});
 		}
@@ -446,7 +465,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn huge harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
+	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 5) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], hugeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -470,25 +489,6 @@ function stage5(spawn, creeps, population) {
 		});
 	}
 
-	//spawn medium restockers
-	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
-	;
-
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 5000) {
-		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true,
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipOwnRoom: false,
-				stores: [TOMBSTONE, CONTAINER, STORAGE]
-			}
-		});
-	}
-
 	//fallback to huge harvesters
 	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], hugeBody, ['harvester'], {
@@ -504,15 +504,16 @@ function stage5(spawn, creeps, population) {
 }
 
 function stage6(spawn, creeps, population) {
-	//
+	//fallback for now
+	return stage5(spawn, creeps, population);
 }
 
 function stage7(spawn, creeps, population) {
-	//
+	//TODO
 }
 
 function stage8(spawn, creeps, population) {
-	//
+	//TODO
 }
 
 function handleSpawn(spawn) {
@@ -523,10 +524,6 @@ function handleSpawn(spawn) {
 
 	//build spawn
 	autoBuild(spawn, 'basic');
-
-	if (spawn.room.controller.level >= 4 && !Game.time % 10 == 0) {
-		placeConstructionSites(spawn, require('schematic.basicramparts'));
-	}
 
 	//defend the spawn!
 	defendSpawn(spawn);
@@ -544,7 +541,11 @@ function handleSpawn(spawn) {
 		return kickstart(spawn);
 	}
 
-	//stages 6, 7 & 8 are not yet implemented
+	//stages 7 & 8 are not yet implemented
+
+	if (spawn.room.energyCapacityAvailable >= 2300) {
+		return stage6(spawn, creeps);
+	}
 
 	if (spawn.room.energyCapacityAvailable >= 1800) {
 		return stage5(spawn, creeps);
