@@ -62,6 +62,20 @@ const hugeBody = [ //1800
 	WORK, WORK, WORK, WORK
 ];
 
+const hugeSlowBody = [ //1800
+	//50 * 6 = 300
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+	MOVE,
+
+	//50 * 10 = 500
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+
+	//100 * 10 = 1000
+	WORK, WORK, WORK, WORK, WORK,
+	WORK, WORK, WORK, WORK, WORK,
+];
+
 //specialized bodies
 const claimerBody = [
 	MOVE, CLAIM
@@ -80,6 +94,7 @@ module.exports = {
 	largeFightBody: largeFightBody,
 
 	hugeBody: hugeBody,
+	hugeSlowBody: hugeSlowBody,
 
 	claimerBody: claimerBody
 };

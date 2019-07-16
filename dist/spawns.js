@@ -1,5 +1,5 @@
 const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
-const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, claimerBody } = require('spawns.bodies');
+const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, hugeSlowBody, claimerBody } = require('spawns.bodies');
 const { getStores, TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TOMBSTONE } = require('utils.store');
 const { autoBuild, placeConstructionSites } = require('autobuilder');
 
@@ -60,6 +60,18 @@ function kickstart(spawn, creeps, population) {
 
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
+
+	//if the room has a storage that can be used
+	if (spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= 100) {
+		return spawnCreep(spawn, 'restocker', [DEPOSIT, WITHDRAW], tinyBody, ['restocker', 'kickstartRestocker'], {
+			DEPOSIT: {
+				stores: [TOWER, SPAWN, EXTENSION]
+			},
+			WITHDRAW: {
+				stores: [CONTAINER, STORAGE]
+			}
+		});
+	}
 
 	//spawn harvesters
 	if (!population.harvester || population.harvester < 5) {
@@ -447,6 +459,21 @@ function stage5(spawn, creeps, population) {
 }
 
 function stage6(spawn, creeps, population) {
+	creeps = creeps || getCreepsByOrigin(spawn);
+	population = population || getPopulationByTags(creeps);
+
+	//spawn home-builders for building the terminal
+	const terminals = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TERMINAL });
+
+	if ((!population.bespokeBuilder || population.bespokeBuilder < 2) && terminals.length == 0) {
+		return spawnCreep(spawn, 'bespokeBuilder', [WITHDRAW, BUILD, DEPOSIT], hugeSlowBody, ['builder', 'bespokeBuilder'], {
+			WITHDRAW: {
+				skipIfNotEmpty: true,
+				stores: [STORAGE]
+			}
+		});
+	}
+
 	//fallback for now
 	return stage5(spawn, creeps, population);
 }

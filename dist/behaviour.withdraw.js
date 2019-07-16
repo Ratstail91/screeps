@@ -11,7 +11,7 @@ function run(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		skipIfNotEmpty: false,
 		forceIfNotFull: false,
-		skipOwnRoom: true,
+		skipOwnRoom: false,
 		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
 
