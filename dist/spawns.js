@@ -146,7 +146,7 @@ function stage2(spawn, creeps, population) {
 
 	//spawn scouts
 	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], smallFightBody, ['scout', 'combat'], {
+		return spawnCreep(spawn, 'scout', [TARGET, BRAVE, CARE, PATROL], smallFightBody, ['scout', 'combat'], {
 			TARGET: {
 				targetFlag: 'rallypoint'
 			},
@@ -229,7 +229,7 @@ function stage4(spawn, creeps, population) {
 
 	//spawn large scouts
 	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+		return spawnCreep(spawn, 'scout', [TARGET, BRAVE, CARE, PATROL], largeFightBody, ['scout', 'combat'], {
 			TARGET: {
 				targetFlag: 'rallypoint'
 			},
@@ -334,7 +334,7 @@ function stage5(spawn, creeps, population) {
 
 	//spawn large scouts
 	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
-		return spawnCreep(spawn, 'scout', [BRAVE, CARE, TARGET, PATROL], largeFightBody, ['scout', 'combat'], {
+		return spawnCreep(spawn, 'scout', [TARGET, BRAVE, CARE, PATROL], largeFightBody, ['scout', 'combat'], {
 			TARGET: {
 				targetFlag: 'rallypoint'
 			},
