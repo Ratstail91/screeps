@@ -176,25 +176,6 @@ function stage3(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	//spawn medium restockers
-	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
-	;
-
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
-		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true,
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipOwnRoom: false,
-				stores: [TOMBSTONE, CONTAINER, STORAGE]
-			}
-		});
-	}
-
 	//spawn medium harvesters
 	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
 		return spawnCreep(spawn, 'harvester', [CRY, DEPOSIT, HARVEST, UPGRADE], mediumBody, ['harvester'], {
@@ -237,25 +218,6 @@ function stage3(spawn, creeps, population) {
 function stage4(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//spawn medium restockers
-	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
-	;
-
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
-		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true,
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipOwnRoom: false,
-				stores: [TOMBSTONE, CONTAINER, STORAGE]
-			}
-		});
-	}
 
 	//check for combat conditions
 	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
@@ -366,25 +328,6 @@ function stage4(spawn, creeps, population) {
 function stage5(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
-
-	//spawn medium restockers
-	const totalSpareEnergy = getStores(spawn, [CONTAINER, STORAGE])
-		.reduce((total, store) => total + store.store[RESOURCE_ENERGY], 0)
-	;
-
-	if ((!population.restocker || population.restocker < 2) && totalSpareEnergy >= 1000) {
-		return spawnCreep(spawn, 'restocker', [CRY, DEPOSIT, WITHDRAW], mediumLorryBody, ['restocker'], {
-			DEPOSIT: {
-				forceIfNotEmpty: true,
-				returnHomeFirst: true,
-				stores: [TOWER, SPAWN, EXTENSION]
-			},
-			WITHDRAW: {
-				skipOwnRoom: false,
-				stores: [TOMBSTONE, CONTAINER, STORAGE]
-			}
-		});
-	}
 
 	//check for combat conditions
 	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
