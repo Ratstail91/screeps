@@ -3,6 +3,7 @@ const SPAWN = 'SPAWN';
 const EXTENSION = 'EXTENSION';
 const CONTAINER = 'CONTAINER';
 const STORAGE = 'STORAGE';
+const TERMINAL = 'TERMINAL';
 const TOMBSTONE = 'TOMBSTONE';
 
 function getStores(point, types) {
@@ -44,6 +45,12 @@ function getStores(point, types) {
 				}));
 				break;
 
+			case TERMINAL:
+				result = result.concat(point.room.find(FIND_STRUCTURES, {filter: structure =>
+					structure.structureType == STRUCTURE_TERMINAL
+				}));
+				break;
+
 			case TOMBSTONE:
 				result = result.concat(point.room.find(FIND_TOMBSTONES));
 				break;
@@ -67,7 +74,7 @@ function checkIsStoreEmpty(store) {
 
 		case STRUCTURE_CONTAINER:
 		case STRUCTURE_STORAGE:
-		case TOMBSTONE:
+		case STRUCTURE_TERMINAL:
 			return _.sum(store.store) == 0;
 
 		default:
@@ -89,6 +96,7 @@ function checkIsStoreFull(store) {
 
 		case STRUCTURE_CONTAINER:
 		case STRUCTURE_STORAGE:
+		case STRUCTURE_TERMINAL:
 			return _.sum(store.store) == store.storeCapacity;
 
 		default:
@@ -102,6 +110,7 @@ module.exports = {
 	EXTENSION: EXTENSION,
 	CONTAINER: CONTAINER,
 	STORAGE: STORAGE,
+	TERMINAL: TERMINAL,
 	TOMBSTONE: TOMBSTONE,
 
 	getStores: getStores,

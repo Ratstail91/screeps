@@ -12,5 +12,5 @@ module.exports =
 	{ "x": -3, "y": 5, "structureType": "extension"},
 	{ "x": -2, "y": 6, "structureType": "extension"},
 
-	{ "x": 0, "y": 6, "structureType": "terminal"}
+	{ "x": 4, "y": 4, "structureType": "terminal"}
 ]
