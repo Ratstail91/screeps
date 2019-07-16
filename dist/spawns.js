@@ -108,7 +108,7 @@ function stage1(spawn, creeps, population) {
 	}
 
 	//spawn builders
-	if (!population.builder || population.builder < 5) {
+	if (!population.builder || population.builder < 10) {
 		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], tinyBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -211,7 +211,7 @@ function stage3(spawn, creeps, population) {
 	}
 
 	//spawn medium builders
-	if (!population.builder || population.builder < 5) {
+	if (!population.builder || population.builder < 10) {
 		return spawnCreep(spawn, 'builder', [CRY, REPAIR, BUILD, DEPOSIT, HARVEST], mediumBody, ['builder'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
