@@ -31,8 +31,8 @@ function attackHostileCreeps(creep, filter) {
 
 function run(creep) {
 	return (
-		attackHostileCreeps(creep, (hostile) => hostile.getActiveBodyparts(HEAL) > 0) &&
 		attackHostileCreeps(creep, (hostile) => hostile.getActiveBodyparts(ATTACK) + hostile.getActiveBodyparts(RANGED_ATTACK) > 0) &&
+		attackHostileCreeps(creep, (hostile) => hostile.getActiveBodyparts(HEAL) > 0) &&
 		attackHostileCreeps(creep, (hostile) => true)
 	);
 }
