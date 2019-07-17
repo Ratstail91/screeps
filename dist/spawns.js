@@ -461,7 +461,7 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//fallback to large harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
+	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 30) {
 		return spawnCreep(spawn, 'harvester', [CRY, FEAR, DEPOSIT, HARVEST, UPGRADE], largeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
@@ -620,7 +620,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//fallback to huge harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
+	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 30) {
 		return spawnCreep(spawn, 'harvester', [CRY, FEAR, DEPOSIT, HARVEST, UPGRADE], hugeBody, ['harvester'], {
 			DEPOSIT: {
 				forceIfNotEmpty: true,
