@@ -166,7 +166,7 @@ function stage2(spawn, creeps, population) {
 
 	//spawn scavengers
 	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], smallLorryBody, ['scavenger'], {
 			TARGET: {
 				targetFlag: 'collectionpoint'
 			},
@@ -206,7 +206,7 @@ function stage3(spawn, creeps, population) {
 
 	//spawn scavengers
 	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], smallLorryBody, ['scavenger'], {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], smallLorryBody, ['scavenger'], {
 			TARGET: {
 				targetFlag: 'collectionpoint'
 			},
@@ -281,7 +281,7 @@ function stage4(spawn, creeps, population) {
 
 	//spawn medium scavengers
 	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], mediumLorryBody, ['scavenger'], {
 			TARGET: {
 				targetFlag: 'collectionpoint'
 			},
@@ -386,7 +386,7 @@ function stage5(spawn, creeps, population) {
 
 	//spawn medium scavengers
 	if (!population.scavenger) {
-		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, WITHDRAW, DEPOSIT], mediumLorryBody, ['scavenger'], {
+		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], mediumLorryBody, ['scavenger'], {
 			TARGET: {
 				targetFlag: 'collectionpoint',
 				stopInRoom: true
