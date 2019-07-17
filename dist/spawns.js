@@ -3,6 +3,8 @@ const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, l
 const { getStores, TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, TOMBSTONE } = require('utils.store');
 const { autoBuild, placeConstructionSites } = require('autobuilder');
 
+const market = require('market');
+
 const { serialize } = require('behaviour.fear');
 
 function spawnCreep(spawn, name, behaviours, body, tags, memory = {}) {
@@ -677,6 +679,12 @@ function handleSpawn(spawn) {
 
 	//defend the spawn!
 	defendSpawn(spawn);
+
+	//sell stuff
+	const terminals = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TERMINAL });
+	if (terminals.length !== 0) {
+		market(terminals[0]);
+	}
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
