@@ -25,10 +25,20 @@ function run(terminal) {
 		return;
 	}
 
-	//sort to find the lowest cost
-	buyOrders = buyOrders.sort((a, b) => a.cost - b.cost);
+	//sort to find the lowest cost vs. price
+	buyOrders = buyOrders.sort((a, b) => a.cost/a.price - b.cost/b.price);
 
-	Game.market.deal(buyOrders[0].id, buyOrders.remainingAmount, terminal.room.name);
+	//too expensive, not worth it (just log it for now and accept it)
+	console.log('buyOrder:', buyOrder[0].cost, buyOrder[0].price, buyOrders[0].cost / buyOrders[0].price);
+//	if (buyOrders[0].cost / buyOrders[0].price > ???) {
+//		return;
+//	}
+
+	const res = Game.market.deal(buyOrders[0].id, buyOrders.remainingAmount, terminal.room.name);
+
+	if (res != OK) {
+		throw new Error(`Unknown error in the market: ${res}`);
+	}
 }
 
 module.exports = run;
