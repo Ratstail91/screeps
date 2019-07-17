@@ -1,4 +1,4 @@
-const { handleBehaviours } = require('behaviours');
+const { initializeBehaviours, handleBehaviours } = require('behaviours');
 
 const top = require('behaviour.top');
 const bottom = require('behaviour.bottom');
@@ -6,6 +6,7 @@ const bottom = require('behaviour.bottom');
 function handleCreep(creep) {
 	//not ready yet
 	if (creep.spawning) {
+		initializeBehaviours(creep);
 		return;
 	}
 

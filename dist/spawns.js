@@ -2,7 +2,6 @@ const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARG
 const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, hugeSlowBody, claimerBody } = require('spawns.bodies');
 const { getStores, TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, TOMBSTONE } = require('utils.store');
 const { autoBuild } = require('autobuilder');
-const { initializeBehaviours } = require('behaviours');
 
 const market = require('market');
 
@@ -698,8 +697,6 @@ function handleSpawn(spawn) {
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
-		//before skipping, initialize the new creep
-		initializeBehaviours(Game.creeps[spawn.spawning.name]);
 		return;
 	}
 
