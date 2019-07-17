@@ -5,7 +5,7 @@ const { REUSE_PATH } = require('constants');
 const pathStyle = { stroke: '#ff00ff' };
 
 function serialize(func) {
-	return func.toString();
+	return func.toString().replace(/[\t\n\r]/g, '');
 }
 
 function deserialize(str) {
