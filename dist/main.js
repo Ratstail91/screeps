@@ -1,5 +1,5 @@
 const handleSpawn = require('spawns');
-const handleCreep = require('creeps');
+const { handleCreep } = require('creeps');
 const profiler = require('screeps.profiler');
 
 profiler.enable();
