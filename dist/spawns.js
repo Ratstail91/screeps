@@ -217,6 +217,7 @@ function stage2(spawn, creeps, population) {
 		});
 	}
 
+/*
 	//spawn scavengers
 	if (!population.scavenger) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], smallLorryBody, ['scavenger'], {
@@ -231,6 +232,7 @@ function stage2(spawn, creeps, population) {
 			}
 		});
 	}
+*/
 
 	//fall back to stage 1
 	return stage1(spawn, creeps, population);
@@ -257,6 +259,7 @@ function stage3(spawn, creeps, population) {
 		});
 	}
 
+/*
 	//spawn scavengers
 	if (!population.scavenger) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], smallLorryBody, ['scavenger'], {
@@ -271,6 +274,7 @@ function stage3(spawn, creeps, population) {
 			}
 		});
 	}
+*/
 
 	//spawn medium harvesters
 	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
@@ -361,6 +365,7 @@ function stage4(spawn, creeps, population) {
 		});
 	}
 
+/*
 	//spawn medium scavengers
 	if (!population.scavenger) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], mediumLorryBody, ['scavenger'], {
@@ -376,6 +381,7 @@ function stage4(spawn, creeps, population) {
 			}
 		});
 	}
+*/
 
 	//check for 'claimme' flag
 	if (Game.flags['claimme']) {
@@ -502,6 +508,7 @@ function stage5(spawn, creeps, population) {
 		});
 	}
 
+/*
 	//spawn medium scavengers
 	if (!population.scavenger) {
 		return spawnCreep(spawn, 'scavenger', [CRY, TARGET, PICKUP, DEPOSIT, WITHDRAW], mediumLorryBody, ['scavenger'], {
@@ -518,6 +525,7 @@ function stage5(spawn, creeps, population) {
 			}
 		});
 	}
+*/
 
 	//check for 'claimme' flag
 	if (Game.flags['claimme']) {
