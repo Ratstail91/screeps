@@ -11,7 +11,7 @@ function run(creep) {
 		creep.memory[HARVEST]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
-			return harvest(creep);
+			return harvest.run(creep);
 		}
 	}
 
@@ -20,7 +20,7 @@ function run(creep) {
 		creep.memory[UPGRADE]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
-			return upgrade(creep);
+			return upgrade.run(creep);
 		}
 	}
 
@@ -29,7 +29,7 @@ function run(creep) {
 		creep.memory[BUILD]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
-			return build(creep);
+			return build.run(creep);
 		}
 	}
 
@@ -38,7 +38,7 @@ function run(creep) {
 		creep.memory[REPAIR]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
-			return repair(creep);
+			return repair.run(creep);
 		}
 	}
 

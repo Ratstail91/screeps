@@ -12,15 +12,16 @@ function deserialize(str) {
 	return new Function('return ' + str)();
 }
 
-function run(creep) {
-	//initialize new creeps
+function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		returnHome: false,
-		onSafe: '(creep) => null',
+		onSafe: 'creep => null',
 		_runningHome: false,
 		_sawLastTick: false
 	}, creep.memory[BEHAVIOUR_NAME]);
+}
 
+function run(creep) {
 	const originSpawn = Game.spawns[creep.memory.origin];
 
 	//if you're running home
@@ -43,10 +44,10 @@ function run(creep) {
 	if (hostiles.length == 0) {
 		//if saw last tick (moved into new room?)
 		if (creep.memory[BEHAVIOUR_NAME]._sawLastTick) {
+			creep.memory[BEHAVIOUR_NAME]._sawLastTick = false;
 			if (creep.memory[BEHAVIOUR_NAME].onSafe) {
 				deserialize(creep.memory[BEHAVIOUR_NAME].onSafe)(creep);
 			}
-			creep.memory[BEHAVIOUR_NAME]._sawLastTick = false;
 		}
 		return true;
 	}
@@ -66,6 +67,7 @@ function run(creep) {
 }
 
 module.exports = {
+	init: init,
 	run: run,
 	serialize: serialize,
 	deserialize: deserialize

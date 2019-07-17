@@ -4,12 +4,13 @@ const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
-function run(creep) {
-	//initialize new creeps
+function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
+}
 
+function run(creep) {
 	//can't build on an empty stomach
 	if (_.sum(creep.carry) == 0) {
 		return true;
@@ -41,4 +42,7 @@ function run(creep) {
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: buildResult ${buildResult}`);
 }
 
-module.exports = run;
+module.exports = {
+	init: init,
+	run: run
+};

@@ -1,4 +1,4 @@
-const handleBehaviours = require('behaviours');
+const { handleBehaviours } = require('behaviours');
 
 const top = require('behaviour.top');
 const bottom = require('behaviour.bottom');

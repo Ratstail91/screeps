@@ -10,10 +10,7 @@ const pathStyle = {
 	opacity: .1
 };
 
-function run(creep) {
-	//NOTE: does not handle flags moving correctly, and pauses on the flags for a tick
-
-	//initialize new creeps
+function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		stopInRoom: false,
 		targetFlags: null,
@@ -21,6 +18,10 @@ function run(creep) {
 		_lastPath: null,
 		_lastPathTime: null
 	}, creep.memory[BEHAVIOUR_NAME]);
+}
+
+function run(creep) {
+	//NOTE: does not handle flags moving correctly, and pauses on the flags for a tick
 
 	//get the flag || undefined
 	const targetCounter = creep.memory[BEHAVIOUR_NAME]._targetCounter;
@@ -79,4 +80,7 @@ function run(creep) {
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
 }
 
-module.exports = run;
+module.exports = {
+	init: init,
+	run: run
+};

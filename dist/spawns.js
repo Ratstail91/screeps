@@ -1,10 +1,12 @@
 const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
 const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, hugeSlowBody, claimerBody } = require('spawns.bodies');
 const { getStores, TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, TOMBSTONE } = require('utils.store');
-const { autoBuild, placeConstructionSites } = require('autobuilder');
+const { autoBuild } = require('autobuilder');
+const { initializeBehaviours } = require('behaviours');
 
 const market = require('market');
 
+//TODO: remove this
 const { serialize } = require('behaviour.fear');
 
 function spawnCreep(spawn, name, behaviours, body, tags, memory = {}) {
@@ -696,6 +698,8 @@ function handleSpawn(spawn) {
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
+		//before skipping, initialize the new creep
+		initializeBehaviours(Game.creeps[spawn.spawning.name]);
 		return;
 	}
 

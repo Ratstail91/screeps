@@ -5,14 +5,15 @@ const { countRemotes } = require('utils.remotes');
 
 const pathStyle = { stroke: '#ff00ff' };
 
-function run(creep) {
-	//initialize new creeps
+function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		remote: null,
 		source: null,
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
+}
 
+function run(creep) {
 	//if belly is full, pass the logic to the next behaviour
 	if (_.sum(creep.carry) == creep.carryCapacity) {
 		return true;
@@ -74,4 +75,7 @@ function run(creep) {
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: harvestResults ${harvestResults}`);
 }
 
-module.exports = run;
+module.exports = {
+	init: init,
+	run: run
+};

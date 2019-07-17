@@ -6,15 +6,16 @@ const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
-function run(creep) {
-	//initialize new creeps
+function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		skipIfNotEmpty: false,
 		forceIfNotFull: false,
 		skipOwnRoom: false,
 		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
+}
 
+function run(creep) {
 	//skip withdrawing if not empty
 	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && !creep.memory[BEHAVIOUR_NAME].forceIfNotFull && _.sum(creep.carry) > 0) {
 		return true;
@@ -64,4 +65,7 @@ function run(creep) {
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: transferResult ${transferResult}, stores length ${stores.length}, my controller ${creep.room.controller.my}`);
 }
 
-module.exports = run;
+module.exports = {
+	init: init,
+	run: run
+};
