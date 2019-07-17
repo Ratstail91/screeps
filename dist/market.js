@@ -2,7 +2,7 @@
 function run(terminal) {
 	//find energy orders
 	let buyOrders = Game.market.getAllOrders(order => {
-		return order.type == ORDER_BUY && order.resourceType == RESOUCE_ENERGY && order.remainingAmount <= terminal.store[RESOUCE_ENERGY]
+		return order.type == ORDER_BUY && order.resourceType == RESOURCE_ENERGY && order.remainingAmount <= terminal.store[RESOURCE_ENERGY]
 	});
 
 	//none found
@@ -18,7 +18,7 @@ function run(terminal) {
 
 	//filter out if costs are too high
 	buyOrders = buyOrders.filter(order => {
-		return order.cost + order.remainingAmount <= terminal.store[RESOUCE_ENERGY];
+		return order.cost + order.remainingAmount <= terminal.store[RESOURCE_ENERGY];
 	});
 
 	if (buyOrders.length == 0) {
