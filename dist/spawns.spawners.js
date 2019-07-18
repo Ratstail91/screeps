@@ -203,11 +203,7 @@ function spawnSpecializedBuilder(spawn, body, extraTags = []) {
 function spawnSpecializedRepairer(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'specializedRepairer', [CRY, FEAR, REPAIR, WITHDRAW, PATROL], body, ['repairer', 'specializedRepairer', ...extraTags], {
 		FEAR: {
-			returnHome: true,
-			onSafe: serialize(creep => {
-				creep.memory['HARVEST'].remote = null;
-				creep.memory['HARVEST'].source = null;
-			})
+			returnHome: true
 		},
 		WITHDRAW: {
 			stores: [STORAGE, CONTAINER]
