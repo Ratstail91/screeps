@@ -8,6 +8,7 @@ const {
 	spawnReserver,
 	spawnRestocker,
 	spawnLorry,
+	spawnThief,
 	spawnSpecializedHarvester,
 	spawnSpecializedUpgrader,
 	spawnSpecializedBuilder,
@@ -193,6 +194,13 @@ function stage4(spawn, creeps, population) {
 		}
 	}
 
+	//check for 'stealme' flag
+	if (Game.flags[`${spawn.name}stealme`]) {
+		if (!population.thief || population.thief < 5) {
+			return spawnThief(spawn, largeLorryBody);
+		}
+	}
+
 	//spawn large specialized harvesters
 	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 5) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
@@ -267,6 +275,13 @@ function stage5(spawn, creeps, population) {
 		//spawn medium colonists
 		if (!population.colonist || population.colonist < 10) {
 			return spawnColonist(spawn, mediumBody);
+		}
+	}
+
+	//check for 'stealme' flag
+	if (Game.flags[`${spawn.name}stealme`]) {
+		if (!population.thief || population.thief < 5) {
+			return spawnThief(spawn, largeLorryBody);
 		}
 	}
 

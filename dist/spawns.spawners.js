@@ -170,6 +170,26 @@ function spawnLorry(spawn, body, extraTags = []) {
 	});
 }
 
+function spawnThief(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'thief', [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], body, ['thief', ...extraTags], {
+		FEAR: {
+			returnHome: true
+		},
+		DEPOSIT: {
+			returnHomeFirst: true,
+			stores: [TOWER, SPAWN, EXTENSION, TERMINAL, STORAGE]
+		},
+		WITHDRAW: {
+			skipOwnRoom: true,
+			stores: [STORAGE]
+		},
+		TARGET: {
+			stopInRoom: true,
+			targetFlag: `${spawn.name}stealme`
+		}
+	});
+}
+
 //specialized alternatives
 function spawnSpecializedHarvester(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'specializedHarvester', [CRY, DROP, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags]);
@@ -248,6 +268,7 @@ module.exports = {
 	spawnColonist,
 	spawnRestocker,
 	spawnLorry,
+	spawnThief,
 	spawnSpecializedHarvester,
 	spawnSpecializedUpgrader,
 	spawnSpecializedBuilder,
