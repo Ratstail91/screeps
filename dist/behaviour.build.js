@@ -16,6 +16,11 @@ function run(creep) {
 		return true;
 	}
 
+	//don't stand on the doorway!
+	if (creep.pos.x <= 0 || creep.pos.y <= 0 || creep.pos.x >= 49 || creep.pos.y >= 49) {
+		return true;
+	}
+
 	//NOTE: building ramparts last
 	let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART });
 
