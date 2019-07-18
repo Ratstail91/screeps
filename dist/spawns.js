@@ -48,7 +48,7 @@ function handleSpawn(spawn) {
 	const creeps = getCreepsByOrigin(spawn);
 
 	//emergency
-	if (creeps.length < 15) {
+	if (creeps.length < 10) {
 		return kickstart(spawn);
 	}
 

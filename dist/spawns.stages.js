@@ -1,11 +1,50 @@
-const { spawnHarvester, spawnUpgrader, spawnBuilder, spawnScout, spawnScavenger, spawnClaimer, spawnTrader, spawnRestocker } = require('spawns.spawners');
-const { tinyBody, smallLorryBody, smallFightBody, mediumBody, mediumLorryBody, largeBody, largeFightBody, hugeBody, hugeSlowBody, claimerBody } = require('spawns.bodies');
+const {
+	spawnHarvester,
+	spawnUpgrader,
+	spawnBuilder,
+	spawnScout,
+	spawnScavenger,
+	spawnClaimer,
+	spawnRestocker,
+	spawnSpecializedHarvester,
+	spawnSpecializedUpgrader,
+	spawnSpecializedBuilder,
+	spawnSpecializedRepairer,
+} = require('spawns.spawners');
+
+const {
+	tinyBody,
+	smallLorryBody,
+	smallFightBody,
+	mediumBody,
+	mediumLorryBody,
+	largeBody,
+	largeFightBody,
+	largeLorryBody,
+	largeSlowBody,
+	hugeBody,
+	hugeLorryBody,
+	hugeSlowBody,
+	claimerBody
+} = require('spawns.bodies');
+
 const { getCreepsByOrigin, getPopulationByTags } = require('utils.spawns');
+
+//utility functions (you dun fucked up, thus this is necessary)
+function firstNotNaN(...args) {
+	//find the first argument that isn't NaN
+	for (let i = 0; i < args.length; i++) {
+		if (!Number.isNaN(args[i])) {
+			return args[i];
+		}
+	}
+
+	return NaN;
+}
 
 //spawn routines for each stage of the colony
 function kickstart(spawn, creeps, population) {
 	//NOTE: basic kickstart routine - assume 300 energy available
-
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
@@ -43,7 +82,7 @@ function stage1(spawn, creeps, population) {
 	}
 
 	//spawn builders
-	if (!population.builder || population.builder < 10) {
+	if (!population.builder || population.builder < 2) {
 		return spawnBuilder(spawn, tinyBody);
 	}
 
@@ -65,10 +104,10 @@ function stage2(spawn, creeps, population) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
-	//spawn scavengers
-	if (!population.scavenger) {
-		return spawnScavenger(spawn, smallLorryBody);
-	}
+//	//spawn scavengers
+//	if (!population.scavenger) {
+//		return spawnScavenger(spawn, smallLorryBody);
+//	}
 
 	//fall back to stage 1
 	return stage1(spawn, creeps, population);
@@ -83,28 +122,28 @@ function stage3(spawn, creeps, population) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
-	//spawn scavengers
-	if (!population.scavenger) {
-		return spawnScavenger(spawn, tinyLorryBody);
-	}
+//	//spawn scavengers
+//	if (!population.scavenger) {
+//		return spawnScavenger(spawn, tinyLorryBody);
+//	}
 
 	//spawn medium harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 10) {
 		return spawnHarvester(spawn, mediumBody);
 	}
 
 	//spawn medium upgraders
-	if (!population.upgrader || (population.upgrader - population.kickstartUpgrader || population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
 		return spawnUpgrader(spawn, mediumBody);
 	}
 
 	//spawn medium builders
-	if (!population.builder || population.builder < 10) {
+	if (!population.builder || population.builder < 2) {
 		return spawnBuilder(spawn, mediumBody);
 	}
 
 	//fallback to harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 20) {
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
 		return spawnHarvester(spawn, mediumBody);
 	}
 
@@ -121,9 +160,14 @@ function stage4(spawn, creeps, population) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
-	//spawn medium scavengers
-	if (!population.scavenger) {
-		return spawnScavenger(spawn, mediumLorryBody);
+//	//spawn medium scavengers
+//	if (!population.scavenger) {
+//		return spawnScavenger(spawn, mediumLorryBody);
+//	}
+
+	//spawn large restockers
+	if (!population.restocker /* || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2 */) {
+		return spawnRestocker(spawn, largeLorryBody);
 	}
 
 	//check for 'claimme' flag
@@ -142,24 +186,29 @@ function stage4(spawn, creeps, population) {
 		}
 	}
 
-	//spawn medium harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 10) {
-		return spawnHarvester(spawn, mediumBody);
+	//spawn large specialized harvesters
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 5) {
+		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
-	//spawn large upgraders
-	if (!population.upgrader || (population.upgrader - population.kickstartUpgrader || population.upgrader) < 5) {
-		return spawnUpgrader(spawn, largeBody);
+	//spawn large specialized upgraders
+	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+		return spawnSpecializedUpgrader(spawn, largeSlowBody);
 	}
 
-	//spawn large builders
-	if (!population.builder || population.builder < 5) {
-		return spawnBuilder(spawn, largeBody);
+	//spawn large specialized builders
+	if (!population.builder || population.builder < 2) {
+		return spawnSpecializedBuilder(spawn, largeBody);
 	}
 
-	//fallback to large harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 30) {
-		return spawnHarvester(spawn, largeBody);
+	//spawn large specialized repairers
+	if (!population.repairer || population.repairer < 2) {
+		return spawnSpecializedRepairer(spawn, largeBody);
+	}
+
+	//fallback to large specialized harvesters
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
+		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
 	//no fall through this time
@@ -175,9 +224,14 @@ function stage5(spawn, creeps, population) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
-	//spawn medium scavengers
-	if (!population.scavenger) {
-		return spawnScavenger(spawn, mediumLorryBody);
+//	//spawn medium scavengers
+//	if (!population.scavenger) {
+//		return spawnScavenger(spawn, mediumLorryBody);
+//	}
+
+	//spawn huge restockers
+	if (!population.restocker /* || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2 */) {
+		return spawnRestocker(spawn, hugeLorryBody);
 	}
 
 	//check for 'claimme' flag
@@ -196,29 +250,34 @@ function stage5(spawn, creeps, population) {
 		}
 	}
 
-	//spawn medium harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 2) {
-		return spawnHarvester(spawn, mediumBody);
+	//spawn large specialized harvesters (a bit of bootstrapping)
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 2) {
+		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
-	//spawn huge harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 5) {
-		return spawnHarvester(spawn, hugeBody);
+	//spawn huge specialized harvesters
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 5) {
+		return spawnSpecializedHarvester(spawn, hugeSlowBody);
 	}
 
-	//spawn huge upgraders
-	if (!population.upgrader || (population.upgrader - population.kickstartUpgrader || population.upgrader) < 5) {
-		return spawnUpgrader(spawn, hugeBody);
+	//spawn huge specialzied upgraders
+	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+		return spawnSpecializedUpgrader(spawn, hugeSlowBody);
 	}
 
-	//spawn huge builders
-	if (!population.builder || population.builder < 5) {
-		return spawnBuilder(spawn, hugeBody);
+	//spawn huge specialized builders
+	if (!population.builder || population.builder < 2) {
+		return spawnSpecializedBuilder(spawn, hugeBody);
 	}
 
-	//fallback to huge harvesters
-	if (!population.harvester || (population.harvester - population.kickstartHarvester || population.harvester) < 30) {
-		return spawnHarvester(spawn, hugeBody);
+	//spawn huge specialized repairers
+	if (!population.repairer || population.repairer < 2) {
+		return spawnSpecializedRepairer(spawn, hugeBody);
+	}
+
+	//fallback to huge specialized harvesters
+	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
+		return spawnSpecializedHarvester(spawn, hugeSlowBody);
 	}
 
 	//no fall through this time
@@ -229,12 +288,7 @@ function stage6(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
-	if (!population.trader || population.trader < 2) {
-		return spawnTrader(spawn, hugeSlowBody);
-	}
-
-	//fallback for now
-	//TODO: more
+	//TODO: fallback for now
 	return stage5(spawn, creeps, population);
 }
 

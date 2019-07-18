@@ -4,7 +4,7 @@ const { TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, TOMBSTONE } = req
 const { spawnCreep } = require('creeps');
 const { serialize } = require('behaviour.fear');
 
-//curried functions
+//generic all-rounders
 function spawnHarvester(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'harvester', [CRY, FEAR, DEPOSIT, HARVEST, UPGRADE], body, ['harvester', ...extraTags], {
 		FEAR: {
@@ -49,6 +49,7 @@ function spawnBuilder(spawn, body, extraTags = []) {
 	});
 }
 
+//combat types
 function spawnScout(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'scout', [CRY, TARGET, BRAVE, CARE, PATROL], body, ['scout', 'combat', ...extraTags], {
 		TARGET: {
@@ -59,7 +60,13 @@ function spawnScout(spawn, body, extraTags = []) {
 				`${spawn.name}remote0`,
 				`${spawn.name}remote1`,
 				`${spawn.name}remote2`,
-				`${spawn.name}remote3`
+				`${spawn.name}remote3`,
+				`${spawn.name}remote4`,
+				`${spawn.name}remote5`,
+				`${spawn.name}remote6`,
+				`${spawn.name}remote7`,
+				`${spawn.name}remote8`,
+				`${spawn.name}remote9`
 			]
 		}
 	});
@@ -79,6 +86,7 @@ function spawnScavenger(spawn, body, extraTags = []) {
 	});
 }
 
+//expansion types
 function spawnClaimer(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'claimer', [CRY, TARGET, CLAIMER], body, ['claimer', ...extraTags], {
 		TARGET: {
@@ -108,25 +116,90 @@ function spawnColonist(spawn, body, extraTags = []) {
 	});
 }
 
-function spawnTrader(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'trader', [CRY, WITHDRAW, BUILD, DEPOSIT], body, ['trader', ...extraTags], {
-		WITHDRAW: {
-			skipIfNotEmpty: true,
-			stores: [STORAGE]
-		},
+//bespoke
+function spawnRestocker(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'restocker', [PICKUP, DEPOSIT, WITHDRAW], body, ['restocker', ...extraTags], {
 		DEPOSIT: {
-			stores: [TERMINAL]
+			stores: [TOWER, SPAWN, EXTENSION, TERMINAL]
+		},
+		WITHDRAW: {
+			stores: [TOMBSTONE, CONTAINER, STORAGE]
 		}
 	});
 }
 
-function spawnRestocker(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'restocker', [DEPOSIT, WITHDRAW], body, ['restocker', ...extraTags], {
+//specialized alternatives
+function spawnSpecializedHarvester(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'specializedHarvester', [CRY, DEPOSIT, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags], {
 		DEPOSIT: {
-			stores: [TOWER, SPAWN, EXTENSION]
+			forceIfNotEmpty: true,
+			stores: [CONTAINER, STORAGE]
+		}
+	});
+}
+
+function spawnSpecializedUpgrader(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'specializedUpgrader', [CRY, WITHDRAW, UPGRADE], body, ['upgrader', 'specializedUpgrader', ...extraTags], {
+		WITHDRAW: {
+			stores: [STORAGE, CONTAINER]
+		}
+	});
+}
+
+function spawnSpecializedBuilder(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'specializedBuilder', [CRY, FEAR, BUILD, WITHDRAW, PATROL], body, ['builder', 'specializedBuilder', ...extraTags], {
+		FEAR: {
+			returnHome: true,
+			onSafe: serialize(creep => {
+				creep.memory['HARVEST'].remote = null;
+				creep.memory['HARVEST'].source = null;
+			})
 		},
 		WITHDRAW: {
-			stores: [CONTAINER, STORAGE]
+			stores: [STORAGE, CONTAINER]
+		},
+		PATROL: {
+			targetFlags: [
+				`${spawn.name}remote0`,
+				`${spawn.name}remote1`,
+				`${spawn.name}remote2`,
+				`${spawn.name}remote3`,
+				`${spawn.name}remote4`,
+				`${spawn.name}remote5`,
+				`${spawn.name}remote6`,
+				`${spawn.name}remote7`,
+				`${spawn.name}remote8`,
+				`${spawn.name}remote9`
+			]
+		}
+	});
+}
+
+function spawnSpecializedRepairer(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'specializedRepairer', [CRY, FEAR, REPAIR, WITHDRAW, PATROL], body, ['repairer', 'specializedRepairer', ...extraTags], {
+		FEAR: {
+			returnHome: true,
+			onSafe: serialize(creep => {
+				creep.memory['HARVEST'].remote = null;
+				creep.memory['HARVEST'].source = null;
+			})
+		},
+		WITHDRAW: {
+			stores: [STORAGE, CONTAINER]
+		},
+		PATROL: {
+			targetFlags: [
+				`${spawn.name}remote0`,
+				`${spawn.name}remote1`,
+				`${spawn.name}remote2`,
+				`${spawn.name}remote3`,
+				`${spawn.name}remote4`,
+				`${spawn.name}remote5`,
+				`${spawn.name}remote6`,
+				`${spawn.name}remote7`,
+				`${spawn.name}remote8`,
+				`${spawn.name}remote9`
+			]
 		}
 	});
 }
@@ -139,6 +212,9 @@ module.exports = {
 	spawnScavenger,
 	spawnClaimer,
 	spawnColonist,
-	spawnTrader,
-	spawnRestocker
+	spawnRestocker,
+	spawnSpecializedHarvester,
+	spawnSpecializedUpgrader,
+	spawnSpecializedBuilder,
+	spawnSpecializedRepairer,
 };

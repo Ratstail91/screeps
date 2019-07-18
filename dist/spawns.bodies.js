@@ -27,7 +27,7 @@ const largeBody = [ //1250
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY,
 
-	//3 * 100 = 300
+	//100 * 3 = 300
 	WORK, WORK, WORK
 ];
 
@@ -43,6 +43,30 @@ const largeFightBody = [ //1200
 
 	//150 * 3 = 450
 	RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK
+];
+
+const largeLorryBody = [ //1200
+	//50 * 8 = 400
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+	MOVE, MOVE, MOVE,
+
+	//50 * 16 = 800
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY,
+];
+
+const largeSlowBody = [ //1200
+	//50 * 5 = 250
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+
+	//50 * 1 = 50
+	CARRY,
+
+	//100 * 9 = 900
+	WORK, WORK, WORK, WORK, WORK,
+	WORK, WORK, WORK, WORK,
 ];
 
 //1800e available
@@ -62,39 +86,56 @@ const hugeBody = [ //1800
 	WORK, WORK, WORK, WORK
 ];
 
-const hugeSlowBody = [ //1800
-	//50 * 6 = 300
+const hugeLorryBody = [ //1800
+	//50 * 12 = 600
 	MOVE, MOVE, MOVE, MOVE, MOVE,
-	MOVE,
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+	MOVE, MOVE,
 
-	//50 * 10 = 500
+	//50 * 24 = 1200
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY,
+];
 
-	//100 * 10 = 1000
+const hugeSlowBody = [//1700
+	//50 * 7 = 350
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+	MOVE, MOVE,
+
+	//50 * 1 = 50
+	CARRY,
+
+	//100 * 13 = 1300
 	WORK, WORK, WORK, WORK, WORK,
 	WORK, WORK, WORK, WORK, WORK,
+	WORK, WORK, WORK,
 ];
 
 //specialized bodies
-const claimerBody = [
+const claimerBody = [//650
 	MOVE, CLAIM
 ];
 
 module.exports = {
-	tinyBody: tinyBody,
+	tinyBody,
 
-	smallLorryBody: smallLorryBody,
-	smallFightBody: smallFightBody,
+	smallLorryBody,
+	smallFightBody,
 
-	mediumBody: mediumBody,
-	mediumLorryBody: mediumLorryBody,
+	mediumBody,
+	mediumLorryBody,
 
-	largeBody: largeBody,
-	largeFightBody: largeFightBody,
+	largeBody,
+	largeFightBody,
+	largeLorryBody,
+	largeSlowBody,
 
-	hugeBody: hugeBody,
-	hugeSlowBody: hugeSlowBody,
+	hugeBody,
+	hugeLorryBody,
+	hugeSlowBody,
 
-	claimerBody: claimerBody
+	claimerBody
 };
