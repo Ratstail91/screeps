@@ -155,6 +155,11 @@ function stage4(spawn, creeps, population) {
 	creeps = creeps || getCreepsByOrigin(spawn);
 	population = population || getPopulationByTags(creeps);
 
+	//spawn explicitly generic builders to ensure the storage is built
+	if (!population.builder || population.builder < 2) {
+		return spawnBuilder(spawn, largeBody);
+	}
+
 	//spawn large scouts
 	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, largeFightBody);
@@ -191,10 +196,10 @@ function stage4(spawn, creeps, population) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
-	//spawn large specialized builders
-	if (!population.builder || population.builder < 2) {
-		return spawnSpecializedBuilder(spawn, largeBody);
-	}
+//	//spawn large specialized builders
+//	if (!population.builder || population.builder < 2) {
+//		return spawnSpecializedBuilder(spawn, largeBody);
+//	}
 
 	//spawn large specialized repairers
 	if (!population.repairer || population.repairer < 2) {
