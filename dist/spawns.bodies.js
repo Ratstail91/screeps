@@ -115,8 +115,8 @@ const hugeSlowBody = [//1700
 ];
 
 //specialized bodies
-const claimerBody = [//650
-	MOVE, CLAIM
+const claimerBody = [//1300
+	MOVE, MOVE, CLAIM, CLAIM
 ];
 
 module.exports = {

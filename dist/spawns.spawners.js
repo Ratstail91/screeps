@@ -90,7 +90,19 @@ function spawnScavenger(spawn, body, extraTags = []) {
 function spawnClaimer(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'claimer', [CRY, TARGET, CLAIMER], body, ['claimer', ...extraTags], {
 		TARGET: {
-			targetFlag: 'claimme',
+			targetFlag: `${spawn.name}claimme`,
+			stopInRoom: true
+		},
+		CLAIMER: {
+			claim: true
+		}
+	});
+}
+
+function spawnReserver(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'reserver', [CRY, TARGET, CLAIMER], body, ['reserver', ...extraTags], {
+		TARGET: {
+			targetFlag: `${spawn.name}reserveme`,
 			stopInRoom: true
 		}
 	});
@@ -232,6 +244,7 @@ module.exports = {
 	spawnScout,
 	spawnScavenger,
 	spawnClaimer,
+	spawnReserver,
 	spawnColonist,
 	spawnRestocker,
 	spawnLorry,

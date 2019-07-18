@@ -5,6 +5,7 @@ const {
 	spawnScout,
 	spawnScavenger,
 	spawnClaimer,
+	spawnReserver,
 	spawnRestocker,
 	spawnLorry,
 	spawnSpecializedHarvester,
@@ -171,11 +172,16 @@ function stage4(spawn, creeps, population) {
 		return spawnRestocker(spawn, largeLorryBody);
 	}
 
-	//check for 'claimme' flag
-	if (Game.flags['claimme']) {
-		//global population
-		let population = getPopulationByTags(getCreepsByOrigin(null));
+	//check for 'reserveme' flag
+	if (Game.flags[`${spawn.name}reserveme`]) {
+		//spawn 1 reserver
+		if (!population.reserver) {
+			return spawnReserver(spawn, claimerBody);
+		}
+	}
 
+	//check for 'claimme' flag
+	if (Game.flags[`${spawn.name}claimme`]) {
 		//spawn 1 claimer
 		if (!population.claimer) {
 			return spawnClaimer(spawn, claimerBody);
@@ -240,8 +246,16 @@ function stage5(spawn, creeps, population) {
 		return spawnRestocker(spawn, hugeLorryBody);
 	}
 
+	//check for 'reserveme' flag
+	if (Game.flags[`${spawn.name}reserveme`]) {
+		//spawn 1 reserver
+		if (!population.reserver) {
+			return spawnReserver(spawn, claimerBody);
+		}
+	}
+
 	//check for 'claimme' flag
-	if (Game.flags['claimme']) {
+	if (Game.flags[`${spawn.name}claimme`]) {
 		//global population
 		let population = getPopulationByTags(getCreepsByOrigin(null));
 
