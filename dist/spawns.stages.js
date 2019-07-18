@@ -167,7 +167,7 @@ function stage4(spawn, creeps, population) {
 //	}
 
 	//spawn large restockers
-	if (!population.restocker /* || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2 */) {
+	if (!population.restocker || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2) {
 		return spawnRestocker(spawn, largeLorryBody);
 	}
 
@@ -236,7 +236,7 @@ function stage5(spawn, creeps, population) {
 //	}
 
 	//spawn huge restockers
-	if (!population.restocker /* || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2 */) {
+	if (!population.restocker || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2) {
 		return spawnRestocker(spawn, hugeLorryBody);
 	}
 
