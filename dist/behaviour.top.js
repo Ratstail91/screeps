@@ -38,7 +38,7 @@ function run(creep) {
 		creep.memory[REPAIR]._lock = false;
 
 		if (_.sum(creep.carry) != 0) {
-			return repair.run(creep);
+			return repair.run(creep, true);
 		}
 	}
 

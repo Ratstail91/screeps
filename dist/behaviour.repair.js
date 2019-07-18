@@ -10,7 +10,7 @@ function init(creep) {
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
-function run(creep) {
+function run(creep, top = false) {
 	//can't repair on an empty stomach
 	if (_.sum(creep.carry) == 0) {
 		return true;
@@ -23,7 +23,7 @@ function run(creep) {
 
 	//NOTE: building ramparts last, skipping walls
 	let repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-		filter: (target) => target.hits < target.hitsMax && target.structureType != STRUCTURE_WALL && target.structureType != STRUCTURE_RAMPART
+		filter: (target) => target.hits < (top ? target.hitsMax : target.hitsMax * 0.6) && target.structureType != STRUCTURE_WALL && target.structureType != STRUCTURE_RAMPART
 	});
 
 	if (!repairTarget) {
