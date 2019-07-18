@@ -5,6 +5,7 @@ module.exports = {
 
 	//handling energy
 	PICKUP: 'PICKUP',
+	DROP: 'DROP',
 	DEPOSIT: 'DEPOSIT',
 	WITHDRAW: 'WITHDRAW',
 

@@ -1,4 +1,4 @@
-const { HARVEST, UPGRADE, PICKUP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
+const { HARVEST, UPGRADE, PICKUP, DROP, DEPOSIT, WITHDRAW, BUILD, REPAIR, PATROL, TARGET, FEAR, BRAVE, CRY, CARE, CLAIMER } = require('behaviour_names');
 
 const { TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, TOMBSTONE } = require('utils.store');
 const { spawnCreep } = require('creeps');
@@ -130,12 +130,7 @@ function spawnRestocker(spawn, body, extraTags = []) {
 
 //specialized alternatives
 function spawnSpecializedHarvester(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'specializedHarvester', [CRY, DEPOSIT, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags], {
-		DEPOSIT: {
-			forceIfNotEmpty: true,
-			stores: [CONTAINER, STORAGE]
-		}
-	});
+	return spawnCreep(spawn, 'specializedHarvester', [CRY, DROP, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags]);
 }
 
 function spawnSpecializedUpgrader(spawn, body, extraTags = []) {
