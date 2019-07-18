@@ -46,36 +46,37 @@ function handleSpawn(spawn) {
 
 	//get the creep count
 	const creeps = getCreepsByOrigin(spawn);
+	const population = getPopulationByTags(creeps);
 
 	//emergency
-	if (creeps.length < 10) {
+	if (creeps.length < 10 || (spawn.room.storage && (!population.restocker || population.restocker < 2) )) {
 		return kickstart(spawn);
 	}
 
 	//TODO: stages 7 & 8 are not yet implemented
 
 	if (spawn.room.energyCapacityAvailable >= 2300) {
-		return stage6(spawn, creeps);
+		return stage6(spawn, creeps, population);
 	}
 
 	if (spawn.room.energyCapacityAvailable >= 1800) {
-		return stage5(spawn, creeps);
+		return stage5(spawn, creeps, population);
 	}
 
 	if (spawn.room.energyCapacityAvailable >= 1300) {
-		return stage4(spawn, creeps);
+		return stage4(spawn, creeps, population);
 	}
 
 	if (spawn.room.energyCapacityAvailable >= 800) {
-		return stage3(spawn, creeps);
+		return stage3(spawn, creeps, population);
 	}
 
 	if (spawn.room.energyCapacityAvailable >= 550) {
-		return stage2(spawn, creeps);
+		return stage2(spawn, creeps, population);
 	}
 
 	//300 energy available
-	return stage1(spawn, creeps);
+	return stage1(spawn, creeps, population);
 }
 
 module.exports = handleSpawn;
