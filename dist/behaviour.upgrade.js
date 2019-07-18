@@ -29,6 +29,8 @@ function run(creep) {
 	} else if (upgradeResult == ERR_NOT_IN_RANGE) {
 		creep.moveTo(creep.room.controller, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 		return false;
+	} else if (upgradeResult == ERR_NOT_ENOUGH_RESOURCES) {
+		return true;
 	}
 
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: upgradeResult ${upgradeResult}`);
