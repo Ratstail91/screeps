@@ -156,7 +156,7 @@ function stage4(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn explicitly generic builders to ensure the storage is built
-	if (!population.builder || population.builder < 2) {
+	if (!population.builder || population.builder < 5) {
 		return spawnBuilder(spawn, largeBody);
 	}
 
