@@ -191,11 +191,6 @@ function stage4(spawn, creeps, population) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
-	//spawn large specialized upgraders
-	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
-		return spawnSpecializedUpgrader(spawn, largeSlowBody);
-	}
-
 	//spawn large specialized builders
 	if (!population.builder || population.builder < 2) {
 		return spawnSpecializedBuilder(spawn, largeBody);
@@ -204,6 +199,11 @@ function stage4(spawn, creeps, population) {
 	//spawn large specialized repairers
 	if (!population.repairer || population.repairer < 2) {
 		return spawnSpecializedRepairer(spawn, largeBody);
+	}
+
+	//spawn large specialized upgraders
+	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+		return spawnSpecializedUpgrader(spawn, largeSlowBody);
 	}
 
 	//fallback to large specialized harvesters
@@ -260,11 +260,6 @@ function stage5(spawn, creeps, population) {
 		return spawnSpecializedHarvester(spawn, hugeSlowBody);
 	}
 
-	//spawn huge specialzied upgraders
-	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
-		return spawnSpecializedUpgrader(spawn, hugeSlowBody);
-	}
-
 	//spawn huge specialized builders
 	if (!population.builder || population.builder < 2) {
 		return spawnSpecializedBuilder(spawn, hugeBody);
@@ -273,6 +268,11 @@ function stage5(spawn, creeps, population) {
 	//spawn huge specialized repairers
 	if (!population.repairer || population.repairer < 2) {
 		return spawnSpecializedRepairer(spawn, hugeBody);
+	}
+
+	//spawn huge specialzied upgraders
+	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+		return spawnSpecializedUpgrader(spawn, hugeSlowBody);
 	}
 
 	//fallback to huge specialized harvesters
