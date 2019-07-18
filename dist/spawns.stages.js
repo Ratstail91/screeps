@@ -6,6 +6,7 @@ const {
 	spawnScavenger,
 	spawnClaimer,
 	spawnRestocker,
+	spawnLorry,
 	spawnSpecializedHarvester,
 	spawnSpecializedUpgrader,
 	spawnSpecializedBuilder,
@@ -196,6 +197,11 @@ function stage4(spawn, creeps, population) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
+	//spawn large lorries
+	if (!population.lorry) {
+		return spawnLorry(spawn, largeLorryBody);
+	}
+
 //	//spawn large specialized builders
 //	if (!population.builder || population.builder < 2) {
 //		return spawnSpecializedBuilder(spawn, largeBody);
@@ -258,6 +264,11 @@ function stage5(spawn, creeps, population) {
 	//spawn large specialized harvesters (a bit of bootstrapping)
 	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 2) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
+	}
+
+	//spawn huge lorries
+	if (!population.lorry) {
+		return spawnLorry(spawn, hugeLorryBody);
 	}
 
 	//spawn huge specialized harvesters

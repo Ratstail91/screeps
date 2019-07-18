@@ -128,6 +128,36 @@ function spawnRestocker(spawn, body, extraTags = []) {
 	});
 }
 
+function spawnLorry(spawn, body, extraTags = []) {
+	return spawnCreep(spawn, 'lorry', [CRY, FEAR, PICKUP, DEPOSIT, WITHDRAW, PATROL], body, ['lorry', ...extraTags], {
+		FEAR: {
+			returnHome: true
+		},
+		DEPOSIT: {
+			returnHomeFirst: true,
+			stores: [STORAGE]
+		},
+		WITHDRAW: {
+			skipOwnRoom: true,
+			stores: [CONTAINER]
+		},
+		PATROL: {
+			targetFlags: [
+				`${spawn.name}remote0`,
+				`${spawn.name}remote1`,
+				`${spawn.name}remote2`,
+				`${spawn.name}remote3`,
+				`${spawn.name}remote4`,
+				`${spawn.name}remote5`,
+				`${spawn.name}remote6`,
+				`${spawn.name}remote7`,
+				`${spawn.name}remote8`,
+				`${spawn.name}remote9`
+			]
+		}
+	});
+}
+
 //specialized alternatives
 function spawnSpecializedHarvester(spawn, body, extraTags = []) {
 	return spawnCreep(spawn, 'specializedHarvester', [CRY, DROP, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags]);
@@ -208,6 +238,7 @@ module.exports = {
 	spawnClaimer,
 	spawnColonist,
 	spawnRestocker,
+	spawnLorry,
 	spawnSpecializedHarvester,
 	spawnSpecializedUpgrader,
 	spawnSpecializedBuilder,
