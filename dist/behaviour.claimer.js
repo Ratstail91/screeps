@@ -8,8 +8,6 @@ function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		claim: false
 	}, creep.memory[BEHAVIOUR_NAME]);
-
-	console.log('initialized claimer creep')
 }
 
 function run(creep) {
