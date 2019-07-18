@@ -129,7 +129,7 @@ function spawnRestocker(spawn, body, extraTags = []) {
 }
 
 function spawnLorry(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'lorry', [CRY, FEAR, PICKUP, DEPOSIT, WITHDRAW, PATROL], body, ['lorry', ...extraTags], {
+	return spawnCreep(spawn, 'lorry', [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], body, ['lorry', ...extraTags], {
 		FEAR: {
 			returnHome: true
 		},
@@ -138,7 +138,6 @@ function spawnLorry(spawn, body, extraTags = []) {
 			stores: [STORAGE]
 		},
 		WITHDRAW: {
-			skipOwnRoom: true,
 			stores: [CONTAINER]
 		},
 		PATROL: {
