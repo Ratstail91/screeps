@@ -129,12 +129,12 @@ function stage3(spawn, creeps, population) {
 //	}
 
 	//spawn medium harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 10) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 10) {
 		return spawnHarvester(spawn, mediumBody);
 	}
 
 	//spawn medium upgraders
-	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
 		return spawnUpgrader(spawn, mediumBody);
 	}
 
@@ -144,7 +144,7 @@ function stage3(spawn, creeps, population) {
 	}
 
 	//fallback to harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 30) {
 		return spawnHarvester(spawn, mediumBody);
 	}
 
@@ -167,7 +167,7 @@ function stage4(spawn, creeps, population) {
 //	}
 
 	//spawn large restockers
-	if (!population.restocker || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2) {
+	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 2) {
 		return spawnRestocker(spawn, largeLorryBody);
 	}
 
@@ -188,7 +188,7 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn large specialized harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 5) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 5) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
@@ -208,12 +208,12 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn large specialized upgraders
-	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
 		return spawnSpecializedUpgrader(spawn, largeSlowBody);
 	}
 
 	//fallback to large specialized harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 30) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
@@ -236,7 +236,7 @@ function stage5(spawn, creeps, population) {
 //	}
 
 	//spawn huge restockers
-	if (!population.restocker || firstNotNaN(population.kickstartRestocker - population.restocker, population.restocker) < 2) {
+	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 2) {
 		return spawnRestocker(spawn, hugeLorryBody);
 	}
 
@@ -257,7 +257,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn large specialized harvesters (a bit of bootstrapping)
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 2) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 2) {
 		return spawnSpecializedHarvester(spawn, largeSlowBody);
 	}
 
@@ -267,7 +267,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn huge specialized harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 5) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 5) {
 		return spawnSpecializedHarvester(spawn, hugeSlowBody);
 	}
 
@@ -282,12 +282,12 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn huge specialzied upgraders
-	if (!population.upgrader || firstNotNaN(population.kickstartUpgrader - population.upgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
 		return spawnSpecializedUpgrader(spawn, hugeSlowBody);
 	}
 
 	//fallback to huge specialized harvesters
-	if (!population.harvester || firstNotNaN(population.kickstartHarvester - population.harvester, population.harvester) < 30) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 30) {
 		return spawnSpecializedHarvester(spawn, hugeSlowBody);
 	}
 
