@@ -62,7 +62,7 @@ function kickstart(spawn, creeps, population) {
 	}
 
 	//spawn upgraders
-	if (!population.upgrader || population.upgrader < 2) {
+	if (!population.upgrader || population.upgrader < 1) {
 		return spawnUpgrader(spawn, tinyBody, ['kickstart', 'kickstartUpgrader']);
 	}
 
@@ -75,12 +75,12 @@ function stage1(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn harvesters
-	if (!population.harvester || population.harvester < 10) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 10) {
 		return spawnHarvester(spawn, tinyBody);
 	}
 
 	//spawn upgraders
-	if (!population.upgrader || population.upgrader < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 1) {
 		return spawnUpgrader(spawn, tinyBody);
 	}
 
@@ -90,7 +90,7 @@ function stage1(spawn, creeps, population) {
 	}
 
 	//fallback to harvesters
-	if (!population.harvester || population.harvester < 30) {
+	if (!population.harvester || firstNotNaN(population.harvester - population.kickstartHarvester, population.harvester) < 30) {
 		return spawnHarvester(spawn, tinyBody);
 	}
 
@@ -136,7 +136,7 @@ function stage3(spawn, creeps, population) {
 	}
 
 	//spawn medium upgraders
-	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 1) {
 		return spawnUpgrader(spawn, mediumBody);
 	}
 
@@ -222,7 +222,7 @@ function stage4(spawn, creeps, population) {
 	}
 
 	//spawn large specialized upgraders
-	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 1) {
 		return spawnSpecializedUpgrader(spawn, largeSlowBody);
 	}
 
@@ -311,7 +311,7 @@ function stage5(spawn, creeps, population) {
 	}
 
 	//spawn huge specialzied upgraders
-	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 5) {
+	if (!population.upgrader || firstNotNaN(population.upgrader - population.kickstartUpgrader, population.upgrader) < 1) {
 		return spawnSpecializedUpgrader(spawn, hugeSlowBody);
 	}
 
