@@ -152,6 +152,7 @@ function spawnLorry(spawn, body, extraTags = []) {
 			stores: [STORAGE]
 		},
 		WITHDRAW: {
+			skipOriginRoom: true,
 			stores: [CONTAINER]
 		},
 		PATROL: {
