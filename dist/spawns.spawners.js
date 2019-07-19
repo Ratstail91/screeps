@@ -180,6 +180,7 @@ function spawnThief(spawn, body, extraTags = []) {
 			stores: [TOWER, SPAWN, EXTENSION, TERMINAL, STORAGE]
 		},
 		WITHDRAW: {
+			skipOriginRoom: true,
 			stores: [STORAGE]
 		},
 		TARGET: {

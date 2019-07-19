@@ -11,6 +11,7 @@ function init(creep) {
 		skipIfNotEmpty: false,
 		forceIfNotFull: false,
 		skipOwnRoom: false,
+		skipOriginRoom: false,
 		stores: null
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
@@ -28,6 +29,13 @@ function run(creep) {
 
 	//skip in rooms owned by me
 	if (creep.memory[BEHAVIOUR_NAME].skipOwnRoom && creep.room.controller.my) {
+		return true;
+	}
+
+	//skip the creep's origin room
+	const spawns = creep.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_SPAWN && s.name == creep.memory.origin });
+
+	if (creep.memory[BEHAVIOUR_NAME].skipOriginRoom && spawns.length != 0) {
 		return true;
 	}
 
