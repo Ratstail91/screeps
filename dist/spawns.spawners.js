@@ -142,11 +142,12 @@ function spawnRestocker(spawn, body, extraTags = []) {
 }
 
 function spawnLorry(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'lorry', [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], body, ['lorry', ...extraTags], {
+	return spawnCreep(spawn, 'lorry', [CRY, FEAR, DEPOSIT, PICKUP, WITHDRAW, PATROL], body, ['lorry', ...extraTags], {
 		FEAR: {
 			returnHome: true
 		},
 		DEPOSIT: {
+			skipIfNotFull: true,
 			returnHomeFirst: true,
 			stores: [STORAGE]
 		},
@@ -154,6 +155,7 @@ function spawnLorry(spawn, body, extraTags = []) {
 			stores: [CONTAINER]
 		},
 		PATROL: {
+			stopInRoom: true,
 			targetFlags: [
 				`${spawn.name}remote0`,
 				`${spawn.name}remote1`,
