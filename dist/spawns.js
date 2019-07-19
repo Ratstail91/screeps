@@ -49,7 +49,7 @@ function handleSpawn(spawn) {
 	const population = getPopulationByTags(creeps);
 
 	//emergency
-	if (creeps.length < 10 || (spawn.room.storage && (!population.restocker || population.restocker < 2) )) {
+	if (creeps.length < 10 || (spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= 100 && (!population.restocker || population.restocker < 2) )) {
 		return kickstart(spawn);
 	}
 

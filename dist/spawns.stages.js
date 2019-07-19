@@ -103,7 +103,7 @@ function stage2(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn scouts
-	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
@@ -121,7 +121,7 @@ function stage3(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn scouts
-	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
@@ -159,7 +159,7 @@ function stage4(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn large scouts
-	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
@@ -196,7 +196,7 @@ function stage4(spawn, creeps, population) {
 
 	//check for 'stealme' flag
 	if (Game.flags[`${spawn.name}stealme`]) {
-		if (!population.thief || population.thief < 5) {
+		if (!population.thief || population.thief < 2) {
 			return spawnThief(spawn, largeLorryBody);
 		}
 	}
@@ -240,7 +240,7 @@ function stage5(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn large scouts
-	if (!population.scout || population.scout < 2 || Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
@@ -280,7 +280,7 @@ function stage5(spawn, creeps, population) {
 
 	//check for 'stealme' flag
 	if (Game.flags[`${spawn.name}stealme`]) {
-		if (!population.thief || population.thief < 5) {
+		if (!population.thief || population.thief < 2) {
 			return spawnThief(spawn, largeLorryBody);
 		}
 	}

@@ -18,41 +18,55 @@ function getStores(point, types) {
 			case TOWER:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_TOWER && structure.my
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case SPAWN:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_SPAWN && structure.my
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case EXTENSION:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_EXTENSION && structure.my
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case CONTAINER:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_CONTAINER
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case STORAGE:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_STORAGE
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case TERMINAL:
 				result = result.concat(point.room.find(FIND_STRUCTURES, {filter: structure =>
 					structure.structureType == STRUCTURE_TERMINAL
-				}));
+				}).sort((a, b) =>
+					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+				));
 				break;
 
 			case TOMBSTONE:
-				result = result.concat(point.room.find(FIND_TOMBSTONES));
+				result = result.concat(point.room.find(FIND_TOMBSTONES)
+					.sort((a, b) => point.pos.getRangeTo(a) - point.pos.getRangeTo(b))
+				);
 				break;
 		}
 	});
