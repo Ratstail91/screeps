@@ -9,6 +9,7 @@ function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		remote: null,
 		source: null,
+		lockToSource: false,
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
@@ -73,9 +74,11 @@ function run(creep) {
 
 		return false;
 	} else if (harvestResults == ERR_NOT_ENOUGH_RESOURCES) {
-		//go to a random source
-		creep.memory[BEHAVIOUR_NAME].remote = null;
-		creep.memory[BEHAVIOUR_NAME].source = null;
+		if (!creep.memory[BEHAVIOUR_NAME].lockToSource) {
+			//go to a random source
+			creep.memory[BEHAVIOUR_NAME].remote = null;
+			creep.memory[BEHAVIOUR_NAME].source = null;
+		}
 
 		return false;
 	}

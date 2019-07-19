@@ -192,7 +192,11 @@ function spawnThief(spawn, body, extraTags = []) {
 
 //specialized alternatives
 function spawnSpecializedHarvester(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'specializedHarvester', [CRY, DROP, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags]);
+	return spawnCreep(spawn, 'specializedHarvester', [CRY, DROP, HARVEST], body, ['harvester', 'specializedHarvester', ...extraTags], {
+		HARVEST: {
+			lockToSource: true
+		}
+	});
 }
 
 function spawnSpecializedUpgrader(spawn, body, extraTags = []) {

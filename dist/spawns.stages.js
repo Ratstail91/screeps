@@ -169,17 +169,17 @@ function stage4(spawn, creeps, population) {
 //	}
 
 	//spawn large restockers
-	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 2) {
+	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 1) {
 		return spawnRestocker(spawn, largeLorryBody);
 	}
 
 	//check for 'reserveme' flag
-	if (Game.flags[`${spawn.name}reserveme`]) {
-		//spawn 1 reserver
-		if (!population.reserver) {
-			return spawnReserver(spawn, claimerBody);
-		}
-	}
+//	if (Game.flags[`${spawn.name}reserveme`]) {
+//		//spawn 1 reserver
+//		if (!population.reserver) {
+//			return spawnReserver(spawn, claimerBody);
+//		}
+//	}
 
 	//check for 'claimme' flag
 	if (Game.flags[`${spawn.name}claimme`]) {
@@ -250,17 +250,17 @@ function stage5(spawn, creeps, population) {
 //	}
 
 	//spawn huge restockers
-	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 2) {
+	if (!population.restocker || firstNotNaN(population.restocker - population.kickstartRestocker, population.restocker) < 1) {
 		return spawnRestocker(spawn, hugeLorryBody);
 	}
 
 	//check for 'reserveme' flag
-	if (Game.flags[`${spawn.name}reserveme`]) {
-		//spawn 1 reserver
-		if (!population.reserver) {
-			return spawnReserver(spawn, claimerBody);
-		}
-	}
+//	if (Game.flags[`${spawn.name}reserveme`]) {
+//		//spawn 1 reserver
+//		if (!population.reserver) {
+//			return spawnReserver(spawn, claimerBody);
+//		}
+//	}
 
 	//check for 'claimme' flag
 	if (Game.flags[`${spawn.name}claimme`]) {

@@ -51,7 +51,7 @@ function run(creep) {
 	} else if(transferResult == ERR_NOT_IN_RANGE) {
 		const moveResult = creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 
-		if (moveResult == OK) {
+		if (moveResult == OK || moveResult == ERR_TIRED) {
 			return false;
 		} else if (moveResult == ERR_NO_PATH) {
 			return true;
