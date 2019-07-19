@@ -171,7 +171,7 @@ function spawnLorry(spawn, body, extraTags = []) {
 }
 
 function spawnThief(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'thief', [CRY, FEAR, DEPOSIT, WITHDRAW, TARGET], body, ['thief', ...extraTags], {
+	return spawnCreep(spawn, 'thief', [FEAR, DEPOSIT, WITHDRAW, TARGET], body, ['thief', ...extraTags], {
 		FEAR: {
 			returnHome: true
 		},
