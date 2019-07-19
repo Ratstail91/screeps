@@ -103,7 +103,7 @@ function stage2(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn scouts
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (!population.scout || Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
@@ -121,7 +121,7 @@ function stage3(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn scouts
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (!population.scout || Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, smallFightBody);
 	}
 
@@ -159,7 +159,7 @@ function stage4(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn large scouts
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (!population.scout || Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
@@ -240,7 +240,7 @@ function stage5(spawn, creeps, population) {
 	population = population || getPopulationByTags(creeps);
 
 	//spawn large scouts
-	if (Memory._cries.length > 0 || Game.flags['rallypoint']) {
+	if (!population.scout || Memory._cries.length > 0 || Game.flags['rallypoint']) {
 		return spawnScout(spawn, largeFightBody);
 	}
 
