@@ -196,7 +196,7 @@ function stage4(spawn, creeps, population) {
 
 	//check for 'stealme' flag
 	if (Game.flags[`${spawn.name}stealme`]) {
-		if (!population.thief || population.thief < 2) {
+		if (!population.thief) {
 			return spawnThief(spawn, largeLorryBody);
 		}
 	}
@@ -280,7 +280,7 @@ function stage5(spawn, creeps, population) {
 
 	//check for 'stealme' flag
 	if (Game.flags[`${spawn.name}stealme`]) {
-		if (!population.thief || population.thief < 2) {
+		if (!population.thief) {
 			return spawnThief(spawn, largeLorryBody);
 		}
 	}

@@ -34,10 +34,10 @@ function handleSpawn(spawn) {
 	defendSpawn(spawn);
 
 	//sell stuff
-	const terminals = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TERMINAL });
-	if (terminals.length !== 0) {
-		market(terminals[0]);
-	}
+//	const terminals = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TERMINAL });
+//	if (terminals.length !== 0) {
+//		market(terminals[0]);
+//	}
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
