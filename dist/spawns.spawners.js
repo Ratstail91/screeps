@@ -34,7 +34,7 @@ function spawnUpgrader(spawn, body, extraTags = []) {
 }
 
 function spawnBuilder(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'builder', [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], body, ['builder', ...extraTags], {
+	return spawnCreep(spawn, 'builder', [CRY, FEAR, REPAIR, BUILD, PICKUP, DEPOSIT, HARVEST], body, ['builder', ...extraTags], {
 		FEAR: {
 			returnHome: true,
 			onSafe: serialize(creep => {
@@ -204,7 +204,7 @@ function spawnSpecializedUpgrader(spawn, body, extraTags = []) {
 }
 
 function spawnSpecializedBuilder(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'specializedBuilder', [CRY, FEAR, BUILD, WITHDRAW, PATROL], body, ['builder', 'specializedBuilder', ...extraTags], {
+	return spawnCreep(spawn, 'specializedBuilder', [CRY, FEAR, BUILD, PICKUP, WITHDRAW, PATROL], body, ['builder', 'specializedBuilder', ...extraTags], {
 		FEAR: {
 			returnHome: true
 		},
@@ -229,7 +229,7 @@ function spawnSpecializedBuilder(spawn, body, extraTags = []) {
 }
 
 function spawnSpecializedRepairer(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'specializedRepairer', [CRY, FEAR, REPAIR, WITHDRAW, PATROL], body, ['repairer', 'specializedRepairer', ...extraTags], {
+	return spawnCreep(spawn, 'specializedRepairer', [CRY, FEAR, REPAIR, PICKUP, WITHDRAW, PATROL], body, ['repairer', 'specializedRepairer', ...extraTags], {
 		FEAR: {
 			returnHome: true
 		},

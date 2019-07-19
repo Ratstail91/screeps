@@ -49,8 +49,15 @@ function run(creep) {
 		//everything is OK
 		return false;
 	} else if(transferResult == ERR_NOT_IN_RANGE) {
-		creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
-		return false;
+		const moveResult = creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+
+		if (moveResult == OK) {
+			return false;
+		} else if (moveResult == ERR_NO_PATH) {
+			return true;
+		}
+
+		throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
 	} else if (transferResult == ERR_NOT_ENOUGH_RESOURCES) {
 		//something else in there?
 		let transferEverythingResult = false;

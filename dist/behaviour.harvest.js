@@ -29,8 +29,16 @@ function run(creep) {
 
 	const remoteFlag = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == remoteFlagName });
 	if (remoteFlag.length == 0) {
-		creep.moveTo(Game.flags[remoteFlagName], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
-		return false;
+		const moveResult = creep.moveTo(Game.flags[remoteFlagName], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+
+		if (moveResult == OK) {
+			return false;
+		} else if (moveResult == ERR_NO_PATH) {
+			//corner case: can't get out...
+			creep.memory[BEHAVIOUR_NAME].remote = null;
+			creep.memory[BEHAVIOUR_NAME].source = null;
+			return false;
+		}
 	}
 
 	//harvest energy (sorted)
