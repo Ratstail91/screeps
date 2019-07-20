@@ -130,7 +130,7 @@ function spawnColonist(spawn, body, extraTags = []) {
 
 //bespoke
 function spawnRestocker(spawn, body, extraTags = []) {
-	return spawnCreep(spawn, 'restocker', [DEPOSIT, PICKUP, WITHDRAW], body, ['restocker', ...extraTags], {
+	return spawnCreep(spawn, 'restocker', [DEPOSIT, WITHDRAW], body, ['restocker', ...extraTags], {
 		DEPOSIT: {
 			returnHomeFirst: true,
 			stores: [TOWER, SPAWN, EXTENSION, TERMINAL]
