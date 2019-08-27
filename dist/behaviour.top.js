@@ -6,8 +6,8 @@ const { TOP: BEHAVIOUR_NAME, HARVEST, UPGRADE, BUILD, REPAIR } = require('behavi
 
 const harvest = require('behaviour.harvest');
 const upgrade = require('behaviour.upgrade');
-//const build = require('behaviour.build');
-//const repair = require('behaviour.repair');
+const build = require('behaviour.build');
+const repair = require('behaviour.repair');
 
 function run(creep) {
 	if (creep.memory[HARVEST] && creep.memory[HARVEST]._lock) {
@@ -30,25 +30,25 @@ function run(creep) {
 		}
 	}
 
-//	if (creep.memory[BUILD] && creep.memory[BUILD]._lock) {
-//		//prevent permanent locking if something goes haywire
-//		creep.memory[BUILD]._lock = false;
+	if (creep.memory[BUILD] && creep.memory[BUILD]._lock) {
+		//prevent permanent locking if something goes haywire
+		creep.memory[BUILD]._lock = false;
 
 		//run until empty
-//		if (_.sum(creep.carry) != 0) {
-//			return build.run(creep);
-//		}
-//	}
+		if (_.sum(creep.carry) != 0) {
+			return build.run(creep);
+		}
+	}
 
-//	if (creep.memory[REPAIR] && creep.memory[REPAIR]._lock) {
-//		//prevent permanent locking if something goes haywire
-//		creep.memory[REPAIR]._lock = false;
+	if (creep.memory[REPAIR] && creep.memory[REPAIR]._lock) {
+		//prevent permanent locking if something goes haywire
+		creep.memory[REPAIR]._lock = false;
 
 		//run until empty
-//		if (_.sum(creep.carry) != 0) {
-//			return repair.run(creep, true);
-//		}
-//	}
+		if (_.sum(creep.carry) != 0) {
+			return repair.run(creep, true);
+		}
+	}
 
 	//no-op
 	return true;

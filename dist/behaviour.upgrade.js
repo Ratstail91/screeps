@@ -18,7 +18,7 @@ function init(creep) {
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
-/* DOCS: init(creep)
+/* DOCS: run(creep)
  * Run upgrade behaviour for "creep".
 */
 function run(creep) {
@@ -43,7 +43,7 @@ function run(creep) {
 
 		case ERR_NOT_IN_RANGE:
 			//move towards the target
-			creep.moveTo(creep.room.controller, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+			creep.moveTo(creep.room.controller, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle, range: 3 });
 			return false;
 
 		case ERR_NOT_ENOUGH_RESOURCES:

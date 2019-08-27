@@ -23,7 +23,7 @@ function init(creep) {
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
-/* DOCS: init(creep)
+/* DOCS: run(creep)
  * Run harvest behaviour for "creep".
 */
 function run(creep) {

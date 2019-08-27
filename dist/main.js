@@ -1,15 +1,29 @@
 const { handleSpawn } = require("spawns");
 const { handleCreep } = require("creeps");
 
+function handleError(e) {
+	const msg = `<div style="color:pink">Error: ${e.message}</div>`;
+	console.log(msg);
+	Game.notify(msg);
+}
+
 module.exports.loop = () => {
 	//run the spawn AI
 	for (const spawnName in Game.spawns) {
-		handleSpawn(Game.spawns[spawnName]);
+		try {
+			handleSpawn(Game.spawns[spawnName]);
+		} catch(e) {
+			handleError(e);
+		}
 	}
 
 	//run the creep AI
 	for (const creepName in Game.creeps) {
-		handleCreep(Game.creeps[creepName]);
+		try {
+			handleCreep(Game.creeps[creepName]);
+		} catch(e) {
+			handleError(e);
+		}
 	}
 
 	//delete memory of dead creeps

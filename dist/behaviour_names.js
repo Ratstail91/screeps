@@ -10,8 +10,8 @@ module.exports = {
 //	WITHDRAW: 'WITHDRAW',
 
 	//building and maintaining structures
-//	BUILD: 'BUILD',
-//	REPAIR: 'REPAIR',
+	BUILD: 'BUILD',
+	REPAIR: 'REPAIR',
 
 	//moving around the rooms
 //	PATROL: 'PATROL',

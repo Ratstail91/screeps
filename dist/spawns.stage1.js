@@ -8,8 +8,10 @@ const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
 const {
-	DEPOSIT, HARVEST, UPGRADE
+	DEPOSIT, HARVEST, UPGRADE, BUILD, REPAIR
 } = require("behaviour_names");
+
+const { schematicBuild } = require("schematic");
 
 //assume 300e available - tinybody is 250e
 const tinyBody = [MOVE, MOVE, WORK, CARRY];
@@ -26,6 +28,23 @@ function run(spawn) {
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 2) {
 		spawnCreep(spawn, "upgrader", ["upgrader"], [HARVEST, UPGRADE], tinyBody);
+	}
+
+	//begin upgrading to the next stage
+	if (spawn.room.controller.level >= 2) {
+		//spawn builders/repairers
+		if (!tags.builder || tags.builder < 4) {
+			spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST], tinyBody);
+		}
+
+		//place the construction sites every so often
+		if (Game.time % 20 == 0) {
+			let schematicResult = schematicBuild(spawn, "schematic.stage1");
+
+			if (schematicResult != 0) {
+				throw new Error(`Invalid schematic count: ${schematicResult}`); //TODO: build elsewhere
+			}
+		}
 	}
 }
 
