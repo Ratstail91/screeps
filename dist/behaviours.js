@@ -1,5 +1,8 @@
 const behaviourNames = require('behaviour_names');
 
+/* initializeBehaviours(creep)
+ * reads through a list of the creep's behaviours, loads that behaviour, and initializes the "creep" with it if an init function is present
+*/
 function initializeBehaviours(creep) {
 	//don't double-init
 	if (creep.memory._init) {
@@ -21,7 +24,7 @@ function initializeBehaviours(creep) {
 	}
 }
 
-function handleBehaviours(creep, name) {
+function handleBehaviour(creep, name) {
 	//check for valid behaviour name
 	if (!behaviourNames[name]) {
 		throw new Error(`Unknown behaviour ${name}`);
@@ -39,6 +42,6 @@ function handleBehaviours(creep, name) {
 }
 
 module.exports = {
-	initializeBehaviours: initializeBehaviours,
-	handleBehaviours: handleBehaviours
+	initializeBehaviours,
+	handleBehaviour,
 };

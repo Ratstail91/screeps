@@ -1,82 +1,53 @@
-const { getCreepsByOrigin, getPopulationByTags } = require('utils.spawns');
-const { kickstart, stage1, stage2, stage3, stage4, stage5, stage6, stage7, stage8 } = require('spawns.stages');
+const {
+	STAGE_1_ENERGY_CAPACITY,
+	STAGE_2_ENERGY_CAPACITY,
+	STAGE_3_ENERGY_CAPACITY,
+	STAGE_4_ENERGY_CAPACITY,
+	STAGE_5_ENERGY_CAPACITY,
+	STAGE_6_ENERGY_CAPACITY,
+} = require("constants");
 
-const { autoBuild } = require('autobuilder');
-const market = require('market');
+const spawnStage1 = require("spawns.stage1");
+//const spawnStage2 = require("spawns.stage2");
+//const spawnStage3 = require("spawns.stage3");
+//const spawnStage4 = require("spawns.stage4");
+//const spawnStage5 = require("spawns.stage5");
+//const spawnStage6 = require("spawns.stage6");
 
-//defensive towers near spawn
-function defendSpawn(spawn) {
-	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS)
-		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
-	;
-
-	if (hostiles.length == 0) {
-		return;
-	}
-
-	const username = hostiles[0].owner.username;
-	Game.notify(`User ${username} spotted near ${spawn.name}`);
-
-	const towers = spawn.room.find(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType == STRUCTURE_TOWER });
-	towers.forEach(tower => tower.attack(hostiles[0]));
-}
-
+/* DOCS: handleSpawn(spawn)
+ * Handles the AI for "spawn"
+*/
 function handleSpawn(spawn) {
-//console.log(spawn.name, JSON.stringify(getPopulationByTags(getCreepsByOrigin(spawn))));
-
-	//remove 'claimme' flag (this room has been claimed)
-	spawn.room.find(FIND_FLAGS, { filter: f => f.name == 'claimme'}).forEach(f => f.remove());
-
-	//build spawn
-	autoBuild(spawn, 'basic');
-
-	//defend the spawn!
-	defendSpawn(spawn);
-
-	//sell stuff
-//	const terminals = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TERMINAL });
-//	if (terminals.length !== 0) {
-//		market(terminals[0]);
-//	}
-
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		return;
 	}
 
-	//get the creep count
-	const creeps = getCreepsByOrigin(spawn);
-	const population = getPopulationByTags(creeps);
+//	if (spawn.room.energyCapacityAvailable >= STAGE_6_ENERGY_CAPACITY) {
+//		return spawnStage6(spawn);
+//	}
 
-	//emergency
-	if (creeps.length < 15 || (spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= 100 && (!population.restocker || population.restocker < 1) )) {
-		return kickstart(spawn);
-	}
+//	if (spawn.room.energyCapacityAvailable >= STAGE_5_ENERGY_CAPACITY) {
+//		return spawnStage5(spawn);
+//	}
 
-	//TODO: stages 7 & 8 are not yet implemented
+//	if (spawn.room.energyCapacityAvailable >= STAGE_4_ENERGY_CAPACITY) {
+//		return spawnStage4(spawn);
+//	}
 
-	if (spawn.room.energyCapacityAvailable >= 2300) {
-		return stage6(spawn, creeps, population);
-	}
+//	if (spawn.room.energyCapacityAvailable >= STAGE_3_ENERGY_CAPACITY) {
+//		return spawnStage3(spawn);
+//	}
 
-	if (spawn.room.energyCapacityAvailable >= 1800) {
-		return stage5(spawn, creeps, population);
-	}
-
-	if (spawn.room.energyCapacityAvailable >= 1300) {
-		return stage4(spawn, creeps, population);
-	}
-
-	if (spawn.room.energyCapacityAvailable >= 800) {
-		return stage3(spawn, creeps, population);
-	}
-
-	if (spawn.room.energyCapacityAvailable >= 550) {
-		return stage2(spawn, creeps, population);
-	}
+//	if (spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+//		return spawnStage2(spawn);
+//	}
 
 	//300 energy available
-	return stage1(spawn, creeps, population);
+	return spawnStage1(spawn);
 }
 
-module.exports = handleSpawn;
+module.exports = {
+	handleSpawn
+};
+

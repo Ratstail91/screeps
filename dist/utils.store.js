@@ -1,14 +1,20 @@
-const TOWER = 'TOWER';
-const SPAWN = 'SPAWN';
-const EXTENSION = 'EXTENSION';
-const CONTAINER = 'CONTAINER';
-const STORAGE = 'STORAGE';
-const TERMINAL = 'TERMINAL';
-const TOMBSTONE = 'TOMBSTONE';
+//storage types that this file recognizes
+const TOWER = "TOWER";
+const SPAWN = "SPAWN";
+const EXTENSION = "EXTENSION";
+const CONTAINER = "CONTAINER";
+const STORAGE = "STORAGE";
+const TERMINAL = "TERMINAL";
+const TOMBSTONE = "TOMBSTONE";
 
+/* DOCS: getStores(creep | spawn [, types])
+ * "point" can be anything with both "room" and "pos" members, including flags.
+ * "types" is an optional array of store types
+*/
 function getStores(point, types) {
 	let result = [];
 
+	//default types
 	if (!types) {
 		types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE];
 	}
@@ -57,7 +63,7 @@ function getStores(point, types) {
 
 			case TERMINAL:
 				result = result.concat(point.room.find(FIND_STRUCTURES, {filter: structure =>
-					structure.structureType == STRUCTURE_TERMINAL
+					structure.structureType == STRUCTURE_TERMINAL && structure.my
 				}).sort((a, b) =>
 					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
 				));
@@ -74,6 +80,9 @@ function getStores(point, types) {
 	return result;
 }
 
+/* DOCS: checkIsStoreEmpty(store)
+ * "store" is the store to check
+*/
 function checkIsStoreEmpty(store) {
 	//check tombstones
 	if (store.deathTime) {
@@ -96,6 +105,9 @@ function checkIsStoreEmpty(store) {
 	}
 }
 
+/* DOCS: checkIsStoreFull(store)
+ * "store" is the store to check
+*/
 function checkIsStoreFull(store) {
 	//check tombstones
 	if (store.deathTime) {
@@ -119,15 +131,15 @@ function checkIsStoreFull(store) {
 }
 
 module.exports = {
-	TOWER: TOWER,
-	SPAWN: SPAWN,
-	EXTENSION: EXTENSION,
-	CONTAINER: CONTAINER,
-	STORAGE: STORAGE,
-	TERMINAL: TERMINAL,
-	TOMBSTONE: TOMBSTONE,
+	TOWER,
+	SPAWN,
+	EXTENSION,
+	CONTAINER,
+	STORAGE,
+	TERMINAL,
+	TOMBSTONE,
 
-	getStores: getStores,
-	checkIsStoreEmpty: checkIsStoreEmpty,
-	checkIsStoreFull: checkIsStoreFull
+	getStores,
+	checkIsStoreEmpty,
+	checkIsStoreFull,
 };

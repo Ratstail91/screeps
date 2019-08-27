@@ -1,17 +1,28 @@
-const { initializeBehaviours, handleBehaviours } = require('behaviours');
+const { initializeBehaviours, handleBehaviour } = require('behaviours');
 
+//special cases
 const top = require('behaviour.top');
 const bottom = require('behaviour.bottom');
 
-function spawnCreep(spawn, name, behaviours, body, tags, memory = {}) {
-	//TODO: add verification, part matching between behaviours and body
-	return spawn.spawnCreep(body, name + Game.time, { memory: _.merge(memory, {
-		behaviours: behaviours,
-		origin: spawn.name,
-		tags: tags //used in spawn logic
-	})});
+/* spawnCreep(spawn, name, behaviours, body[, memory])
+ * This spawns a new creep at "spawn", setting that spawn as it's origin
+ * This takes a "name" and appends the time of creation so that the name is unique
+ * This takes an array of "behaviours" and "bodyParts"
+ * This takes an optional object "memory", appends behaviours and origin spawn name to it, sets that as the creep's memory
+*/
+function spawnCreep(spawn, name, behaviours, bodyParts, memory = {}) {
+	//TODO: add verification, part matching between behaviours and bodyParts
+	return spawn.spawnCreep(bodyParts, name + Game.time, {
+		memory: _.merge(memory, {
+			behaviours: behaviours,
+			origin: spawn.name,
+		})
+	});
 }
 
+/* DOCS: handleCreep(creep)
+ * runs the behaviour stack AI for "creep"
+*/
 function handleCreep(creep) {
 	//not ready yet
 	if (creep.spawning) {
@@ -26,7 +37,7 @@ function handleCreep(creep) {
 
 	//if a module returns false, break the loop
 	for (const index in creep.memory.behaviours) {
-		if (!handleBehaviours(creep, creep.memory.behaviours[index])) {
+		if (!handleBehaviour(creep, creep.memory.behaviours[index])) {
 			break;
 		}
 	}
