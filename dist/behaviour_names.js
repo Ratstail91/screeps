@@ -1,12 +1,12 @@
 module.exports = {
 	//basics
-//	HARVEST: 'HARVEST',
-//	UPGRADE: 'UPGRADE',
+	HARVEST: 'HARVEST',
+	UPGRADE: 'UPGRADE',
 
 	//handling energy
 //	PICKUP: 'PICKUP',
 //	DROP: 'DROP',
-//	DEPOSIT: 'DEPOSIT',
+	DEPOSIT: 'DEPOSIT',
 //	WITHDRAW: 'WITHDRAW',
 
 	//building and maintaining structures

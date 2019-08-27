@@ -7,13 +7,15 @@ const bottom = require('behaviour.bottom');
 /* spawnCreep(spawn, name, behaviours, body[, memory])
  * This spawns a new creep at "spawn", setting that spawn as it's origin
  * This takes a "name" and appends the time of creation so that the name is unique
+ * This takes an array of "tags" which are used by the spawn logic
  * This takes an array of "behaviours" and "bodyParts"
  * This takes an optional object "memory", appends behaviours and origin spawn name to it, sets that as the creep's memory
 */
-function spawnCreep(spawn, name, behaviours, bodyParts, memory = {}) {
+function spawnCreep(spawn, name, tags, behaviours, bodyParts, memory = {}) {
 	//TODO: add verification, part matching between behaviours and bodyParts
 	return spawn.spawnCreep(bodyParts, name + Game.time, {
 		memory: _.merge(memory, {
+			tags: tags,
 			behaviours: behaviours,
 			origin: spawn.name,
 		})
