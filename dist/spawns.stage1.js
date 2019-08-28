@@ -24,7 +24,7 @@ function run(spawn) {
 	if (spawn.room.controller.level >= 2) {
 		//spawn builders/repairers
 		if (!tags.builder || tags.builder < 4) {
-			spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
 		}
 
 		//place the construction sites every so often
@@ -39,12 +39,12 @@ function run(spawn) {
 
 	//spawn harvesters
 	if (!tags.harvester || tags.harvester < 2) {
-		spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody);
+		return spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody);
 	}
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 2) {
-		spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], tinyBody);
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], tinyBody);
 	}
 }
 

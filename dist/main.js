@@ -2,7 +2,7 @@ const { handleSpawn } = require("spawns");
 const { handleCreep } = require("creeps");
 
 function handleError(e) {
-	const msg = `<div style="color:pink">${e.stack}</div>`;
+	const msg = `<div style="color:pink">${e.stack || e}</div>`;
 	console.log(msg);
 	Game.notify(msg);
 }

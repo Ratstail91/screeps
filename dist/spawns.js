@@ -14,6 +14,8 @@ const spawnStage3 = require("spawns.stage3");
 //const spawnStage5 = require("spawns.stage5");
 //const spawnStage6 = require("spawns.stage6");
 
+const { spawnHasCrashed, spawnHandleCrash } = require("spawns.crash");
+
 /* DOCS: handleSpawn(spawn)
  * Handles the AI for "spawn"
 */
@@ -21,6 +23,11 @@ function handleSpawn(spawn) {
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		return;
+	}
+
+	//handle crashes, etc.
+	if (spawnHasCrashed(spawn)) {
+		return spawnHandleCrash(spawn);
 	}
 
 //	if (spawn.room.energyCapacityAvailable >= STAGE_6_ENERGY_CAPACITY) {

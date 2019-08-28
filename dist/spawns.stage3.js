@@ -39,22 +39,22 @@ function run(spawn) {
 
 	//spawn harvesters
 	if (!tags.harvester || tags.harvester < upperLimit) {
-		spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody);
+		return spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody);
 	}
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < upperLimit) {
-		spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], mediumBody);
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], mediumBody);
 	}
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 1) {
-		spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
+		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
 	}
 
 	//spawn scouts
 	if (!tags.scout || tags.scout < 4) {
-		spawnCreep(spawn, "scout", ["scout"], [RECORD, EXPLORE, WANDER], scoutBody);
+		return spawnCreep(spawn, "scout", ["scout"], [RECORD, EXPLORE, WANDER], scoutBody);
 	}
 }
 

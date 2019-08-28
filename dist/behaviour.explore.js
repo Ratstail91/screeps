@@ -18,7 +18,7 @@ function init(creep) {
 
 function run(creep) {
 	//have you moved rooms?
-	if (creep.memory[BEHAVIOUR_NAME]._targetPos != null && creep.room.name != creep.memory[BEHAVIOUR_NAME]._targetPos.roomName) {
+	if (creep.memory[BEHAVIOUR_NAME]._targetPos != null && creep.memory[BEHAVIOUR_NAME]._currentDirection != null && creep.room.name != creep.memory[BEHAVIOUR_NAME]._targetPos.roomName) {
 		//record the movement on the map
 		Memory.map.rooms[creep.memory[BEHAVIOUR_NAME]._targetPos.roomName].exits[creep.memory[BEHAVIOUR_NAME]._currentDirection] = creep.room.name;
 
@@ -67,18 +67,31 @@ function run(creep) {
 			//DO NOTHING
 		} else if (roomRecord.exits.south == null  && setTargetPos(creep, FIND_EXIT_BOTTOM, "south")) {
 			//DO NOTHING
-		} else if (roomRecord.exits.east == null && setTargetPos(creep, FIND_EXIT_LEFT, "east")) {
+		} else if (roomRecord.exits.east == null && setTargetPos(creep, FIND_EXIT_RIGHT, "east")) {
 			//DO NOTHING
-		} else if (roomRecord.exits.west == null && setTargetPos(creep, FIND_EXIT_RIGHT, "west")) {
+		} else if (roomRecord.exits.west == null && setTargetPos(creep, FIND_EXIT_LEFT, "west")) {
 			//DO NOTHING
 		} else {
-			//no valid targets here, pass to the next behaviour
-			return true;
+			//no valid targets here, lets find a null
+			setTargetPosDistant(creep);
 		}
 	}
 
 	//move towards the target
-	let move = creep.moveTo(creep.memory[BEHAVIOUR_NAME]._targetPos.x, creep.memory[BEHAVIOUR_NAME]._targetPos.y, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+	let moveResult = creep.moveTo(new RoomPosition(creep.memory[BEHAVIOUR_NAME]._targetPos.x, creep.memory[BEHAVIOUR_NAME]._targetPos.y, creep.memory[BEHAVIOUR_NAME]._targetPos.roomName), { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+
+	switch(moveResult) {
+		case OK:
+		case ERR_TIRED:
+			break;
+
+		case ERR_NO_PATH:
+			creep.memory[BEHAVIOUR_NAME]._targetPos = null;
+			break;
+
+		default:
+			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
+	}
 
 	//stop here
 	return false;
@@ -95,6 +108,21 @@ function setTargetPos(creep, dir, dirString) {
 	}
 
 	return false;
+}
+
+function setTargetPosDistant(creep) {
+	for (let roomName of Object.keys(Memory.map.rooms)) {
+		for (let exitName of Object.keys(Memory.map.rooms[roomName].exits)) {
+			if (Memory.map.rooms[roomName].exits[exitName] == null) {
+				creep.memory[BEHAVIOUR_NAME]._targetPos = {
+					x: 0, y: 0, roomName: roomName
+				}
+
+				console.log(roomName, exitName);
+				return;
+			}
+		}
+	}
 }
 
 module.exports = {

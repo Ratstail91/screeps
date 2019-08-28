@@ -29,7 +29,7 @@ function run(spawn) {
 
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
-			spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 		}
 
 		//place the construction sites every so often
@@ -44,17 +44,17 @@ function run(spawn) {
 
 	//spawn harvesters
 	if (!tags.harvester || tags.harvester < upperLimit) {
-		spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], smallBody);
+		return spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], smallBody);
 	}
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < upperLimit) {
-		spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
 	}
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 1) {
-		spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
+		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 	}
 }
 
