@@ -43,8 +43,8 @@ function createRoomRecord(room) {
 			//undefined = no door, null = not explored
 			north: room.find(FIND_EXIT_TOP).length > 0 ? null : undefined,
 			south: room.find(FIND_EXIT_BOTTOM).length > 0 ? null : undefined,
-			east: room.find(FIND_EXIT_LEFT).length > 0 ? null : undefined,
-			west: room.find(FIND_EXIT_RIGHT).length > 0 ? null : undefined,
+			east: room.find(FIND_EXIT_RIGHT).length > 0 ? null : undefined,
+			west: room.find(FIND_EXIT_LEFT).length > 0 ? null : undefined,
 		}
 	}
 }

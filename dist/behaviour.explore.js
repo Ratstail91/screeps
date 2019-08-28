@@ -62,14 +62,14 @@ function run(creep) {
 	}
 
 	//set the targetPos
-	if (creep.memory[BEHAVIOUR_NAME]._targetPos == null) {
-		if (roomRecord.exits.north == null && setTargetPos(creep, FIND_EXIT_TOP, "north")) {
+	if (creep.memory[BEHAVIOUR_NAME]._targetPos === null) {
+		if (roomRecord.exits.north === null && setTargetPos(creep, FIND_EXIT_TOP, "north")) {
 			//DO NOTHING
-		} else if (roomRecord.exits.south == null  && setTargetPos(creep, FIND_EXIT_BOTTOM, "south")) {
+		} else if (roomRecord.exits.south === null  && setTargetPos(creep, FIND_EXIT_BOTTOM, "south")) {
 			//DO NOTHING
-		} else if (roomRecord.exits.east == null && setTargetPos(creep, FIND_EXIT_RIGHT, "east")) {
+		} else if (roomRecord.exits.east === null && setTargetPos(creep, FIND_EXIT_RIGHT, "east")) {
 			//DO NOTHING
-		} else if (roomRecord.exits.west == null && setTargetPos(creep, FIND_EXIT_LEFT, "west")) {
+		} else if (roomRecord.exits.west === null && setTargetPos(creep, FIND_EXIT_LEFT, "west")) {
 			//DO NOTHING
 		} else {
 			//no valid targets here, lets find a null
@@ -113,7 +113,7 @@ function setTargetPos(creep, dir, dirString) {
 function setTargetPosDistant(creep) {
 	for (let roomName of Object.keys(Memory.map.rooms)) {
 		for (let exitName of Object.keys(Memory.map.rooms[roomName].exits)) {
-			if (Memory.map.rooms[roomName].exits[exitName] == null) {
+			if (Memory.map.rooms[roomName].exits[exitName] === null) {
 				creep.memory[BEHAVIOUR_NAME]._targetPos = {
 					x: 0, y: 0, roomName: roomName
 				}

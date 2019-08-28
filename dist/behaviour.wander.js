@@ -16,7 +16,7 @@ function init(creep) {
 
 function run(creep) {
 	//find a random room to wander to
-	if (creep.memory[BEHAVIOUR_NAME]._targetPos == null || creep.memory[BEHAVIOUR_NAME]._targetPos.roomName != creep.room.name) {
+	if (creep.memory[BEHAVIOUR_NAME]._targetPos === null || creep.memory[BEHAVIOUR_NAME]._targetPos.roomName != creep.room.name) {
 		const exits = creep.room.find(FIND_EXIT);
 
 		creep.memory[BEHAVIOUR_NAME]._targetPos = exits[Math.floor(Math.random() * exits.length)];
