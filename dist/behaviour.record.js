@@ -28,17 +28,18 @@ function init(creep) {
 
 function run(creep) {
 	if (!Memory.map.rooms[creep.room.name]) {
-		Memory.map.rooms[creep.room.name] = createRoomRecord(creep.room);
+		Memory.map.rooms[creep.room.name] = createRoomRecord(creep, creep.room);
 	}
 
 	return true;
 }
 
-function createRoomRecord(room) {
+function createRoomRecord(creep, room) {
 	return {
 		name: room.name, //for debugging
 		sources: room.find(FIND_SOURCES).length,
 		minerals: room.find(FIND_MINERALS).map(m => m.mineralType),
+		distance: Game.map.getRoomLinearDistance(room.name, Game.spawns[creep.memory.origin].room.name, true),
 		exits: {
 			//undefined = no door, null = not explored
 			north: room.find(FIND_EXIT_TOP).length > 0 ? null : undefined,

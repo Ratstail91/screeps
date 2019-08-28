@@ -7,7 +7,7 @@ const { EXPLORE: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const { REUSE_PATH } = require('constants');
 
-const pathStyle = { stroke: '#ff00ff' };
+//const pathStyle = { stroke: '#ff00ff' };
 
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
@@ -19,10 +19,10 @@ function init(creep) {
 function run(creep) {
 	//have you moved rooms?
 	if (creep.memory[BEHAVIOUR_NAME]._targetPos != null && creep.memory[BEHAVIOUR_NAME]._currentDirection != null && creep.room.name != creep.memory[BEHAVIOUR_NAME]._targetPos.roomName) {
-		//record the movement on the map
+		//record the movement on the map (previous room)
 		Memory.map.rooms[creep.memory[BEHAVIOUR_NAME]._targetPos.roomName].exits[creep.memory[BEHAVIOUR_NAME]._currentDirection] = creep.room.name;
 
-		//record this side too
+		//record this side too (new room)
 		let backwards = null;
 
 		switch(creep.memory[BEHAVIOUR_NAME]._currentDirection) {
@@ -43,9 +43,16 @@ function run(creep) {
 				break;
 		}
 
-		//only record on this side if this room is recorded
+		//only record on this side if this room (the new room) is recorded
 		if (Memory.map.rooms[creep.room.name]) {
 			Memory.map.rooms[creep.room.name].exits[backwards] = creep.memory[BEHAVIOUR_NAME]._targetPos.roomName;
+
+			//if closer to another spawn
+			let distance = Game.map.getRoomLinearDistance(creep.room.name, creep.memory.origin, true);
+
+			if (distance < Memory.map.rooms[creep.room.name].distance) {
+				Memory.map.rooms[creep.room.name].distance = distance;
+			}
 		}
 
 		//clear the state
@@ -72,13 +79,15 @@ function run(creep) {
 		} else if (roomRecord.exits.west === null && setTargetPos(creep, FIND_EXIT_LEFT, "west")) {
 			//DO NOTHING
 		} else {
-			//no valid targets here, lets find a null
-			setTargetPosDistant(creep);
+			//no valid targets here, lets find a null (or pass downwards)
+			if (!setTargetPosDistant(creep)) {
+				return true;
+			}
 		}
 	}
 
 	//move towards the target
-	let moveResult = creep.moveTo(new RoomPosition(creep.memory[BEHAVIOUR_NAME]._targetPos.x, creep.memory[BEHAVIOUR_NAME]._targetPos.y, creep.memory[BEHAVIOUR_NAME]._targetPos.roomName), { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+	let moveResult = creep.moveTo(new RoomPosition(creep.memory[BEHAVIOUR_NAME]._targetPos.x, creep.memory[BEHAVIOUR_NAME]._targetPos.y, creep.memory[BEHAVIOUR_NAME]._targetPos.roomName), { reusePath: 100 });
 
 	switch(moveResult) {
 		case OK:
@@ -110,19 +119,34 @@ function setTargetPos(creep, dir, dirString) {
 	return false;
 }
 
-function setTargetPosDistant(creep) {
-	for (let roomName of Object.keys(Memory.map.rooms)) {
-		for (let exitName of Object.keys(Memory.map.rooms[roomName].exits)) {
-			if (Memory.map.rooms[roomName].exits[exitName] === null) {
-				creep.memory[BEHAVIOUR_NAME]._targetPos = {
-					x: 0, y: 0, roomName: roomName
-				}
+//cached during ticks
+targets = [];
 
-				console.log(roomName, exitName);
-				return;
+function setTargetPosDistant(creep) {
+	if (targets.length == 0) {
+		//find all nulls
+		for (let roomName of Object.keys(Memory.map.rooms)) {
+			//only need a complete map of the nearby regions
+			if (Memory.map.rooms[roomName].distance > 8) {
+				continue;
+			}
+
+			for (let exitName of Object.keys(Memory.map.rooms[roomName].exits)) {
+				if (Memory.map.rooms[roomName].exits[exitName] === null) {
+					targets.push({
+						x: 0, y: 0, roomName: roomName
+					});
+				}
 			}
 		}
 	}
+
+	if (targets.length == 0) {
+		return false;
+	}
+
+	creep.memory[BEHAVIOUR_NAME]._targetPos = targets[Math.floor(Math.random() * targets.length)];
+	return true;
 }
 
 module.exports = {
