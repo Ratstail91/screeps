@@ -8,8 +8,8 @@ const {
 } = require("constants");
 
 const spawnStage1 = require("spawns.stage1");
-//const spawnStage2 = require("spawns.stage2");
-//const spawnStage3 = require("spawns.stage3");
+const spawnStage2 = require("spawns.stage2");
+const spawnStage3 = require("spawns.stage3");
 //const spawnStage4 = require("spawns.stage4");
 //const spawnStage5 = require("spawns.stage5");
 //const spawnStage6 = require("spawns.stage6");
@@ -35,13 +35,13 @@ function handleSpawn(spawn) {
 //		return spawnStage4(spawn);
 //	}
 
-//	if (spawn.room.energyCapacityAvailable >= STAGE_3_ENERGY_CAPACITY) {
-//		return spawnStage3(spawn);
-//	}
+	if (spawn.room.energyCapacityAvailable >= STAGE_3_ENERGY_CAPACITY) {
+		return spawnStage3(spawn);
+	}
 
-//	if (spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
-//		return spawnStage2(spawn);
-//	}
+	if (spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+		return spawnStage2(spawn);
+	}
 
 	//300 energy available
 	return spawnStage1(spawn);

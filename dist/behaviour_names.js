@@ -3,8 +3,8 @@ module.exports = {
 	HARVEST: 'HARVEST',
 	UPGRADE: 'UPGRADE',
 
-	//handling energy
-//	PICKUP: 'PICKUP',
+	//handling energy/resources
+	PICKUP: 'PICKUP',
 //	DROP: 'DROP',
 	DEPOSIT: 'DEPOSIT',
 //	WITHDRAW: 'WITHDRAW',
@@ -14,6 +14,9 @@ module.exports = {
 	REPAIR: 'REPAIR',
 
 	//moving around the rooms
+	RECORD: 'RECORD',
+	EXPLORE: 'EXPLORE',
+	WANDER: 'WANDER',
 //	PATROL: 'PATROL',
 //	TARGET: 'TARGET',
 

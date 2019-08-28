@@ -1,4 +1,4 @@
-/* DOCS: stage 1
+/* DOCS: stage 2
  * The main priority at this stage is to grow as fast as possible.
  * This spawns a few simple harvesters and upgraders.
 */
@@ -13,18 +13,23 @@ const {
 
 const { schematicBuild } = require("schematic");
 
-//assume 300e available - tinybody is 250e
-const tinyBody = [CARRY, WORK, MOVE, MOVE];
+//assume 550 is available - small body is 500e
+const smallBody = [CARRY, CARRY, WORK, WORK, MOVE, MOVE, MOVE, MOVE];
 
 function run(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
+	//an upper limit on units by type
+	let upperLimit = 4;
+
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 2) {
-		//spawn builders/repairers
+	if (spawn.room.controller.level >= 3) {
+		upperLimit = 2; //shift this downwards to give builders enough room
+
+		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
-			spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
+			spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 		}
 
 		//place the construction sites every so often
@@ -38,13 +43,18 @@ function run(spawn) {
 	}
 
 	//spawn harvesters
-	if (!tags.harvester || tags.harvester < 2) {
-		spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody);
+	if (!tags.harvester || tags.harvester < upperLimit) {
+		spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], smallBody);
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 2) {
-		spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], tinyBody);
+	if (!tags.upgrader || tags.upgrader < upperLimit) {
+		spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
+	}
+
+	//spawn builders/repairers
+	if (!tags.builder || tags.builder < 1) {
+		spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 	}
 }
 

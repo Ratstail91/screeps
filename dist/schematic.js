@@ -36,8 +36,16 @@ function placeConstructionSites(point, buildData) {
 		let buildResult = point.room.createConstructionSite(posX, posY, buildData[i].structureType);
 
 		switch(buildResult) {
+			case OK:
+				//do nothing
+				break;
+
 			case ERR_INVALID_TARGET:
 				invalidPlacement++;
+				break;
+
+			case ERR_RCL_NOT_ENOUGH:
+				return invalidPlacement;
 
 			default:
 				throw new Error(`Unknown state in placeConstructionSites for ${point.name}: buildResult ${buildResult} posX ${posX} posY ${posY}`);
