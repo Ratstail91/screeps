@@ -34,11 +34,9 @@ function run(spawn) {
 
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
-			let schematicResult = schematicBuild(spawn, "schematic.extensions");
-
-			if (schematicResult != 0) {
-				throw new Error(`Invalid schematic count: ${schematicResult}`);
-			}
+			schematicBuild(spawn, "schematic.defense");
+			schematicBuild(spawn, "schematic.extensions");
+//			schematicBuild(spawn, "schematic.infrastructure");
 		}
 	}
 

@@ -33,8 +33,20 @@ function run(spawn) {
 	let upperLimit = 4;
 
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 3) {
-		//TODO
+	if (spawn.room.controller.level >= 4) {
+		upperLimit = 2; //shift this downwards to give builders enough room
+
+		//spawn builders/repairers en-masse
+		if (!tags.builder || tags.builder < 4) {
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
+		}
+
+		//place the construction sites every so often
+		if (Game.time % 20 == 0) {
+			schematicBuild(spawn, "schematic.defense");
+			schematicBuild(spawn, "schematic.extensions");
+			schematicBuild(spawn, "schematic.infrastructure");
+		}
 	}
 
 	//spawn harvesters
