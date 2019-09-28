@@ -19,13 +19,18 @@ function getStores(point, types) {
 		types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE];
 	}
 
+	//cache to reduce CPU usage of getRangeTo()
+	let rangeCache = [];
+	point.room.find(FIND_STRUCTURES).forEach(s => rangeCache[s.id] = point.pos.getRangeTo(s));
+
+	//iterate over the switch
 	types.forEach(type => {
 		switch(type) {
 			case TOWER:
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_TOWER && structure.my
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
@@ -33,7 +38,7 @@ function getStores(point, types) {
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_SPAWN && structure.my
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
@@ -41,7 +46,7 @@ function getStores(point, types) {
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_EXTENSION && structure.my
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
@@ -49,7 +54,7 @@ function getStores(point, types) {
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_CONTAINER
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
@@ -57,7 +62,7 @@ function getStores(point, types) {
 				result = result.concat(point.room.find(FIND_STRUCTURES, { filter: structure =>
 					structure.structureType == STRUCTURE_STORAGE
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
@@ -65,13 +70,13 @@ function getStores(point, types) {
 				result = result.concat(point.room.find(FIND_STRUCTURES, {filter: structure =>
 					structure.structureType == STRUCTURE_TERMINAL && structure.my
 				}).sort((a, b) =>
-					point.pos.getRangeTo(a) - point.pos.getRangeTo(b)
+					rangeCache[a.id] - rangeCache[b.id]
 				));
 				break;
 
 			case TOMBSTONE:
 				result = result.concat(point.room.find(FIND_TOMBSTONES)
-					.sort((a, b) => point.pos.getRangeTo(a) - point.pos.getRangeTo(b))
+					.sort((a, b) => rangeCache[a.id] - rangeCache[b.id])
 				);
 				break;
 		}
