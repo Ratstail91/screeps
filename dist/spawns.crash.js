@@ -15,7 +15,7 @@ const tinyBody = [CARRY, WORK, MOVE, MOVE];
 function spawnHasCrashed(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 
-	//TODO: handle different RCL levels and external pressures
+	//TODO: handle different RCL levels and external pressures, and exclude mappers
 
 	if (creeps.length < 5) {
 		return true;

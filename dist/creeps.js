@@ -17,7 +17,7 @@ function spawnCreep(spawn, name, tags, behaviours, bodyParts, memory = {}) {
 		memory: _.merge(memory, {
 			tags: tags,
 			behaviours: behaviours,
-			origin: spawn.name,
+			origin: spawn.name, //TODO: surrogate mother spawns
 		})
 	});
 }

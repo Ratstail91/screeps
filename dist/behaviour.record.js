@@ -6,7 +6,8 @@
  * 'roomName': {
  	name: 'roomName',
 	sources: number,
-	minerals: [],
+	minerals: [mineralTypes],
+	distance: number,
 	exits: {
 		//undefined = no door, null = not explored
 		north: undefined | null | 'roomName',

@@ -3,7 +3,7 @@
  * This spawns a few simple harvesters and upgraders.
 */
 
-const { STAGE_1_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
+const { STAGE_2_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
@@ -27,16 +27,16 @@ function run(spawn) {
 	if (spawn.room.controller.level >= 3) {
 		upperLimit = 2; //shift this downwards to give builders enough room
 
-		//spawn builders/repairers en-masse
-		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
-		}
-
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
 			schematicBuild(spawn, "schematic.defense");
 			schematicBuild(spawn, "schematic.extensions");
 //			schematicBuild(spawn, "schematic.infrastructure");
+		}
+
+		//spawn builders/repairers en-masse
+		if (!tags.builder || tags.builder < 4) {
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 		}
 	}
 

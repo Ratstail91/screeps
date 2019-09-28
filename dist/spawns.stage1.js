@@ -22,16 +22,16 @@ function run(spawn) {
 
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 2) {
-		//spawn builders/repairers
-		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
-		}
-
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
 //			schematicBuild(spawn, "schematic.defense");
 			schematicBuild(spawn, "schematic.extensions");
 //			schematicBuild(spawn, "schematic.infrastructure");
+		}
+
+		//spawn builders/repairers
+		if (!tags.builder || tags.builder < 4) {
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
 		}
 	}
 

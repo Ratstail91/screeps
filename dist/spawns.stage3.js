@@ -2,7 +2,7 @@
  * The main priority at this stage is to grow, and to map out the surrounding rooms.
 */
 
-const { STAGE_1_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
+const { STAGE_3_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
@@ -36,16 +36,16 @@ function run(spawn) {
 	if (spawn.room.controller.level >= 4) {
 		upperLimit = 2; //shift this downwards to give builders enough room
 
-		//spawn builders/repairers en-masse
-		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
-		}
-
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
 			schematicBuild(spawn, "schematic.defense");
 			schematicBuild(spawn, "schematic.extensions");
 			schematicBuild(spawn, "schematic.infrastructure");
+		}
+
+		//spawn builders/repairers en-masse
+		if (!tags.builder || tags.builder < 4) {
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
 		}
 	}
 

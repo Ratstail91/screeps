@@ -24,6 +24,7 @@ function init(creep) {
 
 /* DOCS: run(creep)
  * Run repair behaviour for "creep".
+ * "top" is only set by the behaviour TOP
 */
 function run(creep, top = false) {
 	//can't repair on an empty stomach

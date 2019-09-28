@@ -15,8 +15,8 @@ function run(creep) {
 		return true;
 	}
 
-	//target energy (and other stuff)
-	let energies = creep.room.find(FIND_DROPPED_RESOURCES).filter(r => r.resourceType == RESOURCE_ENERGY);
+	//target energy
+	let energies = creep.room.find(FIND_DROPPED_RESOURCES).filter(r => r.resourceType == RESOURCE_ENERGY); //TODO: handle non-energy resources
 
 	if (energies.length > 0) {
 		const pickupResult = creep.pickup(energies[0]);

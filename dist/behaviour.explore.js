@@ -17,7 +17,7 @@ function init(creep) {
 }
 
 function run(creep) {
-	//have you moved rooms?
+	//have you moved rooms? i.e. passing through the null
 	if (creep.memory[BEHAVIOUR_NAME]._targetPos != null && creep.memory[BEHAVIOUR_NAME]._currentDirection != null && creep.room.name != creep.memory[BEHAVIOUR_NAME]._targetPos.roomName) {
 		//record the movement on the map (previous room)
 		Memory.map.rooms[creep.memory[BEHAVIOUR_NAME]._targetPos.roomName].exits[creep.memory[BEHAVIOUR_NAME]._currentDirection] = creep.room.name;
