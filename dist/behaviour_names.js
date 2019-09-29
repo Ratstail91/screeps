@@ -5,9 +5,9 @@ module.exports = {
 
 	//handling energy/resources
 	PICKUP: 'PICKUP',
-//	DROP: 'DROP',
+	DROP: 'DROP',
 	DEPOSIT: 'DEPOSIT',
-//	WITHDRAW: 'WITHDRAW',
+	WITHDRAW: 'WITHDRAW',
 
 	//building and maintaining structures
 	BUILD: 'BUILD',
