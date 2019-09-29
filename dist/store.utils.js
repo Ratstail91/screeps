@@ -16,7 +16,7 @@ function getStores(point, types) {
 
 	//default types
 	if (!types) {
-		types = [TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE];
+		types = [TOWER, EXTENSION, SPAWN, CONTAINER, STORAGE];
 	}
 
 	//cache to reduce CPU usage of getRangeTo()

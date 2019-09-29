@@ -28,23 +28,66 @@ function getPopulationByTags(creeps = Game.creeps) {
 	return population;
 }
 
+/* DOCS: initializeSpawnMemory(spawn)
+ * Initializes the memory of "spawn"
+*/
+function initializeSpawnMemory(spawn) {
+	console.log("initializeSpawnMemory");
+	//create the data structures
+	if (!Memory.spawns) {
+		Memory.spawns = {};
+	}
+
+	if (!Memory.spawns[spawn.name]) {
+		Memory.spawns[spawn.name] = {};
+	}
+
+	//initialize remotes
+	Memory.spawns[spawn.name].remotes = {};
+
+	//initial remote: this room
+	Memory.spawns[spawn.name].remotes[`${spawn.name}remote0`] = new RoomPosition(1, 1, spawn.room.name);
+
+	//expand the remotes
+	expandRemotes(spawn);
+
+	//TODO: more
+}
+
+/* DOCS: expandRemotes(spawn)
+ * Expands the remotes of "spawn" out by one layer
+*/
+function expandRemotes(spawn) {
+	Object.values(Memory.spawns[spawn.name].remotes).forEach(remote => {
+		const mappedRoom = Memory.map.rooms[remote.roomName];
+		Object.values(mappedRoom.exits).forEach(roomName => createRemoteIfNotExists(spawn, roomName));
+	});
+}
+
+/* DOCS: createRemoteIfNotExists(spawn, roomName)
+ * Creates a remote for "spawn" in "rooomName" if it doesn't already exist
+*/
+function createRemoteIfNotExists(spawn, roomName) {
+	let remoteCount = Object.keys(Memory.spawns[spawn.name].remotes).length;
+	let existingRemotes = Object.values(Memory.spawns[spawn.name].remotes).filter(r => r.roomName == roomName);
+
+	if (existingRemotes.length == 0) {
+		Memory.spawns[spawn.name].remotes[`${spawn.name}remote${remoteCount}`] = new RoomPosition(1, 1, roomName);
+	}
+}
+
 /* DOCS: countRemotes(spawnName)
- * Counts every remote (flag) that begins with '"spawnName"remote'.
+ * Counts every remote of spawnName
 */
 function countRemotes(spawnName) {
-	let counter = 0;
-
-	while(true) {
-		if (!Game.flags[`${spawnName}remote${counter}`]) {
-			return counter;
-		}
-
-		counter++;
-	}
+	return Object.keys(Memory.spawns[spawnName].remotes).length;
 }
 
 module.exports = {
 	getCreepsByOrigin,
 	getPopulationByTags,
+	initializeSpawnMemory,
+	expandRemotes,
+	createRemoteIfNotExists,
 	countRemotes,
 };

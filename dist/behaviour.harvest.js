@@ -38,12 +38,12 @@ function run(creep) {
 		creep.memory[BEHAVIOUR_NAME].source = null;
 	}
 
-	const remoteFlagName = `${creep.memory.origin}remote${creep.memory[BEHAVIOUR_NAME].remote}`;
+	const remoteName = `${creep.memory.origin}remote${creep.memory[BEHAVIOUR_NAME].remote}`;
 
-	//if not in the flag's room
-	const remoteFlag = creep.room.find(FIND_FLAGS, { filter: flag => flag.name == remoteFlagName });
-	if (remoteFlag.length == 0) {
-		const moveResult = creep.moveTo(Game.flags[remoteFlagName], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+	//if not in the remote's room
+	if (creep.room.name != Memory.spawns[creep.memory.origin].remotes[remoteName].roomName) {
+		let remotePos = new RoomPosition(Memory.spawns[creep.memory.origin].remotes[remoteName].x, Memory.spawns[creep.memory.origin].remotes[remoteName].y, Memory.spawns[creep.memory.origin].remotes[remoteName].roomName);
+		const moveResult = creep.moveTo(remotePos, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 
 		if (moveResult == OK) {
 			return false;
