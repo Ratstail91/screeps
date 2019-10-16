@@ -28,7 +28,7 @@ function init(creep) {
 */
 function run(creep, top = false) {
 	//can't repair on an empty stomach
-	if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
 		return true;
 	}
 

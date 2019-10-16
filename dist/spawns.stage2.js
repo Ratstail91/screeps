@@ -20,13 +20,8 @@ function run(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
-	//an upper limit on units by type
-	let upperLimit = 4;
-
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 3) {
-		upperLimit = 2; //shift this downwards to give builders enough room
-
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
 			if (schematicBuild(spawn, "schematic.defense") != 0) {
@@ -40,17 +35,22 @@ function run(spawn) {
 
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody, {
+				HARVEST: {
+					remote: 0,
+					source: null
+				}
+			});
 		}
 	}
 
 	//spawn harvesters
-	if (!tags.harvester || tags.harvester < upperLimit) {
+	if (!tags.harvester || tags.harvester < 4) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], smallBody);
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < upperLimit) {
+	if (!tags.upgrader || tags.upgrader < 2) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
 	}
 

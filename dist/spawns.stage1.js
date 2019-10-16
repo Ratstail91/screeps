@@ -31,7 +31,12 @@ function run(spawn) {
 
 		//spawn builders/repairers
 		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
+			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody, {
+				HARVEST: {
+					remote: 0,
+					source: null
+				}
+			});
 		}
 	}
 

@@ -37,18 +37,33 @@ function spawnHandleCrash(spawn) {
 	tags = getPopulationByTags(creeps);
 
 	//spawn harvesters
-	if (!tags.harvester || tags.harvester < 2) {
-		return spawnCreep(spawn, "harvester", ["harvester", "crash"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody);
+	if (!tags.harvester || tags.harvester < 3) {
+		return spawnCreep(spawn, "harvester", ["harvester", "crash"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, {
+			HARVEST: {
+				remote: 0,
+				source: null
+			}
+		});
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 2) {
-		return spawnCreep(spawn, "upgrader", ["upgrader", "crash"], [PICKUP, HARVEST, UPGRADE], tinyBody);
+	if (!tags.upgrader || tags.upgrader < 1) {
+		return spawnCreep(spawn, "upgrader", ["upgrader", "crash"], [PICKUP, HARVEST, UPGRADE], tinyBody, {
+			HARVEST: {
+				remote: 0,
+				source: null
+			}
+		});
 	}
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 1) {
-		return spawnCreep(spawn, "builder", ["builder", "crash"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody);
+		return spawnCreep(spawn, "builder", ["builder", "crash"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody, {
+			HARVEST: {
+				remote: 0,
+				source: null
+			}
+		});
 	}
 }
 

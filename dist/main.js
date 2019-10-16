@@ -4,7 +4,7 @@ const profiler = require('screepers.profiler');
 
 function handleError(e) {
 	console.log(`<div style="color:pink">${e.stack || e}</div>`);
-	Game.notify(`<div style="color:red;background-color:pink">${e.stack || e}</div>`);
+	Game.notify(`<div style="background-color:pink">${e.stack || e}</div>`);
 }
 
 profiler.enable();
