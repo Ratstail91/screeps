@@ -49,6 +49,7 @@ function placeConstructionSites(point, buildData) {
 				break;
 
 			case ERR_RCL_NOT_ENOUGH:
+			case ERR_FULL:
 				return invalidPlacement;
 
 			default:
