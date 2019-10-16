@@ -30,8 +30,23 @@ function getPopulationByTags(creeps = Game.creeps) {
 
 /* DOCS: countRemotes(spawnName)
  * Counts every remote of spawnName
+ * TODO: improve efficiency
 */
 function countRemotes(spawnName) {
+	let counter = 0;
+
+	while(true) {
+		let flagName = `${spawnName}remote${counter}`;
+
+		if (!Game.flags[flagName]) {
+			break;
+		}
+
+		registerRemote(spawnName, flagName);
+
+		counter++;
+	}
+
 	return Object.keys(Memory.spawns[spawnName].remotes).length;
 }
 

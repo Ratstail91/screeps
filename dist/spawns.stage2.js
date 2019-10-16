@@ -55,7 +55,7 @@ function run(spawn) {
 	}
 
 	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 1) {
+	if (!tags.builder || tags.builder < 2) {
 		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
 	}
 }

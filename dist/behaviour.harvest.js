@@ -40,6 +40,8 @@ function run(creep) {
 
 	const remoteName = `${creep.memory.origin}remote${creep.memory[BEHAVIOUR_NAME].remote}`;
 
+	countRemotes(creep.memory.origin); //NOTE: hack
+
 	//if not in the remote's room
 	if (creep.room.name != Memory.spawns[creep.memory.origin].remotes[remoteName].roomName) {
 		let remotePos = new RoomPosition(Memory.spawns[creep.memory.origin].remotes[remoteName].x, Memory.spawns[creep.memory.origin].remotes[remoteName].y, Memory.spawns[creep.memory.origin].remotes[remoteName].roomName);

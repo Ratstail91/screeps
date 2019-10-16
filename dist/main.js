@@ -5,6 +5,8 @@ const profiler = require('screepers.profiler');
 profiler.enable();
 module.exports.loop = () => {
 	profiler.wrap(() => {
+		//TODO: kill creeps with no memory
+
 		//run the spawn AI
 		for (const spawnName in Game.spawns) {
 			handleSpawn(Game.spawns[spawnName]);
