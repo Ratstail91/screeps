@@ -10,7 +10,13 @@ function attackHostileCreeps(creep, filter) {
 		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
 	;
 
-	const closestHostile = creep.pos.findClosestByPath(hostileCreeps, { filter: filter });
+	let closestHostile = creep.pos.findClosestByPath(hostileCreeps, { filter: filter });
+
+	if (!closestHostile) {//TODO: cleanup
+		closestHostile = creep.pos.findClosestByPath(creep.room.find(FIND_HOSTILE_STRUCTURES, {
+			filter: s => s.structureType != STRUCTURE_CONTROLLER && s.structureType != STRUCTURE_POWER_BANK && s.structureType != STRUCTURE_POWER_SPAWN
+		}));
+	}
 
 	if (closestHostile) {
 		const attackResult = iAmRanged ? creep.rangedAttack(closestHostile) : creep.attack(closestHostile);

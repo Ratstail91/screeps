@@ -51,7 +51,7 @@ function run(spawn) {
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 2) {
+	if (!tags.upgrader || tags.upgrader < 3) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
 	}
 

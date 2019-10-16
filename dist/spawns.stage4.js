@@ -9,7 +9,7 @@ const { spawnCreep } = require("creeps");
 
 const {
 	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
-	TARGET, PATROL, BRAVE,
+	TARGET, PATROL, BRAVE, FEAR,
 } = require("behaviour_names");
 
 const {
@@ -17,10 +17,19 @@ const {
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
+const { serialize } = require("behaviour.fear");
 
 //assume 1300 is available
 const claimerBody = [ //650
 	MOVE, CLAIM,
+];
+
+const guardBody = [
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
+
+	ATTACK, ATTACK, ATTACK, //240
+
+//	HEAL, HEAL, //500 //TODO: heal
 ];
 
 const specializedHarvesterBody = [ //800
@@ -79,18 +88,32 @@ function run(spawn) {
 	tags = getPopulationByTags(creeps);
 
 	//claim nearby rooms (high priority)
-	if (!tags.claimer1 || tags.claimer1 < 1) {
-		return spawnCreep(spawn, "claimer", ["claimer1"], [CLAIMER, TARGET], claimerBody, {
+	if (!tags.claimer || tags.claimer < 1) {
+		return spawnCreep(spawn, "claimer", ["claimer"], [TARGET, CLAIMER], claimerBody, {
+			CLAIMER: {
+				claim: true
+			},
 			TARGET: {
-				targetFlag: "reserveme1"
+				targetFlag: "claimme",
+				stopInRoom: true
 			}
 		});
 	}
 
-	if (!tags.claimer2 || tags.claimer2 < 1) {
-		return spawnCreep(spawn, "claimer", ["claimer2"], [CLAIMER, TARGET], claimerBody, {
+	if (!tags.reserver1 || tags.reserver1 < 1) {
+		return spawnCreep(spawn, "reserver1", ["reserver1"], [TARGET, CLAIMER], claimerBody, {
 			TARGET: {
-				targetFlag: "reserveme2"
+				targetFlag: "reserveme1",
+				stopInRoom: true
+			}
+		});
+	}
+
+	if (!tags.reserver2 || tags.reserver2 < 1) {
+		return spawnCreep(spawn, "reserver2", ["reserver2"], [TARGET, CLAIMER], claimerBody, {
+			TARGET: {
+				targetFlag: "reserveme2",
+				stopInRoom: true
 			}
 		});
 	}
@@ -99,7 +122,15 @@ function run(spawn) {
 	if (spawn.room.controller.level >= 5) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 6) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+			return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+				FEAR: {
+					onSafe: serialize(c => {
+						c.memory['PATROL']._targetCounter++;
+						if (c.memory['PATROL']._targetCounter >= c.memory['PATROL'].targetFlags.length) {
+							c.memory['PATROL']._targetCounter = 0;
+						}
+					})
+				},
 				WITHDRAW: {
 					stores: [CONTAINER, STORAGE]
 				},
@@ -119,35 +150,20 @@ function run(spawn) {
 		});
 	}
 
-	if (tags.guard || tags.guard < 2) {
-		return spawnCreep(spawn, "guard", ["guard"], [BRAVE, PATROL], guardBody, {
-			PATROL: {
-				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
-			}
-		});
-	}
-
-	//spawn MORE harvesters
-	if (!tags.harvester || tags.harvester < 10) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [DEPOSIT, HARVEST], specializedHarvesterBody, {
+	//lorry
+	if (!tags.lorry || tags.lorry < 1) {
+		return spawnCreep(spawn, "lorry", ["lorry"], [FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
+			FEAR: {
+				onSafe: serialize(c => {
+					c.memory['PATROL']._targetCounter++;
+					if (c.memory['PATROL']._targetCounter >= c.memory['PATROL'].targetFlags.length) {
+						c.memory['PATROL']._targetCounter = 0;
+					}
+				})
+			},
 			DEPOSIT: {
-				stores: [CONTAINER]
-			}
-		});
-	}
-
-	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 5) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
-			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
-			}
-		});
-	}
-
-	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+				stores: [EXTENSION, SPAWN, TOWER]
+			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE]
 			},
@@ -157,11 +173,48 @@ function run(spawn) {
 		});
 	}
 
-	//lorry
-	if (!tags.lorry || tags.lorry < 1) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [DEPOSIT, WITHDRAW, PATROL], lorryBody, {
+	if (!tags.guard || tags.guard < 2) {
+		return spawnCreep(spawn, "guard", ["guard"], [BRAVE, PATROL], guardBody, {
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
+	//spawn MORE harvesters
+	if (!tags.harvester || tags.harvester < 10) {
+		return spawnCreep(spawn, "harvester", ["harvester"], [FEAR, DEPOSIT, HARVEST], specializedHarvesterBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			},
 			DEPOSIT: {
-				stores: [EXTENSION, SPAWN, TOWER]
+				stores: [CONTAINER]
+			}
+		});
+	}
+
+	//spawn upgraders
+	if (!tags.upgrader || tags.upgrader < 5) {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [FEAR, PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			},
+			WITHDRAW: {
+				stores: [CONTAINER, STORAGE]
+			}
+		});
+	}
+
+	//spawn builders/repairers
+	if (!tags.builder || tags.builder < 2) {
+		return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+			FEAR: {
+				onSafe: serialize(c => {
+					c.memory['PATROL']._targetCounter++;
+					if (c.memory['PATROL']._targetCounter >= c.memory['PATROL'].targetFlags.length) {
+						c.memory['PATROL']._targetCounter = 0;
+					}
+				})
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE]

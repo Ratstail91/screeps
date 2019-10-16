@@ -9,6 +9,8 @@ const { spawnCreep } = require("creeps");
 
 const {
 	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
+	FEAR, BRAVE, PATROL, TARGET,
+	CLAIMER,
 } = require("behaviour_names");
 
 const {
@@ -16,8 +18,13 @@ const {
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
+const { serialize } = require("behaviour.fear");
 
 //assume 800 is available - medium body is 800e
+const claimerBody = [ //650
+	MOVE, CLAIM,
+];
+
 const mediumBody = [ //800
 	CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK,
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
@@ -26,6 +33,14 @@ const mediumBody = [ //800
 const lorryBody = [ //800
 	CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, 
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+];
+
+const guardBody = [
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
+
+	ATTACK, ATTACK, ATTACK, //240
+
+//	HEAL, HEAL, //500
 ];
 
 function run(spawn) {
@@ -48,11 +63,46 @@ function run(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
+	//claim nearby rooms (high priority)
+	//TODO: better claim & reserver code
+//	if (!tags.claimer || tags.claimer < 1) {
+//		return spawnCreep(spawn, "claimer", ["claimer"], [TARGET, CLAIMER], claimerBody, {
+//			CLAIMER: {
+//				claim: true
+//			},
+//			TARGET: {
+//				targetFlag: "claimme",
+//				stopInRoom: true
+//			}
+//		});
+//	}
+
+	if (!tags.reserver1 || tags.reserver1 < 1) {
+		return spawnCreep(spawn, "reserver1", ["reserver1"], [TARGET, CLAIMER], claimerBody, {
+			TARGET: {
+				targetFlag: "reserveme1",
+				stopInRoom: true
+			}
+		});
+	}
+
+	if (!tags.reserver2 || tags.reserver2 < 1) {
+		return spawnCreep(spawn, "reserver2", ["reserver2"], [TARGET, CLAIMER], claimerBody, {
+			TARGET: {
+				targetFlag: "reserveme2",
+				stopInRoom: true
+			}
+		});
+	}
+
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 4) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
-			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody, {
+			return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, HARVEST, UPGRADE], mediumBody, {
+				FEAR: {
+					onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+				},
 				HARVEST: {
 					remote: 0,
 					source: null
@@ -62,18 +112,12 @@ function run(spawn) {
 	}
 
 	//spawn harvesters
-	if (!tags.harvester || tags.harvester < 10) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody);
-	}
-
-	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 5) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], mediumBody);
-	}
-
-	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
+	if (!tags.harvester || tags.harvester < 4) {
+		return spawnCreep(spawn, "harvester", ["harvester"], [FEAR, PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			}
+		});
 	}
 
 	//lorry
@@ -84,6 +128,58 @@ function run(spawn) {
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE]
+			}
+		});
+	}
+
+//	//TMP
+//	if (!tags.attacker || tags.attacker < 2) {
+//		return spawnCreep(spawn, "attacker", ["attacker"], [BRAVE, TARGET], guardBody, {
+//			TARGET: {
+//				targetFlag: 'attackme'
+//			}
+//		});
+//	}
+
+	if (!tags.guard || tags.guard < 4) {
+		return spawnCreep(spawn, "guard", ["guard"], [BRAVE, PATROL], guardBody, {
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
+	if (!tags.colonist || tags.colonist < 10) {
+		return spawnCreep(spawn, "colonist", ["colonist"], [PICKUP, BUILD, HARVEST, TARGET], mediumBody, {
+			TARGET: {
+				targetFlag: 'claimme'
+			}
+		});
+	}
+
+	//spawn MORE harvesters
+	if (!tags.harvester || tags.harvester < 10) {
+		return spawnCreep(spawn, "harvester", ["harvester"], [FEAR, PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			}
+		});
+	}
+
+	//spawn upgraders
+	if (!tags.upgrader || tags.upgrader < 5) {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [FEAR, PICKUP, HARVEST, UPGRADE], mediumBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			}
+		});
+	}
+
+	//spawn builders/repairers
+	if (!tags.builder || tags.builder < 2) {
+		return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, HARVEST, UPGRADE], mediumBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			}
 		});
 	}

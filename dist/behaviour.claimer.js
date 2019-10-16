@@ -32,6 +32,12 @@ function run(creep) {
 			creep.reserveController(creep.room.controller);
 			return false;
 
+		case ERR_INVALID_TARGET:
+			if (!creep.room.controller.my) {
+				creep.attackController(creep.room.controller);
+			}
+			return false;
+
 		default:
 			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: claimResult ${claimResult}`);
 	}

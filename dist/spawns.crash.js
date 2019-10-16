@@ -18,7 +18,7 @@ function spawnHasCrashed(spawn) {
 
 	//TODO: handle different RCL levels and external pressures, and exclude mappers
 
-	if (creeps.length < 5 && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+	if ((creeps.length < 5 || creeps.length < spawn.room.controller.level * 2) && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
 		return true;
 	} else {
 		Memory._crashHandler = false;
@@ -65,6 +65,14 @@ function spawnHandleCrash(spawn) {
 			}
 		});
 	}
+
+	//spawn harvesters by default
+	return spawnCreep(spawn, "harvester", ["harvester", "crash"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, {
+		HARVEST: {
+			remote: 0,
+			source: null
+		}
+	});
 }
 
 module.exports = {

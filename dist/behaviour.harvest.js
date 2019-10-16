@@ -91,6 +91,7 @@ function run(creep) {
 			return false;
 		}
 
+		case ERR_NOT_OWNER:
 		case ERR_NOT_ENOUGH_RESOURCES:
 			if (!creep.memory[BEHAVIOUR_NAME].lockToSource) {
 				//go to a random remote and source
