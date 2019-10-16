@@ -14,7 +14,9 @@ module.exports.loop = () => {
 
 		//run the creep AI
 		for (const creepName in Game.creeps) {
-			handleCreep(Game.creeps[creepName]);
+			if (Game.creeps[creepName].memory) {
+				handleCreep(Game.creeps[creepName]);
+			}
 		}
 
 		//delete memory of dead creeps
