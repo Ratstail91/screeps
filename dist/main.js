@@ -3,9 +3,8 @@ const { handleCreep } = require('creeps');
 const profiler = require('screepers.profiler');
 
 function handleError(e) {
-	const msg = `<div style="color:pink">${e.stack || e}</div>`;
-	console.log(msg);
-	Game.notify(msg);
+	console.log(`<div style="color:pink">${e.stack || e}</div>`);
+	Game.notify(`<div style="color:red;background-color:pink">${e.stack || e}</div>`);
 }
 
 profiler.enable();
