@@ -1,6 +1,6 @@
 const { WITHDRAW: BEHAVIOUR_NAME } = require('behaviour_names');
 
-const { getStores, checkIsStoreEmpty, CONTAINER, STORAGE } = require('store.utils');
+const { getStores, CONTAINER, STORAGE } = require('store.utils');
 
 const { REUSE_PATH } = require('constants');
 
@@ -40,8 +40,9 @@ function run(creep) {
 	}
 
 	//get the stores
+	//WARNING: bad naming
 	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores || [CONTAINER, STORAGE])
-		.filter(store => !checkIsStoreEmpty(store));
+		.filter(store => store.store[RESOURCE_ENERGY] > 0);
 
 	if (stores.length == 0) {
 		//nothing to withdraw from

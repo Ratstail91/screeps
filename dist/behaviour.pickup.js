@@ -55,6 +55,26 @@ function run(creep) {
 		}		
 	}
 
+	//target ruins
+	const ruins = creep.room.find(FIND_RUINS, { filter: ruins => ruins.store[RESOURCE_ENERGY] > 0 });
+
+	if (ruins.length > 0) {
+		const ruinsResult = creep.withdraw(ruins[0], RESOURCE_ENERGY);
+
+		switch(ruinsResult) {
+			case OK:
+				//DO NOTHING
+				return false;
+
+			case ERR_NOT_IN_RANGE:
+				creep.moveTo(ruins[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+				return false;
+
+			default:
+				throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: ruinsResult ${ruinsResult}`);
+		}		
+	}
+
 	//fall through if nothing found
 	return true;
 }

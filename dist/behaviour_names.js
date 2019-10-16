@@ -17,18 +17,18 @@ module.exports = {
 //	RECORD: 'RECORD',
 //	EXPLORE: 'EXPLORE',
 //	WANDER: 'WANDER',
-//	PATROL: 'PATROL',
-//	TARGET: 'TARGET',
+	PATROL: 'PATROL',
+	TARGET: 'TARGET',
 
 	//run or fight
 //	FEAR: 'FEAR',
-//	BRAVE: 'BRAVE',
+	BRAVE: 'BRAVE',
 
 	//call for help/respond to calls for help
 //	CRY: 'CRY',
 //	CARE: 'CARE',
 
 	//specialized behaviours
-//	CLAIMER: 'CLAIMER',
+	CLAIMER: 'CLAIMER',
 //	WRITER: 'WRITER',
 };

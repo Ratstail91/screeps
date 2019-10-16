@@ -1,4 +1,4 @@
-/* DOCS: stage 2
+/* DOCS: stage 3
  * The main priority at this stage is to grow as fast as possible.
  * This spawns a few simple harvesters and upgraders.
 */
@@ -8,9 +8,12 @@ const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
 const {
-	PICKUP, DEPOSIT, HARVEST, UPGRADE, BUILD, REPAIR,
-	RECORD, EXPLORE, WANDER,
+	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
 } = require("behaviour_names");
+
+const {
+	TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE,
+} = require("store.utils");
 
 const { schematicBuild } = require("schematic");
 
@@ -18,6 +21,11 @@ const { schematicBuild } = require("schematic");
 const mediumBody = [ //800
 	CARRY, CARRY, CARRY, CARRY, CARRY, WORK, WORK,
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
+];
+
+const lorryBody = [ //800
+	CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, 
+	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
 ];
 
 function run(spawn) {
@@ -66,6 +74,18 @@ function run(spawn) {
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 2) {
 		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], mediumBody);
+	}
+
+	//lorry
+	if (!tags.lorry || tags.lorry < 1) {
+		return spawnCreep(spawn, "lorry", ["lorry"], [DEPOSIT, WITHDRAW], lorryBody, {
+			DEPOSIT: {
+				stores: [EXTENSION, SPAWN, TOWER]
+			},
+			WITHDRAW: {
+				stores: [CONTAINER, STORAGE]
+			}
+		});
 	}
 }
 
