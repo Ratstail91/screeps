@@ -2,6 +2,12 @@ const { handleSpawn } = require('spawns');
 const { handleCreep } = require('creeps');
 const profiler = require('screepers.profiler');
 
+function handleError(e) {
+	const msg = `<div style="color:pink">${e.stack || e}</div>`;
+	console.log(msg);
+	Game.notify(msg);
+}
+
 profiler.enable();
 module.exports.loop = () => {
 	profiler.wrap(() => {
@@ -9,13 +15,19 @@ module.exports.loop = () => {
 
 		//run the spawn AI
 		for (const spawnName in Game.spawns) {
-			handleSpawn(Game.spawns[spawnName]);
+			try {
+				handleSpawn(Game.spawns[spawnName]);
+			} catch(e) {
+				handleError(e);
+			}
 		}
 
 		//run the creep AI
 		for (const creepName in Game.creeps) {
-			if (Game.creeps[creepName].memory) {
+			try {
 				handleCreep(Game.creeps[creepName]);
+			} catch(e) {
+				handleError(e);
 			}
 		}
 
