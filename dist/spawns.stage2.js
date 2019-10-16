@@ -17,22 +17,23 @@ const { schematicBuild } = require("schematic");
 const smallBody = [CARRY, CARRY, WORK, WORK, MOVE, MOVE, MOVE, MOVE];
 
 function run(spawn) {
+	//place the construction sites every so often
+	if (Game.time % 20 == 0) {
+		if (schematicBuild(spawn, "schematic.defense") != 0) {
+			Game.notify("schematicBuild returned a non-zero value (defense stage 2)");
+		}
+
+		if (schematicBuild(spawn, "schematic.extensions") != 0) {
+			Game.notify("schematicBuild returned a non-zero value (excensions stage 2)");
+		}
+	}
+
+	//work on the creeps
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 3) {
-		//place the construction sites every so often
-		if (Game.time % 20 == 0) {
-			if (schematicBuild(spawn, "schematic.defense") != 0) {
-				Game.notify("schematicBuild returned a non-zero value (defense stage 2)");
-			}
-
-			if (schematicBuild(spawn, "schematic.extensions") != 0) {
-				Game.notify("schematicBuild returned a non-zero value (excensions stage 2)");
-			}
-		}
-
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
 			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody, {
