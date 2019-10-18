@@ -3,6 +3,8 @@
  * This relies on existing infrastructure placed by the player.
 */
 
+//TODO: allow new behaviours after spawn
+
 const { STAGE_4_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
@@ -143,7 +145,7 @@ function run(spawn) {
 
 	//spawn harvesters (enough to support the guards)
 	if (!tags.harvester || tags.harvester < 4) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, DEPOSIT, HARVEST], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, DEPOSIT, HARVEST, REPAIR, BUILD], specializedHarvesterBody, {
 			DEPOSIT: {
 				stores: [CONTAINER]
 			}
@@ -184,7 +186,7 @@ function run(spawn) {
 
 	//spawn MORE harvesters
 	if (!tags.harvester || tags.harvester < 10) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, DEPOSIT, HARVEST], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, DEPOSIT, HARVEST, REPAIR, BUILD], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
@@ -195,7 +197,7 @@ function run(spawn) {
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 5) {
+	if (!tags.upgrader || tags.upgrader < 2) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
