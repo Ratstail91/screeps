@@ -9,7 +9,7 @@ const { spawnCreep } = require("creeps");
 
 const {
 	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
-	TARGET, PATROL, BRAVE, FEAR,
+	TARGET, PATROL, BRAVE, FEAR, CRY, CARE, CLAIMER,
 } = require("behaviour_names");
 
 const {
@@ -20,8 +20,8 @@ const { schematicBuild } = require("schematic");
 const { serialize } = require("behaviour.fear");
 
 //assume 1300 is available
-const claimerBody = [ //650
-	MOVE, CLAIM,
+const claimerBody = [ //1300
+	MOVE, MOVE, CLAIM, CLAIM,
 ];
 
 const guardBody = [
@@ -88,20 +88,20 @@ function run(spawn) {
 	tags = getPopulationByTags(creeps);
 
 	//claim nearby rooms (high priority)
-	if (!tags.claimer || tags.claimer < 1) {
-		return spawnCreep(spawn, "claimer", ["claimer"], [TARGET, CLAIMER], claimerBody, {
-			CLAIMER: {
-				claim: true
-			},
-			TARGET: {
-				targetFlag: "claimme",
-				stopInRoom: true
-			}
-		});
-	}
+//	if (!tags.claimer || tags.claimer < 1) {
+//		return spawnCreep(spawn, "claimer", ["claimer"], [CRY, TARGET, CLAIMER], claimerBody, {
+//			CLAIMER: {
+//				claim: true
+//			},
+//			TARGET: {
+//				targetFlag: "claimme",
+//				stopInRoom: true
+//			}
+//		});
+//	}
 
 	if (!tags.reserver1 || tags.reserver1 < 1) {
-		return spawnCreep(spawn, "reserver1", ["reserver1"], [TARGET, CLAIMER], claimerBody, {
+		return spawnCreep(spawn, "reserver1", ["reserver1"], [CRY, TARGET, CLAIMER], claimerBody, {
 			TARGET: {
 				targetFlag: "reserveme1",
 				stopInRoom: true
@@ -110,7 +110,7 @@ function run(spawn) {
 	}
 
 	if (!tags.reserver2 || tags.reserver2 < 1) {
-		return spawnCreep(spawn, "reserver2", ["reserver2"], [TARGET, CLAIMER], claimerBody, {
+		return spawnCreep(spawn, "reserver2", ["reserver2"], [CRY, TARGET, CLAIMER], claimerBody, {
 			TARGET: {
 				targetFlag: "reserveme2",
 				stopInRoom: true
@@ -122,7 +122,7 @@ function run(spawn) {
 	if (spawn.room.controller.level >= 5) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 6) {
-			return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
 				FEAR: {
 					onSafe: serialize(c => {
 						c.memory['PATROL']._targetCounter++;
@@ -143,7 +143,7 @@ function run(spawn) {
 
 	//spawn harvesters (enough to support the guards)
 	if (!tags.harvester || tags.harvester < 4) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [DEPOSIT, HARVEST], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			DEPOSIT: {
 				stores: [CONTAINER]
 			}
@@ -152,7 +152,7 @@ function run(spawn) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 1) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
@@ -162,6 +162,7 @@ function run(spawn) {
 				})
 			},
 			DEPOSIT: {
+				returnHomeFirst: true,
 				stores: [EXTENSION, SPAWN, TOWER]
 			},
 			WITHDRAW: {
@@ -174,7 +175,7 @@ function run(spawn) {
 	}
 
 	if (!tags.guard || tags.guard < 2) {
-		return spawnCreep(spawn, "guard", ["guard"], [BRAVE, PATROL], guardBody, {
+		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 			}
@@ -183,7 +184,7 @@ function run(spawn) {
 
 	//spawn MORE harvesters
 	if (!tags.harvester || tags.harvester < 10) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [FEAR, DEPOSIT, HARVEST], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
@@ -195,7 +196,7 @@ function run(spawn) {
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 5) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [FEAR, PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
@@ -207,7 +208,7 @@ function run(spawn) {
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
+		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;

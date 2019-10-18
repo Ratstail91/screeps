@@ -25,8 +25,8 @@ module.exports = {
 	BRAVE: 'BRAVE',
 
 	//call for help/respond to calls for help
-//	CRY: 'CRY',
-//	CARE: 'CARE',
+	CRY: 'CRY',
+	CARE: 'CARE',
 
 	//specialized behaviours
 	CLAIMER: 'CLAIMER',

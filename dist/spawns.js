@@ -27,6 +27,8 @@ function handleSpawn(spawn) {
 		initializeSpawnMemory(spawn);
 	}
 
+	defendSpawn(spawn);
+
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		return;
@@ -59,6 +61,23 @@ function handleSpawn(spawn) {
 
 	//300 energy available
 	return spawnStage1(spawn);
+}
+
+//defensive towers near spawn
+function defendSpawn(spawn) {
+	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS)
+		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
+	;
+
+	if (hostiles.length == 0) {
+		return;
+	}
+
+	const username = hostiles[0].owner.username;
+	Game.notify(`User ${username} spotted near ${spawn.name}`);
+
+	const towers = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TOWER });
+	towers.forEach(t => t.attack(hostiles[0]));
 }
 
 module.exports = {

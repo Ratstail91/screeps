@@ -47,6 +47,7 @@ function run(creep) {
 			return false;
 
 		case ERR_NOT_ENOUGH_RESOURCES:
+		case ERR_INVALID_TARGET:
 			//pass downwards
 			return true;
 
