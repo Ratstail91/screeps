@@ -4,6 +4,8 @@
  * Note that ramparts and walls are given a lower priority.
 */
 
+//TODO: build only certain structures
+
 const { BUILD: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const { REUSE_PATH } = require('constants');

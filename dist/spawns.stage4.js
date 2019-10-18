@@ -145,7 +145,10 @@ function run(spawn) {
 
 	//spawn harvesters (enough to support the guards)
 	if (!tags.harvester || tags.harvester < 4) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, DEPOSIT, HARVEST, REPAIR, BUILD], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
+			FEAR: {
+				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			},
 			DEPOSIT: {
 				stores: [CONTAINER]
 			}
@@ -186,7 +189,7 @@ function run(spawn) {
 
 	//spawn MORE harvesters
 	if (!tags.harvester || tags.harvester < 10) {
-		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, DEPOSIT, HARVEST, REPAIR, BUILD], specializedHarvesterBody, {
+		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
