@@ -18,7 +18,7 @@ function spawnHasCrashed(spawn) {
 
 	//TODO: handle different RCL levels and external pressures, and exclude mappers
 
-	if ((creeps.length < 5 || creeps.length < Math.min(8, spawn.room.controller.level * 3)) && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+	if (creeps.length < 5 && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
 		return true;
 	} else {
 		Memory._crashHandler = false;

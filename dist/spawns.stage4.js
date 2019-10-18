@@ -100,23 +100,23 @@ function run(spawn) {
 //		});
 //	}
 
-	if (!tags.reserver1 || tags.reserver1 < 1) {
-		return spawnCreep(spawn, "reserver1", ["reserver1"], [CRY, TARGET, CLAIMER], claimerBody, {
-			TARGET: {
-				targetFlag: "reserveme1",
-				stopInRoom: true
-			}
-		});
-	}
+//	if (!tags.reserver1 || tags.reserver1 < 1) {
+//		return spawnCreep(spawn, "reserver1", ["reserver1"], [CRY, TARGET, CLAIMER], claimerBody, {
+//			TARGET: {
+//				targetFlag: "reserveme1",
+//				stopInRoom: true
+//			}
+//		});
+//	}
 
-	if (!tags.reserver2 || tags.reserver2 < 1) {
-		return spawnCreep(spawn, "reserver2", ["reserver2"], [CRY, TARGET, CLAIMER], claimerBody, {
-			TARGET: {
-				targetFlag: "reserveme2",
-				stopInRoom: true
-			}
-		});
-	}
+//	if (!tags.reserver2 || tags.reserver2 < 1) {
+//		return spawnCreep(spawn, "reserver2", ["reserver2"], [CRY, TARGET, CLAIMER], claimerBody, {
+//			TARGET: {
+//				targetFlag: "reserveme2",
+//				stopInRoom: true
+//			}
+//		});
+//	}
 
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 5) {
@@ -152,7 +152,7 @@ function run(spawn) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 1) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
