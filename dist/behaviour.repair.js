@@ -18,6 +18,7 @@ const pathStyle = { stroke: '#ff00ff' };
 */
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		structures: null, //only repair these structure types
 		threshold: 0.6, //amount of health at which repairs are needed
 		rampartHealth: 0, //repair ramparts to this point
 		wallHealth: 0, //repair walls to this point
@@ -43,6 +44,11 @@ function run(creep, top = false) {
 	//find the closest repair target
 	let repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { //TODO: findClosestByPath is overkill
 		filter: target => {
+			//exclude non-specified structure types
+			if (creep.memory[BEHAVIOUR_NAME].structures && creep.memory[BEHAVIOUR_NAME].structures.indexOf(target.structureType) == -1) {
+				return false;
+			}
+
 			//handle walls and ramparts separately
 			if (target.structureType == STRUCTURE_WALL) {
 				return target.hits < creep.memory[BEHAVIOUR_NAME].wallHealth;

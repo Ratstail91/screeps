@@ -36,7 +36,7 @@ const lorryBody = [ //800
 ];
 
 const guardBody = [
-	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
+//	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
 
 	MOVE, MOVE, MOVE, //150
 
@@ -45,7 +45,7 @@ const guardBody = [
 //	HEAL, HEAL, //500
 ];
 
-function run(spawn) {
+function run(spawn, crash) {
 	//place the construction sites every so often
 	if (Game.time % 20 == 0) {
 		if (schematicBuild(spawn, "schematic.defense") != 0) {
@@ -65,40 +65,10 @@ function run(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
-	//claim nearby rooms (high priority)
 	//TODO: better claim & reserver code
-//	if (!tags.claimer || tags.claimer < 1) {
-//		return spawnCreep(spawn, "claimer", ["claimer"], [CRY, TARGET, CLAIMER], claimerBody, {
-//			CLAIMER: {
-//				claim: true
-//			},
-//			TARGET: {
-//				targetFlag: "claimme",
-//				stopInRoom: true
-//			}
-//		});
-//	}
-
-	if (!tags.reserver1 || tags.reserver1 < 2) {
-		return spawnCreep(spawn, "reserver1", ["reserver1"], [CRY, TARGET, CLAIMER], claimerBody, {
-			TARGET: {
-				targetFlag: "reserveme1",
-				stopInRoom: true
-			}
-		});
-	}
-
-	if (!tags.reserver2 || tags.reserver2 < 2) {
-		return spawnCreep(spawn, "reserver2", ["reserver2"], [CRY, TARGET, CLAIMER], claimerBody, {
-			TARGET: {
-				targetFlag: "reserveme2",
-				stopInRoom: true
-			}
-		});
-	}
 
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 4) {
+	if (spawn.room.controller.level >= 4 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 10) {
 			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], mediumBody, {
@@ -145,22 +115,14 @@ function run(spawn) {
 				stores: [EXTENSION, SPAWN, TOWER]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [CONTAINER, STORAGE],
+				skipOriginRoom: true,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 			}
 		});
 	}
-
-//	//TMP
-//	if (!tags.attacker || tags.attacker < 2) {
-//		return spawnCreep(spawn, "attacker", ["attacker"], [BRAVE, TARGET], guardBody, {
-//			TARGET: {
-//				targetFlag: 'attackme'
-//			}
-//		});
-//	}
 
 	if (!tags.guard || tags.guard < 2) {
 		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
@@ -169,14 +131,6 @@ function run(spawn) {
 			}
 		});
 	}
-
-//	if (!tags.colonist || tags.colonist < 10) {
-//		return spawnCreep(spawn, "colonist", ["colonist"], [PICKUP, BUILD, HARVEST, TARGET], mediumBody, {
-//			TARGET: {
-//				targetFlag: 'claimme'
-//			}
-//		});
-//	}
 
 	//spawn MORE harvesters
 	if (!tags.harvester || tags.harvester < 10) {
@@ -188,7 +142,7 @@ function run(spawn) {
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 5) {
+	if (!tags.upgrader || tags.upgrader < 2) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, PICKUP, HARVEST, UPGRADE], mediumBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -197,7 +151,7 @@ function run(spawn) {
 	}
 
 	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 5) {
+	if (!tags.builder || tags.builder < 2) {
 		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], mediumBody, {
 			FEAR: {
 				onSafe: serialize(c => {

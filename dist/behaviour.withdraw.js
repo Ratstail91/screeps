@@ -6,6 +6,8 @@ const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
+//TODO: All of the code completely ignores all resources except energy.
+
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
 		skipIfNotEmpty: false,

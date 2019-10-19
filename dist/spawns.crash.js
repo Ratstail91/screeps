@@ -1,8 +1,19 @@
-/* DOCS: spawn.crash
+/* DOCS: spawns.crash
  * Handle colony crash events
 */
 
-const { STAGE_2_ENERGY_CAPACITY } = require("constants");
+const {
+	STAGE_1_ENERGY_CAPACITY,
+	STAGE_2_ENERGY_CAPACITY,
+	STAGE_3_ENERGY_CAPACITY,
+	STAGE_4_ENERGY_CAPACITY,
+} = require("constants");
+
+const spawnStage1 = require("spawns.stage1");
+const spawnStage2 = require("spawns.stage2");
+const spawnStage3 = require("spawns.stage3");
+const spawnStage4 = require("spawns.stage4");
+
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
@@ -66,13 +77,21 @@ function spawnHandleCrash(spawn) {
 		});
 	}
 
-	//spawn harvesters by default
-	return spawnCreep(spawn, "harvester", ["harvester", "crash"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, {
-		HARVEST: {
-			remote: 0,
-			source: null
-		}
-	});
+	//mimic normals
+	if (spawn.room.energyCapacityAvailable >= STAGE_4_ENERGY_CAPACITY) {
+		return spawnStage4(spawn, true);
+	}
+
+	if (spawn.room.energyCapacityAvailable >= STAGE_3_ENERGY_CAPACITY) {
+		return spawnStage3(spawn, true);
+	}
+
+	if (spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+		return spawnStage2(spawn, true);
+	}
+
+	//300 energy available
+	return spawnStage1(spawn, true);
 }
 
 module.exports = {

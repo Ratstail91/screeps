@@ -28,6 +28,9 @@ module.exports = {
 	CRY: 'CRY',
 	CARE: 'CARE',
 
+	//heal creeps
+	HEALER: 'HEALER',
+
 	//specialized behaviours
 	CLAIMER: 'CLAIMER',
 //	WRITER: 'WRITER',

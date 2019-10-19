@@ -16,12 +16,12 @@ const { schematicBuild } = require("schematic");
 //assume 300e available - tinybody is 250e
 const tinyBody = [CARRY, WORK, MOVE, MOVE];
 
-function run(spawn) {
+function run(spawn, crash) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 2) {
+	if (spawn.room.controller.level >= 2 && !crash) {
 		//place the construction sites every so often
 		if (Game.time % 20 == 0) {
 			if (schematicBuild(spawn, "schematic.extensions") != 0) {

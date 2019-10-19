@@ -16,7 +16,7 @@ const { schematicBuild } = require("schematic");
 //assume 550 is available - small body is 500e
 const smallBody = [CARRY, CARRY, WORK, WORK, MOVE, MOVE, MOVE, MOVE];
 
-function run(spawn) {
+function run(spawn, crash) {
 	//place the construction sites every so often
 	if (Game.time % 20 == 0) {
 		if (schematicBuild(spawn, "schematic.defense") != 0) {
@@ -33,7 +33,7 @@ function run(spawn) {
 	tags = getPopulationByTags(creeps);
 
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 3) {
+	if (spawn.room.controller.level >= 3 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 4) {
 			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody, {

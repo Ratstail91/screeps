@@ -11,7 +11,7 @@ const { spawnCreep } = require("creeps");
 
 const {
 	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
-	TARGET, PATROL, BRAVE, FEAR, CRY, CARE, CLAIMER,
+	TARGET, PATROL, BRAVE, FEAR, HEALER, CRY, CARE, CLAIMER,
 } = require("behaviour_names");
 
 const {
@@ -30,8 +30,21 @@ const guardBody = [
 	MOVE, MOVE, MOVE, MOVE, MOVE, //250
 
 	ATTACK, ATTACK, ATTACK, //240
+];
 
-//	HEAL, HEAL, //500 //TODO: heal
+const attackerBody = [
+	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
+
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
+
+	ATTACK, ATTACK, ATTACK, //240
+];
+
+const healerBody = [
+	MOVE, MOVE, MOVE, MOVE, //200
+
+	HEAL, HEAL, HEAL, //750
 ];
 
 const specializedHarvesterBody = [ //800
@@ -57,6 +70,14 @@ const specializedLorryBody = [ //1200
 	CARRY,
 ];
 
+const tinyLorry = [ //300
+	//50
+	MOVE,
+
+	//250
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+];
+
 const largeWorkerBody = [ //1250
 	//50 * 10 = 500
 	MOVE, MOVE, MOVE, MOVE, MOVE,
@@ -69,7 +90,7 @@ const largeWorkerBody = [ //1250
 	WORK, WORK, WORK, WORK, WORK,
 ];
 
-function run(spawn) {
+function run(spawn, crash) {
 	//place the construction sites every so often
 	if (Game.time % 20 == 0) {
 		if (schematicBuild(spawn, "schematic.defense") != 0) {
@@ -89,39 +110,8 @@ function run(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
-	//claim nearby rooms (high priority)
-//	if (!tags.claimer || tags.claimer < 1) {
-//		return spawnCreep(spawn, "claimer", ["claimer"], [CRY, TARGET, CLAIMER], claimerBody, {
-//			CLAIMER: {
-//				claim: true
-//			},
-//			TARGET: {
-//				targetFlag: "claimme",
-//				stopInRoom: true
-//			}
-//		});
-//	}
-
-//	if (!tags.reserver1 || tags.reserver1 < 1) {
-//		return spawnCreep(spawn, "reserver1", ["reserver1"], [CRY, TARGET, CLAIMER], claimerBody, {
-//			TARGET: {
-//				targetFlag: "reserveme1",
-//				stopInRoom: true
-//			}
-//		});
-//	}
-
-//	if (!tags.reserver2 || tags.reserver2 < 1) {
-//		return spawnCreep(spawn, "reserver2", ["reserver2"], [CRY, TARGET, CLAIMER], claimerBody, {
-//			TARGET: {
-//				targetFlag: "reserveme2",
-//				stopInRoom: true
-//			}
-//		});
-//	}
-
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 5) {
+	if (spawn.room.controller.level >= 5 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 6) {
 			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, PATROL], largeWorkerBody, {
@@ -134,7 +124,8 @@ function run(spawn) {
 					})
 				},
 				WITHDRAW: {
-					stores: [CONTAINER, STORAGE]
+					stores: [CONTAINER, STORAGE],
+					skipIfNotEmpty: true,
 				},
 				PATROL: {
 					targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -149,14 +140,73 @@ function run(spawn) {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
+			REPAIR: {
+				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+			},
+			BUILD: {
+				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+			},
 			DEPOSIT: {
-				stores: [CONTAINER]
+				stores: [CONTAINER, STORAGE]
 			}
 		});
 	}
 
+//	if ((!tags.controllerAttacker || tags.controllerAttacker < 1) && Game.flags['attackme']) {
+//		return spawnCreep(spawn, "controllerAttacker", ["controllerAttacker"], [CRY, CARE, TARGET, CLAIMER], claimerBody, {
+//			TARGET: {
+//				targetFlag: 'attackme',
+//				stopInRoom: true,
+//			}
+//		});
+//	}
+
+	if ((!tags.healer || tags.healer < 5) && Game.flags['attackme']) {
+		return spawnCreep(spawn, "healer", ["healer"], [CRY, CARE, HEALER, TARGET], healerBody, {
+			TARGET: {
+				targetFlag: 'attackme'
+			}
+		});
+	}
+
+	if ((!tags.attacker || tags.attacker < 15) && Game.flags['attackme']) {
+		return spawnCreep(spawn, "attacker", ["attacker"], [CRY, CARE, BRAVE, TARGET], attackerBody, {
+			TARGET: {
+				targetFlag: 'attackme'
+			}
+		});
+	}
+
+	//home lorry (only works in spawn)
+	if (!tags.homeLorry || tags.homeLorry < 3) {
+		//NOTE: not immediately returning this result
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, WITHDRAW], specializedLorryBody, {
+			DEPOSIT: {
+				returnHomeFirst: true,
+				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
+			},
+			WITHDRAW: {
+				stores: [CONTAINER]
+			}
+		});
+
+		//not enough energy for a lorry, spawn a tiny lorry
+		//TODO: timer on this?
+		if (result == ERR_NOT_ENOUGH_ENERGY) {
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "homeLorry", "tiny"], [CRY, DEPOSIT, WITHDRAW], tinyLorry, {
+				DEPOSIT: {
+					returnHomeFirst: true,
+					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
+				},
+				WITHDRAW: {
+					stores: [CONTAINER]
+				}
+			});
+		}
+	}
+
 	//lorry
-	if (!tags.lorry || tags.lorry < 1) {
+	if (!tags.lorry || tags.lorry < 4) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
@@ -168,10 +218,11 @@ function run(spawn) {
 			},
 			DEPOSIT: {
 				returnHomeFirst: true,
-				stores: [EXTENSION, SPAWN, TOWER]
+				stores: [EXTENSION, SPAWN, TOWER, CONTAINER, STORAGE]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [CONTAINER, STORAGE],
+				skipOriginRoom: true,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -193,8 +244,14 @@ function run(spawn) {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
+			REPAIR: {
+				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+			},
+			BUILD: {
+				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+			},
 			DEPOSIT: {
-				stores: [CONTAINER]
+				stores: [CONTAINER, STORAGE]
 			}
 		});
 	}
@@ -223,7 +280,8 @@ function run(spawn) {
 				})
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [CONTAINER, STORAGE],
+				skipIfNotEmpty: true,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)

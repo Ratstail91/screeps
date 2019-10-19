@@ -17,6 +17,7 @@ const pathStyle = { stroke: '#ff00ff' };
 */
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
+		structures: null, //only build these structure types
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
@@ -36,10 +37,16 @@ function run(creep) {
 	}
 
 	//NOTE: building ramparts and walls with the lowest priority
-	let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART && site.structureType != STRUCTURE_WALL, range: 3 });
+	let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {
+		filter: site => site.structureType != STRUCTURE_RAMPART && site.structureType != STRUCTURE_WALL && (!creep.memory[BEHAVIOUR_NAME].structures || creep.memory[BEHAVIOUR_NAME].structures.indexOf(site.structureType) != -1),
+		range: 3
+	});
 
 	if (!constructionSite) {
-		constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, { range: 3 });
+		constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES, {
+			filter: site => !creep.memory[BEHAVIOUR_NAME].structures || creep.memory[BEHAVIOUR_NAME].structures.indexOf(site.structureType) != -1,
+			range: 3
+		});
 	}
 
 	//no construction sites found

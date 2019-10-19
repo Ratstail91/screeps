@@ -1,4 +1,5 @@
 //storage types that this file recognizes
+//TODO: replace some of these with the game's STRUCTURE_* constants
 const TOWER = "TOWER";
 const SPAWN = "SPAWN";
 const EXTENSION = "EXTENSION";
