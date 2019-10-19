@@ -30,7 +30,7 @@ function run(creep) {
 	const targetPos = Game.rooms[targetCry].getPositionAt(25, 25);
 
 	creep.moveTo(targetPos, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
-	return false;
+	return true;
 }
 
 module.exports = run;

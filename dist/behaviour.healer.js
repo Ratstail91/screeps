@@ -12,12 +12,19 @@ const pathStyle = { stroke: '#0000ff' };
  * Run healer behaviour for "creep".
 */
 function run(creep) {
+	//don't stand on the doorway!
+	if (creep.pos.x <= 0 || creep.pos.y <= 0 || creep.pos.x >= 49 || creep.pos.y >= 49) {
+		return true;
+	}
+
 	//find damaged creeps
 	const closest = creep.pos.findClosestByRange(FIND_MY_CREEPS, { filter: c => c.hits < c.hitsMax });
 
 	if (!closest) {
 		return true;
 	}
+
+	console.log(`closest to ${creep.name}: ${closest}`);
 
 	const healResult = creep.heal(closest);
 
