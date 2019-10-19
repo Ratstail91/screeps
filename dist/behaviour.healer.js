@@ -24,7 +24,7 @@ function run(creep) {
 		return true;
 	}
 
-	console.log(`closest to ${creep.name}: ${closest}`);
+//	console.log(`closest to ${creep.name}: ${closest}`);
 
 	const healResult = creep.heal(closest);
 

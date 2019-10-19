@@ -178,28 +178,28 @@ function run(spawn, crash) {
 	}
 
 	//home lorry (only works in spawn)
-	if (!tags.homeLorry || tags.homeLorry < 3) {
+	if (!tags.homeLorry || tags.homeLorry < 2) {
 		//NOTE: not immediately returning this result
-		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, WITHDRAW], specializedLorryBody, {
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, PICKUP, DEPOSIT, WITHDRAW], specializedLorryBody, {
 			DEPOSIT: {
 				returnHomeFirst: true,
 				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER]
+				stores: [CONTAINER, STORAGE]
 			}
 		});
 
 		//not enough energy for a lorry, spawn a tiny lorry
 		//TODO: timer on this?
 		if (result == ERR_NOT_ENOUGH_ENERGY) {
-			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "homeLorry", "tiny"], [CRY, DEPOSIT, WITHDRAW], tinyLorry, {
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "homeLorry", "tiny"], [CRY, PICKUP, DEPOSIT, WITHDRAW], tinyLorry, {
 				DEPOSIT: {
 					returnHomeFirst: true,
 					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
 				},
 				WITHDRAW: {
-					stores: [CONTAINER]
+					stores: [CONTAINER, STORAGE]
 				}
 			});
 		}
@@ -239,7 +239,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn MORE harvesters
-	if (!tags.harvester || tags.harvester < 10) {
+	if (!tags.harvester || tags.harvester < 8) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -258,7 +258,7 @@ function run(spawn, crash) {
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 2) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, PICKUP, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},

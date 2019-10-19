@@ -42,7 +42,7 @@ function run(creep, top = false) {
 	}
 
 	//find the closest repair target
-	let repairTarget = creep.pos.findClosestByPath(FIND_STRUCTURES, { //TODO: findClosestByPath is overkill
+	let repairTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 		filter: target => {
 			//exclude non-specified structure types
 			if (creep.memory[BEHAVIOUR_NAME].structures && creep.memory[BEHAVIOUR_NAME].structures.indexOf(target.structureType) == -1) {
