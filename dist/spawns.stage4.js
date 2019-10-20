@@ -135,7 +135,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn harvesters (enough to support the guards)
-	if (!tags.harvester || tags.harvester < 4) {
+	if (!tags.harvester || tags.harvester < 2) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -172,21 +172,21 @@ function run(spawn, crash) {
 //		})
 //	}
 
-	if ((!tags.healer || tags.healer < 5) && Game.flags["attackme"]) {
-		return spawnCreep(spawn, "healer", ["healer"], [CRY, CARE, HEALER, TARGET], healerBody, {
-			TARGET: {
-				targetFlag: 'attackme'
-			}
-		});
-	}
+//	if ((!tags.healer || tags.healer < 10) && Game.flags["attackme"]) {
+//		return spawnCreep(spawn, "healer", ["healer"], [CRY, CARE, HEALER, TARGET], healerBody, {
+//			TARGET: {
+//				targetFlag: 'attackme'
+//			}
+//		});
+//	}
 
-	if ((!tags.attacker || tags.attacker < 15) && Game.flags['attackme']) {
-		return spawnCreep(spawn, "attacker", ["attacker"], [CRY, CARE, BRAVE, TARGET], attackerBody, {
-			TARGET: {
-				targetFlag: 'attackme'
-			}
-		});
-	}
+//	if ((!tags.attacker || tags.attacker < 15) && Game.flags['attackme']) {
+//		return spawnCreep(spawn, "attacker", ["attacker"], [CRY, CARE, BRAVE, TARGET], attackerBody, {
+//			TARGET: {
+//				targetFlag: 'attackme'
+//			}
+//		});
+//	}
 
 	//home lorry (only works in spawn)
 	if (!tags.homeLorry || tags.homeLorry < 2) {
@@ -217,7 +217,7 @@ function run(spawn, crash) {
 	}
 
 	//lorry
-	if (!tags.lorry || tags.lorry < 4) {
+	if (!tags.lorry || tags.lorry < 2) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
@@ -250,7 +250,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn MORE harvesters
-	if (!tags.harvester || tags.harvester < 8) {
+	if (!tags.harvester || tags.harvester < 5) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -268,7 +268,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 2) {
+	if (!tags.upgrader || tags.upgrader < 4) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -289,6 +289,9 @@ function run(spawn, crash) {
 						c.memory['PATROL']._targetCounter = 0;
 					}
 				})
+			},
+			REPAIR: {
+				wallHealth: 50000,
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
