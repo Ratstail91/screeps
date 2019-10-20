@@ -152,16 +152,27 @@ function run(spawn, crash) {
 		});
 	}
 
-//	if ((!tags.controllerAttacker || tags.controllerAttacker < 1) && Game.flags['attackme']) {
-//		return spawnCreep(spawn, "controllerAttacker", ["controllerAttacker"], [CRY, CARE, TARGET, CLAIMER], claimerBody, {
+//	if ((!tags.claimer || tags.claimer < 1) && Game.flags["claimme"]) {
+//		return spawnCreep(spawn, "claimer", ["claimer"], [TARGET, CLAIMER], claimerBody, {
 //			TARGET: {
-//				targetFlag: 'attackme',
-//				stopInRoom: true,
+//				targetFlag: "claimme",
+//				stopInRoom: true
 //			}
 //		});
 //	}
 
-	if ((!tags.healer || tags.healer < 5) && Game.flags['attackme']) {
+	//BUG: getPopulationByTags() doesn't recognize the other spawn
+//	if ((!tags.colonist || tags.colonist < 4) && Game.flags["claimme"]) {
+//		return spawnCreep(spawn, "colonist", ["colonist"], [TARGET, HARVEST, BUILD], largeWorkerBody, {
+//			TARGET: {
+//				targetFlag: "claimme",
+//				stopInRoom: true
+//			},
+//			origin: "Spawn2"
+//		})
+//	}
+
+	if ((!tags.healer || tags.healer < 5) && Game.flags["attackme"]) {
 		return spawnCreep(spawn, "healer", ["healer"], [CRY, CARE, HEALER, TARGET], healerBody, {
 			TARGET: {
 				targetFlag: 'attackme'

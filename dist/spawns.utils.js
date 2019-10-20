@@ -47,11 +47,13 @@ function countRemotes(spawnName) {
 		counter++;
 	}
 
-	return Object.keys(Memory.spawns[spawnName].remotes).length;
+	return Memory.spawns[spawnName] ? Object.keys(Memory.spawns[spawnName].remotes).length : 0;
 }
 
 function registerRemote(spawnName, flagName) {
-	Memory.spawns[spawnName].remotes[flagName] = Game.flags[flagName].pos;
+	if (Memory.spawns[spawnName]) {
+		Memory.spawns[spawnName].remotes[flagName] = Game.flags[flagName].pos;
+	}
 }
 
 /* DOCS: initializeSpawnMemory(spawn)

@@ -34,7 +34,11 @@ function run(creep) {
 			return false;
 
 		case ERR_NOT_IN_RANGE:
-			creep.moveTo(closest, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle, range: 3 });
+			const rangedHealResult = creep.rangedHeal(closest);
+
+			if (rangedHealResult == ERR_NOT_IN_RANGE) {
+				creep.moveTo(closest, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle, range: 3 });
+			}
 			return false;
 
 		case ERR_INVALID_TARGET:

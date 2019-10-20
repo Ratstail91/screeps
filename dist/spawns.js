@@ -19,6 +19,8 @@ const spawnStage4 = require("spawns.stage4");
 const { spawnHasCrashed, spawnHandleCrash } = require("spawns.crash");
 const { initializeSpawnMemory } = require("spawns.utils");
 
+const allies = require("allies");
+
 /* DOCS: handleSpawn(spawn)
  * Handles the AI for "spawn"
 */
@@ -67,6 +69,7 @@ function handleSpawn(spawn) {
 function defendSpawn(spawn) {
 	const hostiles = spawn.room.find(FIND_HOSTILE_CREEPS)
 		.filter(c => c.pos.x > 0 && c.pos.x < 49 && c.pos.y > 0 && c.pos.y < 49)
+		.filter(c => allies.indexOf(c.owner.username) == -1) //NOTE: untested
 	;
 
 	if (hostiles.length == 0) {

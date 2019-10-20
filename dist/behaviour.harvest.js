@@ -43,7 +43,7 @@ function run(creep) {
 	countRemotes(creep.memory.origin); //NOTE: hack
 
 	//if not in the remote's room
-	if (creep.room.name != Memory.spawns[creep.memory.origin].remotes[remoteName].roomName) {
+	if (Memory.spawns[creep.memory.origin] && creep.room.name != Memory.spawns[creep.memory.origin].remotes[remoteName].roomName) {
 		let remotePos = new RoomPosition(Memory.spawns[creep.memory.origin].remotes[remoteName].x, Memory.spawns[creep.memory.origin].remotes[remoteName].y, Memory.spawns[creep.memory.origin].remotes[remoteName].roomName);
 		const moveResult = creep.moveTo(remotePos, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 

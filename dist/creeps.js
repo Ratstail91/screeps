@@ -14,11 +14,11 @@ const bottom = require('behaviour.bottom');
 function spawnCreep(spawn, name, tags, behaviours, bodyParts, memory = {}) {
 	//TODO: add verification, part matching between behaviours and bodyParts
 	return spawn.spawnCreep(bodyParts, name + Game.time, {
-		memory: _.merge(memory, {
+		memory: _.merge({
 			tags: tags,
 			behaviours: behaviours,
 			origin: spawn.name, //TODO: surrogate mother spawns
-		})
+		}, memory)
 	});
 }
 
