@@ -55,7 +55,7 @@ function run(creep, top = false) {
 			}
 
 			if (target.structureType == STRUCTURE_RAMPART) {
-				return target.hits < creep.memory[BEHAVIOUR_NAME].rampartHealth;
+				return target.hits < (top ? creep.memory[BEHAVIOUR_NAME].rampartHealth : creep.memory[BEHAVIOUR_NAME].rampartHealth * creep.memory[BEHAVIOUR_NAME].threshold);
 			}
 
 			//default: use general threshold

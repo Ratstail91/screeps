@@ -1,11 +1,11 @@
-/* DOCS: stage 4
- * This stage switches to using canister mining.
+/* DOCS: stage 5
+ * Nothing major happens at this stage
  * This relies on existing infrastructure placed by the player.
 */
 
 //TODO: allow new behaviours after spawn
 
-const { STAGE_4_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
+const { STAGE_5_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
@@ -21,7 +21,7 @@ const {
 const { schematicBuild } = require("schematic");
 const { serialize } = require("behaviour.fear");
 
-//assume 1300 is available
+//assume 1800 is available
 const claimerBody = [ //1300
 	MOVE, MOVE, CLAIM, CLAIM,
 ];
@@ -42,9 +42,9 @@ const attackerBody = [
 ];
 
 const healerBody = [
-	MOVE, MOVE, MOVE, MOVE, //200
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
 
-	HEAL, HEAL, HEAL, //750
+	HEAL, HEAL, HEAL, HEAL, //1000
 ];
 
 const specializedHarvesterBody = [ //800
@@ -58,16 +58,16 @@ const specializedHarvesterBody = [ //800
 	WORK, WORK, WORK, WORK, WORK,
 ];
 
-const specializedLorryBody = [ //1200
-	//50 * 8 = 400
+const specializedLorryBody = [ //1500
+	//50 * 10 = 500
 	MOVE, MOVE, MOVE, MOVE, MOVE,
-	MOVE, MOVE, MOVE,
+	MOVE, MOVE, MOVE, MOVE, MOVE,
 
-	//50 * 16 = 800
+	//50 * 20 = 1000
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
-	CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
 ];
 
 const tinyLorry = [ //300
@@ -78,12 +78,14 @@ const tinyLorry = [ //300
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 ];
 
-const largeWorkerBody = [ //1250
-	//50 * 10 = 500
+const hugeWorkerBody = [ //1750
+	//50 * 15 = 750
+	MOVE, MOVE, MOVE, MOVE, MOVE,
 	MOVE, MOVE, MOVE, MOVE, MOVE,
 	MOVE, MOVE, MOVE, MOVE, MOVE,
 
-	//50 * 5 = 250
+	//50 * 10 = 500
+	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 
 	//100 * 5 = 500
@@ -114,7 +116,7 @@ function run(spawn, crash) {
 	if (spawn.room.controller.level >= 5 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 2) {
-			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], largeWorkerBody, {
+			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], hugeWorkerBody, {
 				FEAR: {
 					onSafe: serialize(c => {
 						c.memory['HARVEST'].remote = null;
@@ -268,7 +270,7 @@ function run(spawn, crash) {
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 4) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
 			},
@@ -280,7 +282,7 @@ function run(spawn, crash) {
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], largeWorkerBody, {
+		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['HARVEST'].remote = null;
@@ -293,7 +295,8 @@ function run(spawn, crash) {
 				})
 			},
 			REPAIR: {
-				wallHealth: 50000,
+				wallHealth: 100000,
+				rampartHealth: 100000,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)

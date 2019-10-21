@@ -70,7 +70,7 @@ function run(spawn, crash) {
 	//begin upgrading to the next stage
 	if (spawn.room.controller.level >= 4 && !crash) {
 		//spawn builders/repairers en-masse
-		if (!tags.builder || tags.builder < 10) {
+		if (!tags.builder || tags.builder < 2) {
 			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], mediumBody, {
 				FEAR: {
 					onSafe: serialize(c => {

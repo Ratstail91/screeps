@@ -1,3 +1,4 @@
 module.exports = [
-	"_Lalaleyna"
+	"_Lalaleyna",
+	"Zuler",
 ];

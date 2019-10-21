@@ -35,6 +35,9 @@ function getPopulationByTags(creeps = Game.creeps) {
 function countRemotes(spawnName) {
 	let counter = 0;
 
+	//clear the existing flags
+	Memory.spawns[spawnName].remotes = {};
+
 	while(true) {
 		let flagName = `${spawnName}remote${counter}`;
 
