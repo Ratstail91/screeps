@@ -94,15 +94,15 @@ function run(spawn, crash) {
 	//place the construction sites every so often
 	if (Game.time % 20 == 0) {
 		if (schematicBuild(spawn, "schematic.defense") != 0) {
-			Game.notify("schematicBuild returned a non-zero value (defense stage 3)");
+			Game.notify("schematicBuild returned a non-zero value (defense stage 4)");
 		}
 
 		if (schematicBuild(spawn, "schematic.extensions") != 0) {
-			Game.notify("schematicBuild returned a non-zero value (extensions stage 3)");
+			Game.notify("schematicBuild returned a non-zero value (extensions stage 4)");
 		}
 
 		if (schematicBuild(spawn, "schematic.infrastructure") != 0) {
-			Game.notify("schematicBuild returned a non-zero value (infrastructure stage 3)");
+			Game.notify("schematicBuild returned a non-zero value (infrastructure stage 4)");
 		}
 	}
 
