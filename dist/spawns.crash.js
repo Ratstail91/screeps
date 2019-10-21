@@ -3,16 +3,8 @@
 */
 
 const {
-	STAGE_1_ENERGY_CAPACITY,
 	STAGE_2_ENERGY_CAPACITY,
-	STAGE_3_ENERGY_CAPACITY,
-	STAGE_4_ENERGY_CAPACITY,
 } = require("constants");
-
-const spawnStage1 = require("spawns.stage1");
-const spawnStage2 = require("spawns.stage2");
-const spawnStage3 = require("spawns.stage3");
-const spawnStage4 = require("spawns.stage4");
 
 const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
@@ -27,21 +19,22 @@ const tinyBody = [CARRY, WORK, MOVE, MOVE];
 function spawnHasCrashed(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 
-	//TODO: handle different RCL levels and external pressures, and exclude mappers
-
 	if (creeps.length < 5 && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
 		return true;
 	} else {
-		Memory._crashHandler = false;
+		Memory.spawns[spawn.name]._crashHandler = false;
 	}
 }
 
 function spawnHandleCrash(spawn) {
-	if (!Memory._crashHandler) {
-		Memory._crashHandler = true;
+	if (!Memory.spawns[spawn.name]._crashHandler) {
+		Memory.spawns[spawn.name]._crashHandler = true;
 		const msg = `Crash detected at ${spawn.name}, beginning recovery`;
 		Game.notify(msg);
-		console.log(`<div style="color:red">${msg}</div>`)
+		console.log(`<div style="color:red">${msg}</div>`);
+
+		//full reset
+		getCreepsByOrigin(spawn).forEach(c => c.suicide());
 	}
 
 	creeps = getCreepsByOrigin(spawn);
@@ -76,22 +69,6 @@ function spawnHandleCrash(spawn) {
 			}
 		});
 	}
-
-	//mimic normals
-	if (spawn.room.energyCapacityAvailable >= STAGE_4_ENERGY_CAPACITY) {
-		return spawnStage4(spawn, true);
-	}
-
-	if (spawn.room.energyCapacityAvailable >= STAGE_3_ENERGY_CAPACITY) {
-		return spawnStage3(spawn, true);
-	}
-
-	if (spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
-		return spawnStage2(spawn, true);
-	}
-
-	//300 energy available
-	return spawnStage1(spawn, true);
 }
 
 module.exports = {

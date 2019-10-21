@@ -1,5 +1,6 @@
 const { FEAR: BEHAVIOUR_NAME } = require('behaviour_names');
 
+const allies = require("allies");
 const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
@@ -38,7 +39,9 @@ function run(creep) {
 		return false;
 	}
 
-	let hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
+	let hostiles = creep.room.find(FIND_HOSTILE_CREEPS)
+		.filter(c => allies.indexOf(c.owner.username) == -1) //NOTE: untested
+		;
 
 	//nothing found, fall through
 	if (hostiles.length == 0) {

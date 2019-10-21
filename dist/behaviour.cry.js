@@ -1,8 +1,12 @@
 const { CRY: BEHAVIOUR_NAME } = require('behaviour_names');
 
+const allies = require("allies");
+
 function run(creep) {
 	//if hostiles found
-	const hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
+	const hostiles = creep.room.find(FIND_HOSTILE_CREEPS)
+		.filter(c => allies.indexOf(c.owner.username) == -1) //NOTE: untested
+		;
 
 	if (hostiles.length > 0) {
 		createCry(creep.room.name);
