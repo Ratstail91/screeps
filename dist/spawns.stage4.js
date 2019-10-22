@@ -216,7 +216,7 @@ function run(spawn, crash) {
 	}
 
 	//lorry
-	if (!tags.lorry || tags.lorry < 4) {
+	if (!tags.lorry || tags.lorry < 1) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
@@ -240,13 +240,13 @@ function run(spawn, crash) {
 		});
 	}
 
-	if (!tags.guard || tags.guard < 2) {
-		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
-			PATROL: {
-				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
-			}
-		});
-	}
+//	if (!tags.guard || tags.guard < 2) {
+//		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
+//			PATROL: {
+//				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+//			}
+//		});
+//	}
 
 	//spawn MORE harvesters
 	if (!tags.harvester || tags.harvester < 8) {

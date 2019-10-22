@@ -113,7 +113,7 @@ function run(spawn, crash) {
 	tags = getPopulationByTags(creeps);
 
 	//begin upgrading to the next stage
-	if (spawn.room.controller.level >= 5 && !crash) {
+	if (spawn.room.controller.level >= 6 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 2) {
 			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], hugeWorkerBody, {
@@ -218,7 +218,7 @@ function run(spawn, crash) {
 	}
 
 	//lorry
-	if (!tags.lorry || tags.lorry < 4) {
+	if (!tags.lorry || tags.lorry < 2) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {

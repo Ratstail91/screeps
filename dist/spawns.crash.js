@@ -33,8 +33,12 @@ function spawnHandleCrash(spawn) {
 		Game.notify(msg);
 		console.log(`<div style="color:red">${msg}</div>`);
 
-		//full reset
-		getCreepsByOrigin(spawn).forEach(c => c.suicide());
+		//full reset if no crash tags are present
+		const c = getCreepsByOrigin(spawn);
+		const s = c.some(c => c.memory.tags.indexOf('crash') != -1);
+		if (!s) {
+			c.forEach(c => c.suicide());
+		}
 	}
 
 	creeps = getCreepsByOrigin(spawn);
