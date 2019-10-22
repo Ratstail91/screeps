@@ -275,7 +275,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn upgraders
-	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.stoage && spawn.room.stoage.store[RESOURCE_ENERGY] > 10000) {
+	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > 10000) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
