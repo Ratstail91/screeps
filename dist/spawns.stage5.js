@@ -247,7 +247,7 @@ function run(spawn, crash) {
 		});
 	}
 
-	if (!tags.guard || tags.guard < 2) {
+	if ((!tags.guard || tags.guard < 2) && Memory._cries.length > 0) {
 		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -289,7 +289,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 4) {
+	if (!tags.builder || tags.builder < 2) {
 		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => {

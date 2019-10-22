@@ -1,5 +1,5 @@
 //storage types that this file recognizes
-//TODO: replace some of these with the game's STRUCTURE_* constants
+//TODO: (1) replace some of these with the game's STRUCTURE_* constants
 const TOWER = "TOWER";
 const SPAWN = "SPAWN";
 const EXTENSION = "EXTENSION";
@@ -8,6 +8,17 @@ const STORAGE = "STORAGE";
 const TERMINAL = "TERMINAL";
 const TOMBSTONE = "TOMBSTONE";
 const RUINS = "RUINS";
+
+recognizedStructures = [ //TODO: fix this hack
+	STRUCTURE_TOWER,
+	STRUCTURE_SPAWN,
+	STRUCTURE_EXTENSION,
+	STRUCTURE_CONTAINER,
+	STRUCTURE_STORAGE,
+	STRUCTURE_TERMINAL,
+	//TOMEBSTONE
+	//RUINS
+];
 
 /* DOCS: getStores(creep | spawn [, types])
  * "point" can be anything with both "room" and "pos" members, including flags.
@@ -23,7 +34,10 @@ function getStores(point, types) {
 
 	//cache to reduce CPU usage of getRangeTo()
 	let rangeCache = [];
-	point.room.find(FIND_STRUCTURES).forEach(s => rangeCache[s.id] = point.pos.getRangeTo(s));
+	point.room.find(FIND_STRUCTURES)
+		.filter(s => recognizedStructures.indexOf(s.structureType) != -1 || s.deathTime || s.destroyTime)
+		.forEach(s => rangeCache[s.id] = point.pos.getRangeTo(s))
+		;
 
 	//iterate over the switch
 	types.forEach(type => {
