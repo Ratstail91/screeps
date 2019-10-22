@@ -4,6 +4,8 @@
  * This behaviour interacts with TOP.
 */
 
+//TODO: add target locking
+
 const { HARVEST: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const { REUSE_PATH } = require('constants');
@@ -19,6 +21,7 @@ function init(creep) {
 		remote: null,
 		source: null,
 		lockToSource: false, //don't switch sources when they run out
+		skipOnFull: false,
 		_lock: false
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
@@ -27,9 +30,34 @@ function init(creep) {
  * Run harvest behaviour for "creep".
 */
 function run(creep) {
-	//if belly is full, pass the logic to the next behaviour
+	//if belly is full
 	if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-		return true;
+		//pass the logic to the next behaviour
+		if (creep.memory[BEHAVIOUR_NAME].skipOnFull) {
+			return true;
+		}
+
+		//otherwise, drop/move to the nearest container
+		const container = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_CONTAINER });
+
+		if (container && !creep.pos.isEqualTo(container.pos)) {
+			const moveResult = creep.moveTo(container.pos, { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+
+			switch(moveResult) {
+				case OK:
+					return false;
+
+				case ERR_NO_PATH:
+					creep.deposit(closest, RESOURCE_ENERGY);
+					return false;
+
+				default:
+					throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
+			}
+		} else {
+			creep.drop(RESOURCE_ENERGY);
+			//continue with the behaviour
+		}
 	}
 
 	//move to a specified (or random) remote
@@ -71,9 +99,9 @@ function run(creep) {
 		creep.memory[BEHAVIOUR_NAME].source = Math.floor(Math.random() * sources.length);
 	}
 
-	const harvestResults = creep.harvest(sources[creep.memory[BEHAVIOUR_NAME].source]);
+	const harvestResult = creep.harvest(sources[creep.memory[BEHAVIOUR_NAME].source]);
 
-	switch(harvestResults) {
+	switch(harvestResult) {
 		case OK:
 			//everything is OK, send a '_lock' message to TOP
 			creep.memory[BEHAVIOUR_NAME]._lock = true;
@@ -101,7 +129,7 @@ function run(creep) {
 			return false;
 
 		default:
-			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: harvestResults ${harvestResults}`);
+			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: harvestResult ${harvestResult}`);
 	}
 }
 

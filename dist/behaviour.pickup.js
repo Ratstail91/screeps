@@ -1,6 +1,7 @@
 /* DOCS: pickup behaviour
  * Pickup from the ground or collect any energy that has been dropped.
  * TODO: expand this to handle minerals
+ * TODO: Add a "Called it" system to PICKUP
 */
 
 const { PICKUP: BEHAVIOUR_NAME } = require('behaviour_names');
