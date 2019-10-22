@@ -4,9 +4,6 @@
  * This behaviour interacts with TOP.
  * Note that ramparts and walls are ignored by default.
 */
-
-//TODO: repair only certain structures
-
 const { REPAIR: BEHAVIOUR_NAME } = require('behaviour_names');
 
 const { REUSE_PATH } = require('constants');

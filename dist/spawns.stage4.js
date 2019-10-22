@@ -114,7 +114,7 @@ function run(spawn, crash) {
 	if (spawn.room.controller.level >= 5 && !crash) {
 		//spawn builders/repairers en-masse
 		if (!tags.builder || tags.builder < 2) {
-			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], largeWorkerBody, {
+			return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], largeWorkerBody, {
 				FEAR: {
 					onSafe: serialize(c => {
 						c.memory['HARVEST'].remote = null;
@@ -125,6 +125,9 @@ function run(spawn, crash) {
 							c.memory['PATROL']._targetCounter = 0;
 						}
 					})
+				},
+				WITHDRAW: {
+					stores: [CONTAINER, STORAGE]
 				},
 				PATROL: {
 					targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -143,10 +146,13 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
 			},
 			BUILD: {
-				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+				structures: [STRUCTURE_CONTAINER]
 			},
 			DEPOSIT: {
 				stores: [CONTAINER, STORAGE]
+			},
+			HARVEST: {
+//				lockToSource: true
 			}
 		});
 	}
@@ -201,9 +207,8 @@ function run(spawn, crash) {
 		});
 
 		//not enough energy for a lorry, spawn a tiny lorry
-		//TODO: timer on this?
-		if (result == ERR_NOT_ENOUGH_ENERGY) {
-			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "homeLorry", "tiny"], [CRY, PICKUP, DEPOSIT, WITHDRAW], tinyLorry, {
+		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny"], [CRY, PICKUP, DEPOSIT, WITHDRAW], tinyLorry, {
 				DEPOSIT: {
 					returnHomeFirst: true,
 					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
@@ -228,7 +233,7 @@ function run(spawn, crash) {
 			},
 			DEPOSIT: {
 				returnHomeFirst: true,
-				stores: [EXTENSION, SPAWN, TOWER, CONTAINER, STORAGE]
+				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
@@ -240,16 +245,16 @@ function run(spawn, crash) {
 		});
 	}
 
-//	if (!tags.guard || tags.guard < 2) {
-//		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
-//			PATROL: {
-//				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
-//			}
-//		});
-//	}
+	if (!tags.guard || tags.guard < 2) {
+		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
 
 	//spawn MORE harvesters
-	if (!tags.harvester || tags.harvester < 8) {
+	if (!tags.harvester || tags.harvester < 6) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, DEPOSIT, HARVEST], specializedHarvesterBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -258,16 +263,19 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
 			},
 			BUILD: {
-				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
+				structures: [STRUCTURE_CONTAINER]
 			},
 			DEPOSIT: {
 				stores: [CONTAINER, STORAGE]
+			},
+			HARVEST: {
+//				lockToSource: true
 			}
 		});
 	}
 
 	//spawn upgraders
-	if (!tags.upgrader || tags.upgrader < 4) {
+	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.stoage && spawn.room.stoage.store[RESOURCE_ENERGY] > 10000) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, HARVEST, UPGRADE], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
@@ -279,8 +287,8 @@ function run(spawn, crash) {
 	}
 
 	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, HARVEST, PATROL], largeWorkerBody, {
+	if (!tags.builder || tags.builder < 4) {
+		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], largeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['HARVEST'].remote = null;
@@ -294,6 +302,9 @@ function run(spawn, crash) {
 			},
 			REPAIR: {
 				wallHealth: 50000,
+			},
+			WITHDRAW: {
+				stores: [CONTAINER, STORAGE]
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)

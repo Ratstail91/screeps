@@ -20,12 +20,6 @@ function run(creep) {
 		return true;
 	}
 
-	//can't see this room, remove it
-	if (!Game.rooms[targetCry]) {
-		deleteCry(targetCry);
-		return run(creep); //recursion FTW
-	}
-
 	//move to the target cry
 	const targetPos = Game.rooms[targetCry].getPositionAt(25, 25);
 
