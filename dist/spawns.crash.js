@@ -37,7 +37,7 @@ function spawnHandleCrash(spawn) {
 		const c = getCreepsByOrigin(spawn);
 		const s = c.some(c => c.memory.tags.indexOf('crash') != -1);
 		if (!s) {
-			c.forEach(c => c.suicide());
+			c.filter(c => c.memory.tags.indexOf('nocrash') != -1).forEach(c => c.suicide());
 		}
 	}
 

@@ -45,10 +45,9 @@ function run(creep) {
 
 			switch(moveResult) {
 				case OK:
-					return false;
-
+				case ERR_TIRED:
 				case ERR_NO_PATH:
-					creep.deposit(closest, RESOURCE_ENERGY);
+					creep.transfer(container, RESOURCE_ENERGY);
 					return false;
 
 				default:

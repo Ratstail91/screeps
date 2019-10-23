@@ -8,9 +8,8 @@ const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
 const {
-	PICKUP, DEPOSIT, WITHDRAW, HARVEST, UPGRADE, BUILD, REPAIR,
-	FEAR, BRAVE, PATROL, TARGET, CRY, CARE,
-	CLAIMER,
+	HARVEST, UPGRADE, PICKUP, DROP, DEPOSIT, WITHDRAW, BUILD, REPAIR,
+	PATROL, TARGET, FEAR, BRAVE, CRY, CARE, HEALER, CLAIMER,
 } = require("behaviour_names");
 
 const {
@@ -35,14 +34,18 @@ const lorryBody = [ //800
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE,
 ];
 
-const guardBody = [
-//	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
+const tankBody = [ //700
+	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
 
-	MOVE, MOVE, MOVE, //150
+	MOVE, MOVE, MOVE, MOVE, MOVE, //250
 
-	ATTACK, ATTACK, ATTACK, //240
+	ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, //400
+];
 
-//	HEAL, HEAL, //500
+const healerBody = [ //600
+	MOVE, MOVE, //100
+
+	HEAL, HEAL, //500
 ];
 
 function run(spawn, crash) {
@@ -83,6 +86,9 @@ function run(spawn, crash) {
 						}
 					})
 				},
+				HARVEST: {
+					skipOnFull: true,
+				},
 				PATROL: {
 					targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 				}
@@ -95,6 +101,22 @@ function run(spawn, crash) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			}
+		});
+	}
+
+	if ((!tags.tank || tags.tank < 1) && Game.flags['attackme']) {
+		return spawnCreep(spawn, "tank", ["tank", "nocrash"], [CRY, BRAVE, TARGET], tankBody, {
+			TARGET: {
+				targetFlag: 'attackme'
+			}
+		});
+	}
+
+	if ((!tags.healer || tags.healer < 1) && Game.flags["attackme"]) {
+		return spawnCreep(spawn, "healer", ["healer", "nocrash"], [CRY, HEALER, TARGET], healerBody, {
+			TARGET: {
+				targetFlag: 'attackme'
 			}
 		});
 	}
@@ -124,8 +146,9 @@ function run(spawn, crash) {
 		});
 	}
 
-	if (!tags.guard || tags.guard < 2) {
-		return spawnCreep(spawn, "guard", ["guard"], [CRY, CARE, BRAVE, PATROL], guardBody, {
+	//guards when someone cries for help
+	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
+		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 			}
@@ -146,6 +169,9 @@ function run(spawn, crash) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, PICKUP, HARVEST, UPGRADE], mediumBody, {
 			FEAR: {
 				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+			},
+			HARVEST: {
+				skipOnFull: true,
 			}
 		});
 	}
@@ -163,6 +189,9 @@ function run(spawn, crash) {
 						c.memory['PATROL']._targetCounter = 0;
 					}
 				})
+			},
+			HARVEST: {
+				skipOnFull: true,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)

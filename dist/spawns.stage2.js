@@ -39,7 +39,8 @@ function run(spawn, crash) {
 			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody, {
 				HARVEST: {
 					remote: 0,
-					source: null
+					source: null,
+					skipOnFull: true,
 				}
 			});
 		}
@@ -52,12 +53,20 @@ function run(spawn, crash) {
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 3) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody);
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], smallBody, {
+			HARVEST: {
+				skipOnFull: true,
+			}
+		});
 	}
 
 	//spawn builders/repairers
 	if (!tags.builder || tags.builder < 2) {
-		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody);
+		return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], smallBody, {
+			HARVEST: {
+				skipOnFull: true,
+			}
+		});
 	}
 }
 

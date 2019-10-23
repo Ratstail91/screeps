@@ -24,15 +24,36 @@ function attackHostileCreeps(creep, filter) {
 	if (closestHostile) {
 		const attackResult = iAmRanged ? creep.rangedAttack(closestHostile) : creep.attack(closestHostile);
 
-		if (attackResult == OK || attackResult == ERR_NO_BODYPART) {
-			//DO NOTHING
-		} else if (attackResult == ERR_NOT_IN_RANGE) {
-			creep.moveTo(closestHostile, { reusePath: 1, visualizePathStyle: pathStyle });
-		} else {
-			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: iAmRanged ${iAmRanged} attackResult ${attackResult} closestHostile ${JSON.stringify(closestHostile)}`);
-		}
+		switch(attackResult) {
+			case OK:
+				return false;
 
-		return false;
+			case ERR_NO_BODYPART:
+				return true;
+
+			case ERR_NOT_IN_RANGE:
+				//if damaged and far away from a target
+		//		if (creep.hits < creep.hitsMax) {
+		//			return true;
+		//		}
+
+				const moveResult = creep.moveTo(closestHostile, { reusePath: 1, visualizePathStyle: pathStyle });
+
+				switch(moveResult) {
+					case OK:
+						return false;
+
+					case ERR_TIRED:
+					case ERR_NO_BODYPART:
+						return true;
+
+					default:
+						throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
+				}
+
+			default:
+				throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: iAmRanged ${iAmRanged} attackResult ${attackResult} closestHostile ${JSON.stringify(closestHostile)}`);
+		}
 	}
 
 	return true;

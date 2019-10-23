@@ -34,7 +34,8 @@ function run(spawn, crash) {
 			return spawnCreep(spawn, "builder", ["builder"], [REPAIR, BUILD, HARVEST, UPGRADE], tinyBody, {
 				HARVEST: {
 					remote: 0,
-					source: null
+					source: null,
+					skipOnFull: true,
 				}
 			});
 		}
@@ -47,7 +48,11 @@ function run(spawn, crash) {
 
 	//spawn upgraders
 	if (!tags.upgrader || tags.upgrader < 2) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], tinyBody);
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [PICKUP, HARVEST, UPGRADE], tinyBody, {
+			HARVEST: {
+				skipOnFull: true,
+			}
+		});
 	}
 }
 
