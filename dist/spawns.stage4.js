@@ -195,7 +195,7 @@ function run(spawn, crash) {
 	//home lorry (only works in spawn)
 	if (!tags.homeLorry || tags.homeLorry < 2) {
 		//NOTE: not immediately returning this result
-		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, PICKUP, DEPOSIT, WITHDRAW], specializedLorryBody, {
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, PICKUP, WITHDRAW], specializedLorryBody, {
 			DEPOSIT: {
 				returnHomeFirst: true,
 				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
@@ -207,7 +207,7 @@ function run(spawn, crash) {
 
 		//not enough energy for a lorry, spawn a tiny lorry
 		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
-			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny"], [CRY, PICKUP, DEPOSIT, WITHDRAW], tinyLorry, {
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny"], [CRY, DEPOSIT, PICKUP, WITHDRAW], tinyLorry, {
 				DEPOSIT: {
 					returnHomeFirst: true,
 					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
@@ -221,7 +221,7 @@ function run(spawn, crash) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 3) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, PICKUP, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
