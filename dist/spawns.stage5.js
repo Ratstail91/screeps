@@ -230,11 +230,16 @@ function run(spawn, crash) {
 				}
 			});
 		}
+	} else {
+		//clean up the tiny lorries
+		creeps.filter(c => c.memory.tags.indexOf("tinyLorry") != -1)
+			.forEach(c => c.suicide())
+			;
 	}
 
 	//lorry
-	if (!tags.lorry || tags.lorry < 4) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, PICKUP, WITHDRAW, PATROL], specializedLorryBody, {
+	if (!tags.lorry || tags.lorry < 2) {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
@@ -315,7 +320,7 @@ function run(spawn, crash) {
 				rampartHealth: 100000,
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [STORAGE, CONTAINER]
 			},
 			HARVEST: {
 				skipOnFull: true,
