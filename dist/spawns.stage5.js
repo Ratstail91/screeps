@@ -273,11 +273,12 @@ function run(spawn, crash) {
 			},
 			DEPOSIT: {
 				returnHomeFirst: true,
-				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
+				stores: [STORAGE]
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
 				skipOriginRoom: true,
+				skipIfNotEmpty: true,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
