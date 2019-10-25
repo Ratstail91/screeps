@@ -6,7 +6,7 @@
 //TODO: allow new behaviours after spawn
 
 const { STAGE_4_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
-const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
+const { getCreepsByOrigin, getPopulationByTags, countRemotes } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
 const {
@@ -148,7 +148,8 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER]
 			},
 			HARVEST: {
-//				lockToSource: true
+				remote: Memory.spawns[spawn.name].harvestCounter++ % countRemotes(spawn.name),
+				lockToSource: true
 			}
 		});
 	}
@@ -271,7 +272,8 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER]
 			},
 			HARVEST: {
-//				lockToSource: true
+				remote: Memory.spawns[spawn.name].harvestCounter++ % countRemotes(spawn.name),
+				lockToSource: true
 			}
 		});
 	}

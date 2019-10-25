@@ -8,7 +8,7 @@
 //TODO: use Traveller.js?
 
 const { STAGE_5_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
-const { getCreepsByOrigin, getPopulationByTags } = require("spawns.utils");
+const { getCreepsByOrigin, getPopulationByTags, countRemotes } = require("spawns.utils");
 const { spawnCreep } = require("creeps");
 
 const {
@@ -161,7 +161,8 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
 			},
 			HARVEST: {
-//				lockToSource: true
+				remote: Memory.spawns[spawn.name].harvestCounter++ % countRemotes(spawn.name),
+				lockToSource: true
 			}
 		});
 	}
@@ -284,7 +285,8 @@ function run(spawn, crash) {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
 			},
 			HARVEST: {
-//				lockToSource: true
+				remote: Memory.spawns[spawn.name].harvestCounter++ % countRemotes(spawn.name),
+				lockToSource: true
 			}
 		});
 	}

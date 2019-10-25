@@ -20,7 +20,7 @@ Lets look deeper into the harvester AI so I can explain what particular behaviou
 
 ## CRY
 
-Screeps' world is divided into rooms, and this behaviour stores the room's name into a global array where I can access it with the BRAVE behaviour.
+Screeps' world is divided into rooms, and this behaviour stores the room's name into a global array where I can access it with the CARE behaviour.
 
 ## FEAR
 

@@ -75,6 +75,9 @@ function initializeSpawnMemory(spawn) {
 	//initialize remotes
 	Memory.spawns[spawn.name].remotes = {};
 
+	//initialize remote harvest counter
+	Memory.spawns[spawn.name].harvestCounter = 0;
+
 	//TODO: more
 	//TODO: record each newly registered remote
 }
