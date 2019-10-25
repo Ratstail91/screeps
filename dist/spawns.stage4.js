@@ -249,7 +249,7 @@ function run(spawn, crash) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 4) {
-		return spawnCreep(spawn, "lozry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
