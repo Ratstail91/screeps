@@ -208,8 +208,19 @@ function run(spawn, crash) {
 
 	//home lorry (only works in spawn)
 	if (!tags.homeLorry || tags.homeLorry < 2) {
+		let behaviours;
+		let extraTags = [];
+
+		//only one creep should lack the PICKUP behaviour
+		if (!tags.nopickup || tags.nopickup < 1) {
+			behaviours = [CRY, DEPOSIT, WITHDRAW];
+			extraTags.push("nopickup");
+		} else {
+			behaviours = [CRY, DEPOSIT, PICKUP, WITHDRAW];
+		}
+
 		//NOTE: not immediately returning this result
-		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, PICKUP, WITHDRAW], specializedLorryBody, {
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry", ...extraTags], behaviours, specializedLorryBody, {
 			DEPOSIT: {
 				returnHomeFirst: true,
 				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
@@ -221,7 +232,18 @@ function run(spawn, crash) {
 
 		//not enough energy for a lorry, spawn a tiny lorry
 		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
-			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny"], [CRY, DEPOSIT, PICKUP, WITHDRAW], tinyLorry, {
+			let behaviours;
+			let extraTags = [];
+
+			//only one creep should lack the PICKUP behaviour
+			if (!tags.nopickup || tags.nopickup < 1) {
+				behaviours = [CRY, DEPOSIT, WITHDRAW];
+				extraTags.push("nopickup");
+			} else {
+				behaviours = [CRY, DEPOSIT, PICKUP, WITHDRAW];
+			}
+
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny", ...extraTags], behaviours, tinyLorry, {
 				DEPOSIT: {
 					returnHomeFirst: true,
 					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
