@@ -15,7 +15,7 @@ function attackHostileCreeps(creep, filter) {
 
 	let closestHostile = creep.pos.findClosestByRange(hostileCreeps, { filter: filter });
 
-	if (!closestHostile) {//TODO: cleanup
+	if (!closestHostile) {
 		closestHostile = creep.pos.findClosestByRange(creep.room.find(FIND_HOSTILE_STRUCTURES, {
 			filter: s => s.structureType != STRUCTURE_CONTROLLER && s.structureType != STRUCTURE_POWER_BANK && s.structureType != STRUCTURE_POWER_SPAWN && allies.indexOf(s.owner.username) == -1
 		}));

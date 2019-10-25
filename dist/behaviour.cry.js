@@ -6,7 +6,7 @@ function run(creep) {
 	//if hostiles found
 	const hostiles = creep.room.find(FIND_HOSTILE_CREEPS)
 		.filter(c => allies.indexOf(c.owner.username) == -1) //NOTE: untested
-		; //TODO: inefficient
+		; //TODO: inefficient, replace with a room-based find variable?
 
 	if (hostiles.length > 0) {
 		createCry(creep.room.name);

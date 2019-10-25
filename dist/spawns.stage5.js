@@ -4,7 +4,7 @@
 */
 
 //TODO: allow new behaviours after spawn
-//TODO: link code
+//TODO: (1) link code
 //TODO: use Traveller.js?
 
 const { STAGE_5_ENERGY_CAPACITY: ENERGY_CAPACITY } = require("constants");
