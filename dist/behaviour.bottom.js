@@ -8,4 +8,6 @@ function run(creep) {
 	//no-op
 }
 
-module.exports = run;
+const profiler = require('screepers.profiler');
+
+module.exports = profiler.registerFN(run, "bottom.run");

@@ -41,7 +41,9 @@ function handleBehaviour(creep, name) {
 	}
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	initializeBehaviours,
-	handleBehaviour,
+	initializeBehaviours: profiler.registerFN(initializeBehaviours, "behaviours.initializeBehaviours"),
+	handleBehaviour: profiler.registerFN(handleBehaviour, "behaviours.handleBehaviour"),
 };

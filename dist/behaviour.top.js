@@ -54,4 +54,6 @@ function run(creep) {
 	return true;
 }
 
-module.exports = run;
+const profiler = require('screepers.profiler');
+
+module.exports = profiler.registerFN(run, "top.run");

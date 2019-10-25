@@ -47,7 +47,9 @@ function handleCreep(creep) {
 	bottom(creep);
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	spawnCreep,
-	handleCreep
+	spawnCreep: profiler.registerFN(spawnCreep, "creeps.spawnCreep"),
+	handleCreep: profiler.registerFN(handleCreep, "creeps.handleCreep"),
 };

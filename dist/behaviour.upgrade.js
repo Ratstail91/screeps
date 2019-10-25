@@ -56,7 +56,9 @@ function run(creep) {
 	}
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: init,
-	run: run
+	init: profiler.registerFN(init, "upgrade.init"),
+	run: profiler.registerFN(run, "upgrade.run"),
 };

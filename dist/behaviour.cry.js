@@ -63,10 +63,12 @@ function findClosestCryTo(targetRoomName) {
 	return closest.roomName;
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: c => null, //DO NOTHING
-	run,
-	createCry,
-	deleteCry,
-	findClosestCryTo,
+	init: profiler.registerFN(c => null, "cry.init"), //DO NOTHING
+	run: profiler.registerFN(run, "cry.run"),
+	createCry: profiler.registerFN(createCry, "cry.createCry"),
+	deleteCry: profiler.registerFN(deleteCry, "cry.deleteCry"),
+	findClosestCryTo: profiler.registerFN(findClosestCryTo, "cry.findClosestCryTo"),
 };

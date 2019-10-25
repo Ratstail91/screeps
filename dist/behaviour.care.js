@@ -27,4 +27,6 @@ function run(creep) {
 	return false;
 }
 
-module.exports = run;
+const profiler = require('screepers.profiler');
+
+module.exports = profiler.registerFN(run, "care.run");

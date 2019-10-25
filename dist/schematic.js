@@ -60,7 +60,9 @@ function placeConstructionSites(point, buildData) {
 	return invalidPlacement;
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	schematicBuild,
-	placeConstructionSites
+	schematicBuild: profiler.registerFN(schematicBuild, "schematic.schematicBuild"),
+	placeConstructionSites: profiler.registerFN(placeConstructionSites, "schematic.placeConstructionSites"),
 };

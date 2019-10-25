@@ -43,7 +43,9 @@ function run(creep) {
 	}
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: init,
-	run: run
+	init: profiler.registerFN(init, "claimer.init"),
+	run: profiler.registerFN(run, "claimer.run"),
 };

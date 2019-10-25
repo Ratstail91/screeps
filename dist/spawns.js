@@ -83,6 +83,8 @@ function defendSpawn(spawn) {
 	towers.forEach(t => t.attack(hostiles[0]));
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	handleSpawn
+	handleSpawn: profiler.registerFN(handleSpawn, "spawns.handleSpawn"),
 };

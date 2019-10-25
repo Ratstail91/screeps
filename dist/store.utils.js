@@ -106,6 +106,8 @@ function getStores(point, types) {
 	return result;
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
 	TOWER,
 	SPAWN,
@@ -116,5 +118,5 @@ module.exports = {
 	TOMBSTONE,
 	RUINS,
 
-	getStores,
+	getStores: profiler.registerFN(getStores, "store.utils.getStores"),
 };

@@ -69,9 +69,11 @@ function run(creep) {
 	return false;
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: init,
-	run: run,
-	serialize: serialize,
-	deserialize: deserialize
+	init: profiler.registerFN(init, "fear.init"),
+	run: profiler.registerFN(run, "fear.run"),
+	serialize: profiler.registerFN(serialize, "fear.serialize"),
+	deserialize: profiler.registerFN(deserialize, "fear.deserialize"),
 };

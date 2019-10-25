@@ -67,4 +67,6 @@ function run(creep) {
 	);
 }
 
-module.exports = run;
+const profiler = require('screepers.profiler');
+
+module.exports = profiler.registerFN(run, "brave.run");

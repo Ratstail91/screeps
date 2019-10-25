@@ -82,10 +82,12 @@ function initializeSpawnMemory(spawn) {
 	//TODO: record each newly registered remote
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	getCreepsByOrigin,
-	getPopulationByTags,
-	countRemotes,
-	registerRemote,
-	initializeSpawnMemory,
+	getCreepsByOrigin: profiler.registerFN(getCreepsByOrigin, "spawns.utils.getCreepsByOrigin"),
+	getPopulationByTags: profiler.registerFN(getPopulationByTags, "spawns.utils.getPopulationByTags"),
+	countRemotes: profiler.registerFN(countRemotes, "spawns.utils.countRemotes"),
+	registerRemote: profiler.registerFN(registerRemote, "spawns.utils.registerRemote"),
+	initializeSpawnMemory: profiler.registerFN(initializeSpawnMemory, "spawns.utils.initializeSpawnMemory"),
 };

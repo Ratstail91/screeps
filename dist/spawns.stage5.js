@@ -261,7 +261,7 @@ function run(spawn, crash) {
 	}
 
 	//lorry
-	if (!tags.lorry || tags.lorry < 2) {
+	if (!tags.lorry || tags.lorry < 4) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
@@ -356,4 +356,6 @@ function run(spawn, crash) {
 	}
 }
 
-module.exports = run;
+const profiler = require('screepers.profiler');
+
+module.exports = profiler.registerFN(run, "spawns.stage5");

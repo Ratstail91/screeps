@@ -76,7 +76,9 @@ function spawnHandleCrash(spawn) {
 	}
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	spawnHasCrashed,
-	spawnHandleCrash,
+	spawnHasCrashed: profiler.registerFN(spawnHasCrashed, "spawns.crash.spawnHasCrashed"),
+	spawnHandleCrash: profiler.registerFN(spawnHandleCrash, "spawns.crash.spawnHandleCrash"),
 };

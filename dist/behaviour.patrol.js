@@ -80,7 +80,9 @@ function run(creep) {
 	throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: moveResult ${moveResult}`);
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: init,
-	run: run
+	init: profiler.registerFN(init, "patrol.init"),
+	run: profiler.registerFN(run, "patrol.run"),
 };

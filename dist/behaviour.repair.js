@@ -83,7 +83,9 @@ function run(creep, top = false) {
 	}
 }
 
+const profiler = require('screepers.profiler');
+
 module.exports = {
-	init: init,
-	run: run
+	init: profiler.registerFN(init, "repair.init"),
+	run: profiler.registerFN(run, "repair.run"),
 };
