@@ -139,7 +139,12 @@ function run(spawn, crash) {
 	if (!tags.harvester || tags.harvester < 4) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, HARVEST], specializedHarvesterBody, {
 			FEAR: {
-				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+				onSafe: serialize(c => {
+					if (!c.memory['HARVEST'].lockToSource) {
+						c.memory['HARVEST'].remote = null;
+						c.memory['HARVEST'].source = null;
+					}
+				})
 			},
 			REPAIR: {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]
@@ -218,7 +223,7 @@ function run(spawn, crash) {
 		});
 
 		//not enough energy for a lorry, spawn a tiny lorry
-		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
+		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 4)) {
 			let behaviours;
 			let extraTags = [];
 
@@ -287,7 +292,12 @@ function run(spawn, crash) {
 	if (!tags.harvester || tags.harvester < 6) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, REPAIR, BUILD, HARVEST], specializedHarvesterBody, {
 			FEAR: {
-				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+				onSafe: serialize(c => {
+					if (!c.memory['HARVEST'].lockToSource) {
+						c.memory['HARVEST'].remote = null;
+						c.memory['HARVEST'].source = null;
+					}
+				})
 			},
 			REPAIR: {
 				structures: [STRUCTURE_CONTAINER, STRUCTURE_STORAGE]

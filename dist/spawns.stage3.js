@@ -100,7 +100,12 @@ function run(spawn, crash) {
 	if (!tags.harvester || tags.harvester < 4) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody, {
 			FEAR: {
-				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+				onSafe: serialize(c => {
+					if (!c.memory['HARVEST'].lockToSource) {
+						c.memory['HARVEST'].remote = null;
+						c.memory['HARVEST'].source = null;
+					}
+				})
 			}
 		});
 	}
@@ -159,7 +164,12 @@ function run(spawn, crash) {
 	if (!tags.harvester || tags.harvester < 10) {
 		return spawnCreep(spawn, "harvester", ["harvester"], [CRY, FEAR, PICKUP, DEPOSIT, HARVEST, UPGRADE], mediumBody, {
 			FEAR: {
-				onSafe: serialize(c => { c.memory['HARVEST'].remote = null; c.memory['HARVEST'].source = null; })
+				onSafe: serialize(c => {
+					if (!c.memory['HARVEST'].lockToSource) {
+						c.memory['HARVEST'].remote = null;
+						c.memory['HARVEST'].source = null;
+					}
+				})
 			}
 		});
 	}
