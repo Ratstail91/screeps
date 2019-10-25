@@ -14,7 +14,8 @@ function init(creep) {
 		forceIfNotFull: false,
 		skipOwnRoom: false,
 		skipOriginRoom: false,
-		stores: null
+		stores: null,
+		continueOnSuccess: false, //HACK: allow patrol to increment
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
@@ -56,7 +57,7 @@ function run(creep) {
 	switch(transferResult) {
 		case OK:
 			//everything is OK
-			return false;
+			return creep.memory[BEHAVIOUR_NAME].continueOnSuccess;
 
 		case ERR_NOT_IN_RANGE: {
 			const moveResult = creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });

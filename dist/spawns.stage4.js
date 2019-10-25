@@ -265,10 +265,11 @@ function run(spawn, crash) {
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
 				skipOriginRoom: true,
-				skipIfNotEmpty: true,
+				continueOnSuccess: true,
 			},
 			PATROL: {
-				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes),
+				stopInRoom: true,
 			}
 		});
 	}
