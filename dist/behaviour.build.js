@@ -34,6 +34,7 @@ function run(creep) {
 	}
 
 	//NOTE: building ramparts and walls with the lowest priority
+	//TODO: why do builders look for structures every tick?
 	let allConstructionSites = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: site => site.structureType != STRUCTURE_RAMPART && site.structureType != STRUCTURE_WALL && (!creep.memory[BEHAVIOUR_NAME].structures || creep.memory[BEHAVIOUR_NAME].structures.indexOf(site.structureType) != -1) });
 
 	if (allConstructionSites.length == 0) {
