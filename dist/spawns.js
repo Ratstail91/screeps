@@ -4,7 +4,7 @@ const {
 	STAGE_3_ENERGY_CAPACITY,
 	STAGE_4_ENERGY_CAPACITY,
 	STAGE_5_ENERGY_CAPACITY,
-//	STAGE_6_ENERGY_CAPACITY,
+	STAGE_6_ENERGY_CAPACITY,
 //	STAGE_7_ENERGY_CAPACITY,
 //	STAGE_8_ENERGY_CAPACITY,
 } = require("constants");
@@ -14,7 +14,7 @@ const spawnStage2 = require("spawns.stage2");
 const spawnStage3 = require("spawns.stage3");
 const spawnStage4 = require("spawns.stage4");
 const spawnStage5 = require("spawns.stage5");
-//const spawnStage6 = require("spawns.stage6");
+const spawnStage6 = require("spawns.stage6");
 
 const { spawnHasCrashed, spawnHandleCrash } = require("spawns.crash");
 const { initializeSpawnMemory, countRemotes } = require("spawns.utils");
@@ -41,9 +41,11 @@ function handleSpawn(spawn) {
 		return spawnHandleCrash(spawn);
 	}
 
-//	if (spawn.room.energyCapacityAvailable >= STAGE_6_ENERGY_CAPACITY) {
-//		return spawnStage6(spawn);
-//	}
+	//TODO: stage 7 & 8
+
+	if (spawn.room.energyCapacityAvailable >= STAGE_6_ENERGY_CAPACITY) {
+		return spawnStage6(spawn);
+	}
 
 	if (spawn.room.energyCapacityAvailable >= STAGE_5_ENERGY_CAPACITY) {
 		return spawnStage5(spawn);

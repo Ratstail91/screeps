@@ -38,14 +38,9 @@ function run(creep, top = false) {
 		return true;
 	}
 
-	//find the closest repair target
+	//find the closest repair target (walls and ramparts first
 	let repairTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 		filter: target => {
-			//exclude non-specified structure types
-			if (creep.memory[BEHAVIOUR_NAME].structures && creep.memory[BEHAVIOUR_NAME].structures.indexOf(target.structureType) == -1) {
-				return false;
-			}
-
 			//handle walls and ramparts separately
 			if (target.structureType == STRUCTURE_WALL) {
 				return target.hits < creep.memory[BEHAVIOUR_NAME].wallHealth;
@@ -55,11 +50,26 @@ function run(creep, top = false) {
 				return target.hits < (top ? creep.memory[BEHAVIOUR_NAME].rampartHealth : creep.memory[BEHAVIOUR_NAME].rampartHealth * creep.memory[BEHAVIOUR_NAME].threshold);
 			}
 
-			//default: use general threshold
-			return target.hits < (top ? target.hitsMax : target.hitsMax * creep.memory[BEHAVIOUR_NAME].threshold);
+			return false;
 		},
 		range: 3
 	});
+
+	//find the closest repair target (all structures)
+	if (!repairTarget) {
+		repairTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+			filter: target => {
+				//exclude non-specified structure types
+				if (creep.memory[BEHAVIOUR_NAME].structures && creep.memory[BEHAVIOUR_NAME].structures.indexOf(target.structureType) == -1) {
+					return false;
+				}
+
+				//default: use general threshold
+				return target.hits < (top ? target.hitsMax : target.hitsMax * creep.memory[BEHAVIOUR_NAME].threshold);
+			},
+			range: 3
+		});
+	}
 
 	//if no repair targets
 	if (!repairTarget) {
