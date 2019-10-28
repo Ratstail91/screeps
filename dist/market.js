@@ -47,7 +47,7 @@ function handleResource(resourceType, terminal) {
 		.sort((a, b) => b.price - a.price) //highest buy price first
 		;
 
-	if (buyOrders[0].price > average) {
+	if (buyOrders.length > 0 && buyOrders[0].price > average) {
 		const result = confirmSale(buyOrders[0], terminal);
 
 		switch(result) {
@@ -61,7 +61,7 @@ function handleResource(resourceType, terminal) {
 	}
 
 	//process the given data
-	if (sellOrders[0].price <= average) {
+	if (sellOrders.length > 0 && sellOrders[0].price <= average) {
 		const result = confirmPurchase(sellOrders[0], terminal);
 
 		switch(result) {
