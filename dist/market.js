@@ -105,7 +105,7 @@ function confirmPurchase(sellOrder, terminal, average) {
 
 	const amount = Math.min(purchasable, sellOrder.remainingAmount); //how many I can buy
 
-	if (amount <= 0) {
+	if (amount <= 100) {
 		return 1;
 	}
 
@@ -124,7 +124,7 @@ function confirmSale(buyOrder, terminal, average) {
 
 	const amount = Math.min(salable, buyOrder.remainingAmount); //how many I can sell
 
-	if (amount <= 0) {
+	if (amount <= 100) {
 		return 1;
 	}
 
