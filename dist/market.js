@@ -5,14 +5,15 @@ function handleMarket(spawn) {
 		return;
 	}
 
-	handleResource(RESOURCE_HYDROGEN, terminal);
-	handleResource(RESOURCE_OXYGEN, terminal);
-	handleResource(RESOURCE_UTRIUM, terminal);
-	handleResource(RESOURCE_LEMERGIUM, terminal);
-	handleResource(RESOURCE_KEANIUM, terminal);
-	handleResource(RESOURCE_ZYNTHIUM, terminal);
-	handleResource(RESOURCE_CATALYST, terminal);
+
 	handleResource(RESOURCE_GHODIUM, terminal);
+	handleResource(RESOURCE_CATALYST, terminal);
+	handleResource(RESOURCE_ZYNTHIUM, terminal);
+	handleResource(RESOURCE_KEANIUM, terminal);
+	handleResource(RESOURCE_LEMERGIUM, terminal);
+	handleResource(RESOURCE_UTRIUM, terminal);
+	handleResource(RESOURCE_OXYGEN, terminal);
+	handleResource(RESOURCE_HYDROGEN, terminal);
 }
 
 function dumpEnergy(terminal) {
