@@ -103,11 +103,11 @@ function getFortnightlyAverage(resourceType) {
 function confirmPurchase(sellOrder, terminal, average) {
 	const purchasable = Math.floor(Game.market.credits / sellOrder.price); //how many I can afford
 
-	if (purchasable <= 0) {
+	const amount = Math.min(purchasable, sellOrder.remainingAmount); //how many I can buy
+
+	if (amount <= 0) {
 		return 1;
 	}
-
-	const amount = Math.min(purchasable, sellOrder.remainingAmount); //how many I can buy
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, sellOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
@@ -122,11 +122,11 @@ function confirmPurchase(sellOrder, terminal, average) {
 function confirmSale(buyOrder, terminal, average) {
 	const salable = terminal.store[buyOrder.resourceType]; //the stock I have to sell
 
-	if (salable <= 0) {
+	const amount = Math.min(salable, buyOrder.remainingAmount); //how many I can sell
+
+	if (amount <= 0) {
 		return 1;
 	}
-
-	const amount = Math.min(salable, buyOrder.remainingAmount); //how many I can sell
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, buyOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
