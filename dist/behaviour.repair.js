@@ -59,6 +59,11 @@ function run(creep, top = false) {
 	if (!repairTarget) {
 		repairTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
 			filter: target => {
+				//exclude walls and ramparts (already handled)
+				if (target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) {
+					return false;
+				}
+
 				//exclude non-specified structure types
 				if (creep.memory[BEHAVIOUR_NAME].structures && creep.memory[BEHAVIOUR_NAME].structures.indexOf(target.structureType) == -1) {
 					return false;

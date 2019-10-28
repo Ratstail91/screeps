@@ -16,6 +16,8 @@ const spawnStage4 = require("spawns.stage4");
 const spawnStage5 = require("spawns.stage5");
 const spawnStage6 = require("spawns.stage6");
 
+const handleMarket = require("market");
+
 const { spawnHasCrashed, spawnHandleCrash } = require("spawns.crash");
 const { initializeSpawnMemory, countRemotes } = require("spawns.utils");
 
@@ -30,6 +32,7 @@ function handleSpawn(spawn) {
 	}
 
 	defendSpawn(spawn);
+	handleMarket(spawn);
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {

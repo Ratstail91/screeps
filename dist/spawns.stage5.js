@@ -48,7 +48,7 @@ const tankBody = [ //1680
 //	RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
 ];
 
-const healerBody = [
+const healerBody = [ //1550
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, //300
 
 	HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, //1250

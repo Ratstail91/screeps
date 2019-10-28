@@ -13,7 +13,7 @@ const {
 } = require("behaviour_names");
 
 const {
-	TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE,
+	TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL,
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
@@ -24,27 +24,22 @@ const claimerBody = [ //1300
 	MOVE, MOVE, CLAIM, CLAIM,
 ];
 
-const tankBody = [ //1680
-	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //100
-	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
-
-	TOUGH, TOUGH, //20
+const tankBody = [ //2300
+	TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, //50
 
 	MOVE, MOVE, MOVE, MOVE, MOVE, //500
 	MOVE, MOVE, MOVE, MOVE, MOVE,
 
-	MOVE, MOVE, //100
+	MOVE, MOVE, MOVE, //150
 
 	ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, //800
 	ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
 
-	ATTACK, ATTACK, //160
-
-//	RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK, //900
-//	RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK,
+	ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, //800
+	ATTACK, ATTACK, ATTACK, ATTACK, ATTACK,
 ];
 
-const healerBody = [
+const healerBody = [ //1550
 	MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, //300
 
 	HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, //1250
@@ -61,14 +56,20 @@ const specializedHarvesterBody = [ //800
 	WORK, WORK, WORK, WORK, WORK,
 ];
 
-const specializedLorryBody = [ //1500
-	//50 * 10 = 500
+const specializedLorryBody = [ //2250
+	//50 * 10 = 750
 	MOVE, MOVE, MOVE, MOVE, MOVE,
 	MOVE, MOVE, MOVE, MOVE, MOVE,
 
-	//50 * 20 = 1000
+	MOVE, MOVE, MOVE, MOVE, MOVE,
+
+	//50 * 30 = 1500
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
+
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+	CARRY, CARRY, CARRY, CARRY, CARRY,
+
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 	CARRY, CARRY, CARRY, CARRY, CARRY,
 ];
@@ -110,6 +111,9 @@ function run(spawn, crash) {
 			Game.notify("schematicBuild returned a non-zero value (infrastructure stage 5)");
 		}
 	}
+
+	//certain creeps don't spawn below this storage number
+	const energyThreshold = 20000;
 
 	//work on the creeps
 	creeps = getCreepsByOrigin(spawn);
@@ -231,7 +235,7 @@ function run(spawn, crash) {
 			}
 		});
 
-		//not enough energy for a lorry, spawn a tiny lorry
+		//not enough energy for a home lorry, spawn a tiny lorry
 		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 4)) {
 			let behaviours;
 			let extraTags = [];
@@ -288,6 +292,18 @@ function run(spawn, crash) {
 		});
 	}
 
+	//trader
+	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
+		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
+			DEPOSIT: {
+				stores: [TERMINAL]
+			},
+			WITHDRAW: {
+				stores: [STORAGE]
+			}
+		});
+	}
+
 	//guards when someone cries for help
 	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
 		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
@@ -322,7 +338,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn upgraders
-	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > 10000) {
+	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > energyThreshold) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => null)
@@ -348,8 +364,8 @@ function run(spawn, crash) {
 				})
 			},
 			REPAIR: {
-				wallHealth: 100000,
-				rampartHealth: 100000,
+				wallHealth: 200000,
+				rampartHealth: 250000,
 			},
 			WITHDRAW: {
 				stores: [STORAGE, CONTAINER]
