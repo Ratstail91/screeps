@@ -48,7 +48,7 @@ function handleResource(resourceType, terminal) {
 
 	if (buyOrders.length > 0 && buyOrders[0].price > average) {
 //		console.log("buy order found");
-		const result = confirmSale(buyOrders[0], terminal);
+		const result = confirmSale(buyOrders[0], terminal, average);
 
 		switch(result) {
 			case OK:
@@ -69,7 +69,7 @@ function handleResource(resourceType, terminal) {
 	//process the given data
 	if (sellOrders.length > 0 && sellOrders[0].price <= average) {
 //		console.log("sell order found");
-		const result = confirmPurchase(sellOrders[0], terminal);
+		const result = confirmPurchase(sellOrders[0], terminal, average);
 
 		switch(result) {
 			case OK:
@@ -96,7 +96,7 @@ function getFortnightlyAverage(resourceType) {
 	return total / history.length;
 }
 
-function confirmPurchase(sellOrder, terminal) {
+function confirmPurchase(sellOrder, terminal, average) {
 	const purchasable = Math.floor(Game.market.credits / sellOrder.price); //how many I can afford
 
 	if (purchasable <= 0) {
@@ -110,12 +110,12 @@ function confirmPurchase(sellOrder, terminal) {
 		return 2;
 	}
 
-	Game.notify(`Buying: ${sellOrder.resourceType} for ${sellOrder.price}`);
+	Game.notify(`Buying: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
 	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
 }
 
-function confirmSale(buyOrder, terminal) {
+function confirmSale(buyOrder, terminal, average) {
 	const salable = terminal.store[buyOrder.resourceType]; //the stock I have to sell
 
 	if (salable <= 0) {
@@ -129,7 +129,7 @@ function confirmSale(buyOrder, terminal) {
 		return 2;
 	}
 
-	Game.notify(`Selling: ${buyOrder.resourceType} for ${buyOrder.price}`);
+	Game.notify(`Selling: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
 	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
 }
