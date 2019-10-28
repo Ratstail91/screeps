@@ -1,21 +1,3 @@
-/*
-function dumpEnergy(terminal) {
-	const sellAmount = terminal.store[RESOURCE_ENERGY] / 2;
-
-	const buyOrders = Game.market.getAllOrders({ resourceType: RESOURCE_ENERGY, type: ORDER_BUY })
-		.filter(bo => bo.price >= 0.003)
-		.sort((a, b) =>
-			Game.market.calcTransactionCost(sellAmount, a.roomName, terminal.room.name) -
-			Game.market.calcTransactionCost(sellAmount, b.roomName, terminal.room.name)
-		);
-
-	if (buyOrders[0]) {
-		console.log(`cost: ${Game.market.calcTransactionCost(sellAmount, buyOrders[0].roomName, terminal.room.name)}`);
-		Game.market.deal(buyOrders[0].id, sellAmount, terminal.room.name);
-	}
-}
-*/
-
 function handleMarket(spawn) {
 	const terminal = spawn.room.terminal;
 
@@ -33,6 +15,22 @@ function handleMarket(spawn) {
 	handleResource(RESOURCE_GHODIUM, terminal);
 }
 
+function dumpEnergy(terminal) {
+	const sellAmount = terminal.store[RESOURCE_ENERGY] / 2;
+
+	const buyOrders = Game.market.getAllOrders({ resourceType: RESOURCE_ENERGY, type: ORDER_BUY })
+		.filter(bo => bo.price >= 0.003)
+		.sort((a, b) =>
+			Game.market.calcTransactionCost(sellAmount, a.roomName, terminal.room.name) -
+			Game.market.calcTransactionCost(sellAmount, b.roomName, terminal.room.name)
+		);
+
+	if (buyOrders[0]) {
+//		console.log(`cost: ${Game.market.calcTransactionCost(sellAmount, buyOrders[0].roomName, terminal.room.name)}`);
+		Game.market.deal(buyOrders[0].id, sellAmount, terminal.room.name);
+	}
+}
+
 function handleResource(resourceType, terminal) {
 	if (resourceType == RESOURCE_ENERGY) {
 		throw new Error("Can't sell energy yet");
@@ -48,11 +46,18 @@ function handleResource(resourceType, terminal) {
 		;
 
 	if (buyOrders.length > 0 && buyOrders[0].price > average) {
+//		console.log("buy order found");
 		const result = confirmSale(buyOrders[0], terminal);
 
 		switch(result) {
 			case OK:
-			case 1: //custom error code
+				break;
+
+			case 1: //custom error code: no stock to sell
+//				console.log("no stock");
+				break;
+
+			case 2: //custom error code: not enough energy
 				break;
 
 			default:
@@ -62,11 +67,18 @@ function handleResource(resourceType, terminal) {
 
 	//process the given data
 	if (sellOrders.length > 0 && sellOrders[0].price <= average) {
+//		console.log("sell order found");
 		const result = confirmPurchase(sellOrders[0], terminal);
 
 		switch(result) {
 			case OK:
-			case 1: //custom error code
+				break;
+
+			case 1: //custom error code: no money to buy
+//				dumpEnergy(terminal); //get some money
+				break;
+
+			case 2: //custom error code: not enough energy
 				break;
 
 			default:
@@ -94,7 +106,7 @@ function confirmPurchase(sellOrder, terminal) {
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, sellOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
-		return 1;
+		return 2;
 	}
 
 	Game.notify(`Buying: ${sellOrder.resourceType} for ${sellOrder.price}`);
@@ -113,7 +125,7 @@ function confirmSale(buyOrder, terminal) {
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, buyOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
-		return 1;
+		return 2;
 	}
 
 	Game.notify(`Selling: ${buyOrder.resourceType} for ${buyOrder.price}`);
