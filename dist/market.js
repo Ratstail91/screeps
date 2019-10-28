@@ -10,7 +10,6 @@ function handleMarket(spawn) {
 	}
 
 
-	handleResource(RESOURCE_GHODIUM, terminal);
 	handleResource(RESOURCE_CATALYST, terminal);
 	handleResource(RESOURCE_ZYNTHIUM, terminal);
 	handleResource(RESOURCE_KEANIUM, terminal);
@@ -18,6 +17,11 @@ function handleMarket(spawn) {
 	handleResource(RESOURCE_UTRIUM, terminal);
 	handleResource(RESOURCE_OXYGEN, terminal);
 	handleResource(RESOURCE_HYDROGEN, terminal);
+
+	handleResource(RESOURCE_HYDROXIDE, terminal);
+	handleResource(RESOURCE_ZYNTHIUM_KEANITE, terminal);
+	handleResource(RESOURCE_UTRIUM_LEMERGITE, terminal);
+	handleResource(RESOURCE_GHODIUM, terminal);
 
 //	dumpEnergy(terminal); //get some money from the remaining energy
 }
