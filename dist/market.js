@@ -5,7 +5,7 @@ function handleMarket(spawn) {
 //		Game.notify(`Report: ${JSON.stringify(terminal.store)} - ${Game.market.credits} credits`);
 	}
 
-	if (!terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
+	if (true || !terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
 		return;
 	}
 
@@ -98,6 +98,10 @@ function handleResource(resourceType, terminal) {
 
 function getFortnightlyAverage(resourceType) {
 	const history = Game.market.getHistory(resourceType);
+
+	if (!history.length) {
+		return null;
+	}
 
 	let total = 0;
 	history.forEach(day => total += day.avgPrice);

@@ -282,16 +282,16 @@ function run(spawn, crash) {
 	}
 
 	//trader
-	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
-		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
-			DEPOSIT: {
-				stores: [TERMINAL]
-			},
-			WITHDRAW: {
-				stores: [STORAGE]
-			}
-		});
-	}
+//	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
+//		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
+//			DEPOSIT: {
+//				stores: [TERMINAL]
+//			},
+//			WITHDRAW: {
+//				stores: [STORAGE]
+//			}
+//		});
+//	}
 
 	//guards when someone cries for help
 	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
