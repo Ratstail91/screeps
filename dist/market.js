@@ -2,7 +2,7 @@ function handleMarket(spawn) {
 	const terminal = spawn.room.terminal;
 
 	if (terminal && Game.time % 1500 == 0) {
-		Game.notify(`Report: ${JSON.stringify(terminal.store)} - ${Game.market.credits} credits`);
+//		Game.notify(`Report: ${JSON.stringify(terminal.store)} - ${Game.market.credits} credits`);
 	}
 
 	if (!terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
@@ -19,7 +19,7 @@ function handleMarket(spawn) {
 	handleResource(RESOURCE_OXYGEN, terminal);
 	handleResource(RESOURCE_HYDROGEN, terminal);
 
-	dumpEnergy(terminal); //get some money from the remaining energy
+//	dumpEnergy(terminal); //get some money from the remaining energy
 }
 
 function dumpEnergy(terminal) {

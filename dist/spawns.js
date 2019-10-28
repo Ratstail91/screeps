@@ -35,6 +35,7 @@ function handleSpawn(spawn) {
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
+		handleMarket(spawn);
 		return;
 	}
 

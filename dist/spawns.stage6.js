@@ -212,20 +212,9 @@ function run(spawn, crash) {
 	}
 
 	//home lorry (only works in spawn)
-	if (!tags.homeLorry || tags.homeLorry < 2) {
-		let behaviours;
-		let extraTags = [];
-
-		//only one creep should lack the PICKUP behaviour
-		if (!tags.nopickup || tags.nopickup < 1) {
-			behaviours = [CRY, DEPOSIT, WITHDRAW];
-			extraTags.push("nopickup");
-		} else {
-			behaviours = [CRY, DEPOSIT, PICKUP, WITHDRAW];
-		}
-
+	if (!tags.homeLorry || tags.homeLorry < 1) {
 		//NOTE: not immediately returning this result
-		let result = spawnCreep(spawn, "homeLorry", ["homeLorry", ...extraTags], behaviours, specializedLorryBody, {
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, PICKUP, WITHDRAW], specializedLorryBody, {
 			DEPOSIT: {
 				returnHomeFirst: true,
 				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
@@ -350,7 +339,7 @@ function run(spawn, crash) {
 	}
 
 	//spawn builders/repairers
-	if (!tags.builder || tags.builder < 2) {
+	if (!tags.builder || tags.builder < 4) {
 		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => {
