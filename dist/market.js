@@ -76,7 +76,7 @@ function handleResource(resourceType, terminal) {
 				break;
 
 			case 1: //custom error code: no money to buy
-//				dumpEnergy(terminal); //get some money
+				dumpEnergy(terminal); //get some money
 				break;
 
 			case 2: //custom error code: not enough energy
