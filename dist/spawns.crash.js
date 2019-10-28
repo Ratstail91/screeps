@@ -20,7 +20,7 @@ function spawnHasCrashed(spawn) {
 	creeps = getCreepsByOrigin(spawn);
 	tags = getPopulationByTags(creeps);
 
-	if (creeps.length - tags.nocrash < 5 && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
+	if (creeps.length - (tags.nocrash || 0) < 5 && spawn.room.energyCapacityAvailable >= STAGE_2_ENERGY_CAPACITY) {
 		return true;
 	} else {
 		Memory.spawns[spawn.name]._crashHandler = false;

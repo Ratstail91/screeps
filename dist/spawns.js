@@ -32,7 +32,6 @@ function handleSpawn(spawn) {
 	}
 
 	defendSpawn(spawn);
-	handleMarket(spawn);
 
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
@@ -43,6 +42,8 @@ function handleSpawn(spawn) {
 	if (spawnHasCrashed(spawn)) {
 		return spawnHandleCrash(spawn);
 	}
+
+	handleMarket(spawn);
 
 	//TODO: stage 7 & 8
 
