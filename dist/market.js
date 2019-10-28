@@ -1,6 +1,10 @@
 function handleMarket(spawn) {
 	const terminal = spawn.room.terminal;
 
+	if (terminal && Game.time % 1500 == 0) {
+		Game.notify(`Report: ${JSON.stringify(terminal.store)} - ${Game.market.credits} credits`);
+	}
+
 	if (!terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
 		return;
 	}
@@ -110,7 +114,7 @@ function confirmPurchase(sellOrder, terminal, average) {
 		return 2;
 	}
 
-	Game.notify(`Buying: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
+//	Game.notify(`Buying: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
 	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
 }
@@ -129,7 +133,7 @@ function confirmSale(buyOrder, terminal, average) {
 		return 2;
 	}
 
-	Game.notify(`Selling: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
+//	Game.notify(`Selling: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
 	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
 }
