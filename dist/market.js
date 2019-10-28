@@ -135,7 +135,7 @@ function confirmSale(buyOrder, terminal, average) {
 
 //	Game.notify(`Selling: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
-	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
+	return Game.market.deal(buyOrder.id, amount, terminal.room.name);
 }
 
 module.exports = handleMarket;
