@@ -18,6 +18,8 @@ function handleMarket(spawn) {
 	handleResource(RESOURCE_UTRIUM, terminal);
 	handleResource(RESOURCE_OXYGEN, terminal);
 	handleResource(RESOURCE_HYDROGEN, terminal);
+
+	dumpEnergy(terminal); //get some money from the remaining energy
 }
 
 function dumpEnergy(terminal) {
@@ -59,7 +61,6 @@ function handleResource(resourceType, terminal) {
 				break;
 
 			case 1: //custom error code: no stock to sell
-//				console.log("no stock");
 				break;
 
 			case 2: //custom error code: not enough energy
@@ -80,7 +81,6 @@ function handleResource(resourceType, terminal) {
 				break;
 
 			case 1: //custom error code: no money to buy
-				dumpEnergy(terminal); //get some money
 				break;
 
 			case 2: //custom error code: not enough energy
