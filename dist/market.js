@@ -47,6 +47,19 @@ function handleResource(resourceType, terminal) {
 		.sort((a, b) => b.price - a.price) //highest buy price first
 		;
 
+	if (buyOrders[0].price > average) {
+		const result = confirmSale(buyOrders[0], terminal);
+
+		switch(result) {
+			case OK:
+			case 1: //custom error code
+				break;
+
+			default:
+				throw new Error(`Unexpected result in confirmSale: result ${result}`);
+		}
+	}
+
 	//process the given data
 	if (sellOrders[0].price <= average) {
 		const result = confirmPurchase(sellOrders[0], terminal);
@@ -58,19 +71,6 @@ function handleResource(resourceType, terminal) {
 
 			default:
 				throw new Error(`Unexpected result in confirmPurchase: result ${result}`);
-		}
-	}
-
-	if (buyOrders[0].price > average) {
-		const result = confirmSale(buyOrders[0], terminal);
-
-		switch(result) {
-			case OK:
-			case 1: //custom error code
-				break;
-
-			default:
-				throw new Error(`Unexpected result in confirmSale: result ${result}`);
 		}
 	}
 }
