@@ -26,6 +26,9 @@ function telephoneTest() {
 	switch(Memory.telephoneTest2) {
 		//check the initialization and closure of the telephone system
 		case 1:
+			//reset everything
+			closeTelephone();
+
 			console.log("Please wait while the test is run. This may take some time.");
 
 			if (checkTelephone()) {
