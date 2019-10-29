@@ -20,10 +20,10 @@ const {
 
 function telephoneTest() {
 	//initialize the tester
-	Memory.telephoneTest = Memory.telephoneTest + 1 || 1;
+	Memory.telephoneTest2 = Memory.telephoneTest2 + 1 || 1;
 
 	//switch between test stages
-	switch(Memory.telephoneTest) {
+	switch(Memory.telephoneTest2) {
 		//check the initialization and closure of the telephone system
 		case 1:
 			console.log("Please wait while the test is run. This may take some time.");

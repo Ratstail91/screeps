@@ -32,7 +32,9 @@ function initializeTelephone() {
 }
 
 function checkTelephone() {
-	return RawMemory.segments[TELEPHONE_INFO] && RawMemory.segments[TELEPHONE_HELP];
+	return
+		RawMemory.segments[TELEPHONE_INFO] != undefined &&
+		RawMemory.segments[TELEPHONE_HELP] != undefined;
 }
 
 //close down the telephone system
@@ -43,7 +45,7 @@ function closeTelephone() {
 
 //sending info or asking for help
 function setTelephone(protocol, mode, data) {
-	if (!RawMemory.segments[protocol]) {
+	if (RawMemory.segments[protocol] == undefined) {
 		return TELEPHONE_ERR_NOT_INITIALIZED;
 	}
 
