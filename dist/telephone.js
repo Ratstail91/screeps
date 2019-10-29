@@ -71,7 +71,7 @@ function getTelephone(playerName, protocol) {
 		return TELEPHONE_ERR_PLAYER_NOT_CONNECTED;
 	}
 
-	return RawMemory.foreignSegment;
+	return RawMemory.foreignSegment.data;
 }
 
 module.exports = {
