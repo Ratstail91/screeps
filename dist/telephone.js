@@ -31,16 +31,11 @@ function initializeTelephone() {
 	RawMemory.setPublicSegments(protocols);
 }
 
-function checkTelephone() {
-	return
-		RawMemory.segments[TELEPHONE_INFO] != undefined &&
-		RawMemory.segments[TELEPHONE_HELP] != undefined;
-}
-
 //close down the telephone system
 function closeTelephone() {
 	RawMemory.setActiveSegments([]);
 	RawMemory.setPublicSegments([]);
+	RawMemory.setActiveForeignSegment(null);
 }
 
 //sending info or asking for help
@@ -92,7 +87,6 @@ module.exports = {
 	TELEPHONE_HELP_DEFEND,
 	TELEPHONE_HELP_ATTACK,
 	initializeTelephone,
-	checkTelephone,
 	closeTelephone,
 	setTelephone,
 	requestTelephone,
