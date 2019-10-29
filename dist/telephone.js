@@ -44,10 +44,10 @@ function setTelephone(protocol, mode, data) {
 		return TELEPHONE_ERR_NOT_INITIALIZED;
 	}
 
-	RawMemory.segments[protocol] = JSON.stringify({
+	RawMemory.segments[protocol] = {
 		mode: mode,
 		data: data,
-	});
+	};
 
 	return OK;
 }
@@ -71,7 +71,7 @@ function getTelephone(playerName, protocol) {
 		return TELEPHONE_ERR_PLAYER_NOT_CONNECTED;
 	}
 
-	return JSON.parse(RawMemory.foreignSegment);
+	return RawMemory.foreignSegment;
 }
 
 module.exports = {
