@@ -48,6 +48,9 @@ function spawnHandleCrash(spawn) {
 	//spawn harvesters
 	if (!tags.harvester || tags.harvester < 3) {
 		return spawnCreep(spawn, "harvester", ["harvester", "crash"], [PICKUP, DEPOSIT, HARVEST, UPGRADE], tinyBody, {
+			DEPOSIT: {
+				returnHomeFirst: true, //bugfix
+			},
 			HARVEST: {
 				remote: 0,
 				source: null

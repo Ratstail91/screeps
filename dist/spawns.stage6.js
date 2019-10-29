@@ -172,29 +172,6 @@ function run(spawn, crash) {
 		});
 	}
 
-//	if ((!tags.claimer || tags.claimer < 1) && Game.flags["claimme"]) {
-//		return spawnCreep(spawn, "claimer", ["claimer"], [TARGET, CLAIMER], claimerBody, {
-//			TARGET: {
-//				targetFlag: "claimme",
-//				stopInRoom: true
-//			}
-//		});
-//	}
-
-	//BUG: getPopulationByTags() doesn't recognize the other spawn
-//	if ((!tags.colonist || tags.colonist < 4) && Game.flags["claimme"]) {
-//		return spawnCreep(spawn, "colonist", ["colonist"], [TARGET, HARVEST, BUILD], largeWorkerBody, {
-//			TARGET: {
-//				targetFlag: "claimme",
-//				stopInRoom: true
-//			},
-//			HARVEST: {
-//				skipOnFull: true,
-//			}
-//			origin: "Spawn2"
-//		})
-//	}
-
 	if ((!tags.tank || tags.tank < 1) && Game.flags['attackme']) {
 		return spawnCreep(spawn, "tank", ["tank", "nocrash"], [CRY, BRAVE, TARGET], tankBody, {
 			TARGET: {
@@ -225,7 +202,7 @@ function run(spawn, crash) {
 		});
 
 		//not enough energy for a home lorry, spawn a tiny lorry
-		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 4)) {
+		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
 			let behaviours;
 			let extraTags = [];
 
@@ -254,6 +231,48 @@ function run(spawn, crash) {
 			;
 	}
 
+	//spawn builders/repairers (don't care about walls/ramparts)
+	if (!tags.builder || tags.builder < 1) {
+		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], hugeWorkerBody, {
+			FEAR: {
+				onSafe: serialize(c => {
+					c.memory['HARVEST'].remote = null;
+					c.memory['HARVEST'].source = null;
+
+					c.memory['PATROL']._targetCounter++;
+					if (c.memory['PATROL']._targetCounter >= c.memory['PATROL'].targetFlags.length) {
+						c.memory['PATROL']._targetCounter = 0;
+					}
+				})
+			},
+			REPAIR: {
+				wallHealth: 0,
+				rampartHealth: 0,
+			},
+			WITHDRAW: {
+				stores: [STORAGE, CONTAINER]
+			},
+			HARVEST: {
+				skipOnFull: true,
+			},
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
+	//spawn upgraders
+	if ((!tags.upgrader || tags.upgrader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > energyThreshold) {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
+			FEAR: {
+				onSafe: serialize(c => null)
+			},
+			WITHDRAW: {
+				stores: [STORAGE]
+			}
+		});
+	}
+
 	//lorry
 	if (!tags.lorry || tags.lorry < 4) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
@@ -280,18 +299,6 @@ function run(spawn, crash) {
 			}
 		});
 	}
-
-	//trader
-//	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
-//		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
-//			DEPOSIT: {
-//				stores: [TERMINAL]
-//			},
-//			WITHDRAW: {
-//				stores: [STORAGE]
-//			}
-//		});
-//	}
 
 	//guards when someone cries for help
 	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
@@ -326,19 +333,7 @@ function run(spawn, crash) {
 		});
 	}
 
-	//spawn upgraders
-	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > energyThreshold) {
-		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
-			FEAR: {
-				onSafe: serialize(c => null)
-			},
-			WITHDRAW: {
-				stores: [STORAGE]
-			}
-		});
-	}
-
-	//spawn builders/repairers
+	//spawn MORE builders/repairers
 	if (!tags.builder || tags.builder < 4) {
 		return spawnCreep(spawn, "builder", ["builder"], [CRY, FEAR, REPAIR, BUILD, WITHDRAW, HARVEST, PATROL], hugeWorkerBody, {
 			FEAR: {
@@ -364,6 +359,30 @@ function run(spawn, crash) {
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
+	//spawn MORE upgraders
+	if ((!tags.upgrader || tags.upgrader < 4) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] > energyThreshold) {
+		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
+			FEAR: {
+				onSafe: serialize(c => null)
+			},
+			WITHDRAW: {
+				stores: [STORAGE]
+			}
+		});
+	}
+
+	//trader
+	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
+		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
+			DEPOSIT: {
+				stores: [TERMINAL]
+			},
+			WITHDRAW: {
+				stores: [STORAGE]
 			}
 		});
 	}
