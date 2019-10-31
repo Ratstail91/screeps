@@ -168,7 +168,18 @@ function confirmSale(buyOrder, terminal, average) {
 	return { result, amount };
 }
 
+function report() {
+	Object.values(Game.spawns)
+		.forEach(s => {
+			if (s.room.terminal) {
+				console.log(`${s.name}: ${JSON.stringify(s.room.terminal.store)}`);
+			}
+		})
+		;
+}
+
 module.exports = {
 	handleMarket,
 	getFortnightlyAverage,
+	report,
 };
