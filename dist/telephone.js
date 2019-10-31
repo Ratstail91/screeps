@@ -110,7 +110,7 @@ function decrypt(content, passcode) {
 		str += ch;
 	}
 
-	return JSON.parse(str);
+	return JSON.parse(str.length ? str : TELEPHONE_ERR_NO_DATA);
 }
 
 module.exports = {
