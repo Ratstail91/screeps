@@ -16,6 +16,7 @@ const TELEPHONE_HELP = 98; //request help
 //modes to use
 const TELEPHONE_INFO_NONE = 0; //no info
 const TELEPHONE_INFO_ANY = 1; //any information I want to send
+const TELEPHONE_INFO_NOTIFY = 2; //invoke the other player's Game.notify()
 
 const TELEPHONE_HELP_NONE = 0; //I don't need help
 const TELEPHONE_HELP_ENERGY = 1; //I need energy
@@ -90,6 +91,7 @@ module.exports = {
 	TELEPHONE_HELP,
 	TELEPHONE_INFO_NONE,
 	TELEPHONE_INFO_ANY,
+	TELEPHONE_INFO_NOTIFY,
 	TELEPHONE_HELP_NONE,
 	TELEPHONE_HELP_ENERGY,
 	TELEPHONE_HELP_DEFEND,

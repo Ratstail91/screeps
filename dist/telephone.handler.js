@@ -10,6 +10,7 @@ const {
 	TELEPHONE_HELP,
 	TELEPHONE_INFO_NONE,
 	TELEPHONE_INFO_ANY,
+	TELEPHONE_INFO_NOTIFY,
 	TELEPHONE_HELP_NONE,
 	TELEPHONE_HELP_ENERGY,
 	TELEPHONE_HELP_DEFEND,
@@ -68,7 +69,7 @@ function handleTelephoneInfo() {
 			throw new Error("Your telephone is not initialized");
 
 		case TELEPHONE_ERR_PLAYER_NOT_CONNECTED:
-			console.log(`Player ${allies[Memory._handleTelephone.ally]} is not connected to the telephone system`);
+//			console.log(`Player ${allies[Memory._handleTelephone.ally]} is not connected to the telephone system`);
 			break;
 
 		case TELEPHONE_ERR_NO_DATA:
@@ -84,13 +85,20 @@ function handleTelephoneInfo() {
 	}
 
 	//handle the mode
+	const msg = `${allies[Memory._handleTelephone.ally]}: ${result.data}`;
+
 	switch(result.mode) {
 		case TELEPHONE_INFO_NONE:
 			//do nothing
 			break;
 
 		case TELEPHONE_INFO_ANY:
-			console.log(`${allies[Memory._handleTelephone.ally]}: ${result.data}`);
+			console.log(msg);
+			break;
+
+		case TELEPHONE_INFO_NOTIFY:
+			console.log(msg);
+			Game.notify(msg);
 			break;
 	}
 }
@@ -104,7 +112,7 @@ function handleTelephoneHelp() {
 			throw new Error("Your telephone is not initialized");
 
 		case TELEPHONE_ERR_PLAYER_NOT_CONNECTED:
-			console.log(`Player ${allies[Memory._handleTelephone.ally]} is not connected to the telephone system`);
+//			console.log(`Player ${allies[Memory._handleTelephone.ally]} is not connected to the telephone system`);
 			break;
 
 		case TELEPHONE_ERR_NO_DATA:
@@ -126,7 +134,7 @@ function handleTelephoneHelp() {
 			break;
 
 		case TELEPHONE_HELP_ENERGY:
-			//TODO: send energy
+			sendEnergy(allies[Memory._handleTelephone.ally], result.data);
 			break;
 
 		case TELEPHONE_HELP_DEFEND:
@@ -137,6 +145,30 @@ function handleTelephoneHelp() {
 			//TODO: attack target
 			break;
 	}
+}
+
+//how to help other players
+function sendEnergy(player, destination) {
+	const terminals = Object.values(Game.spawns)
+		.filter(s => s.name.startsWith("Spawn")) //ignore surrogates
+		.map(s => s.room.terminal)
+		.filter(t => t.store[RESOURCE_ENERGY] >= 1000) //must have energy to send
+		;
+
+	if (terminals.length == 0) {
+		return;
+	}
+
+	//hacky check
+	try {
+		new Room.Terrain(destination);
+	} catch(e) {
+		console.log(`Garbage room name received from ${player}: data ${destination}`);
+	}
+
+	console.log(`Sending emergency supply drop to ${player} at ${destination}`);
+
+	terminals.forEach(t => t.send(RESOURCE_ENERGY, t.store[RESOURCE_ENERGY] /2, destination, "emergency supply drop"));
 }
 
 module.exports = handleTelephone;
