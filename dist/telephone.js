@@ -93,8 +93,8 @@ function encrypt(content, key) {
 	return aesjs.utils.hex.fromBytes(encryptedBytes);
 }
 
-function decrypt(content, passcode) {
-	const encryptedBytes = aesjs.utils.hex.toBytes(encryptedHex);
+function decrypt(content, key) {
+	const encryptedBytes = aesjs.utils.hex.toBytes(content);
 
 	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
 	const decryptedBytes = aesCtr.decrypt(encryptedBytes);
