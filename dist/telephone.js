@@ -7,13 +7,15 @@ const TELEPHONE_ERR_NOT_INITIALIZED = -101;
 const TELEPHONE_ERR_WRONG_PLAYER = -102;
 const TELEPHONE_ERR_WRONG_PROTOCOL = -103;
 const TELEPHONE_ERR_PLAYER_NOT_CONNECTED = -104;
+const TELEPHONE_ERR_NO_DATA = -105;
 
 //protocols that can be used
 const TELEPHONE_INFO = 99; //general data
 const TELEPHONE_HELP = 98; //request help
 
 //modes to use
-const TELEPHONE_INFO_ANY = 0; //any information I want to send
+const TELEPHONE_INFO_NONE = 0; //no info
+const TELEPHONE_INFO_ANY = 1; //any information I want to send
 
 const TELEPHONE_HELP_NONE = 0; //I don't need help
 const TELEPHONE_HELP_ENERGY = 1; //I need energy
@@ -59,6 +61,10 @@ function requestTelephone(playerName, protocol) {
 
 //accessing info on the next tick
 function getTelephone(playerName, protocol) {
+	if (!RawMemory.foreignSegment) {
+		return TELEPHONE_ERR_PLAYER_NOT_CONNECTED;
+	}
+
 	if (RawMemory.foreignSegment.username != playerName) {
 		return TELEPHONE_ERR_WRONG_PLAYER;
 	}
@@ -67,8 +73,8 @@ function getTelephone(playerName, protocol) {
 		return TELEPHONE_ERR_WRONG_PROTOCOL;
 	}
 
-	if (!RawMemory.foreignSegment) {
-		return TELEPHONE_ERR_PLAYER_NOT_CONNECTED;
+	if (RawMemory.foreignSegment.data.length == 0) {
+		return TELEPHONE_ERR_NO_DATA;
 	}
 
 	return JSON.parse(RawMemory.foreignSegment.data);
@@ -79,8 +85,10 @@ module.exports = {
 	TELEPHONE_ERR_WRONG_PLAYER,
 	TELEPHONE_ERR_WRONG_PROTOCOL,
 	TELEPHONE_ERR_PLAYER_NOT_CONNECTED,
+	TELEPHONE_ERR_NO_DATA,
 	TELEPHONE_INFO,
 	TELEPHONE_HELP,
+	TELEPHONE_INFO_NONE,
 	TELEPHONE_INFO_ANY,
 	TELEPHONE_HELP_NONE,
 	TELEPHONE_HELP_ENERGY,

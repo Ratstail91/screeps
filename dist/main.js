@@ -1,5 +1,6 @@
 const { handleSpawn } = require('spawns');
 const { handleCreep } = require('creeps');
+const handleTelephone = require('telephone.handler');
 const profiler = require('screepers.profiler');
 
 function handleError(e) {
@@ -11,6 +12,13 @@ profiler.enable();
 module.exports.loop = () => {
 	profiler.wrap(() => {
 		//TODO: kill creeps with no memory
+
+		//check the telephone
+		try {
+			handleTelephone();
+		} catch(e) {
+			handleError(e);
+		}
 
 		//run the spawn AI
 		for (const spawnName in Game.spawns) {
