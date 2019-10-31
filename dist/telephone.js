@@ -83,8 +83,9 @@ function getTelephone(playerName, protocol) {
 
 //encrypt/decrypt functions built into the telephone system
 function encrypt(content, passcode) {
+	content = JSON.stringify(content);
 	let result = [];
-
+//console.log("encrypt: ", content.length, passcode);
 	for(let i = 0; i < content.length; i++) {
 		let passOffset = i % passcode.length;
 		let calcAscii = (content.charCodeAt(i)+passcode.charCodeAt(passOffset));
@@ -95,13 +96,13 @@ function encrypt(content, passcode) {
 }
 
 function decrypt(content, passcode) {
+	content = JSON.parse(content);
 	let result = [];
 	let str = '';
-	let codesArr = JSON.parse(content);
-
-	for(let i = 0; i < codesArr.length; i++) {
+//console.log("decrypt: ", content, passcode);
+	for(let i = 0; i < content.length; i++) {
 		let passOffset = i % passcode.length;
-		let calcAscii = (codesArr[i] - passcode.charCodeAt(passOffset));
+		let calcAscii = (content[i] - passcode.charCodeAt(passOffset));
 		result.push(calcAscii) ;
 	}
 
@@ -110,7 +111,7 @@ function decrypt(content, passcode) {
 		str += ch;
 	}
 
-	return JSON.parse(str.length ? str : TELEPHONE_ERR_NO_DATA);
+	return str.length ? JSON.parse(str) : TELEPHONE_ERR_NO_DATA;
 }
 
 module.exports = {
