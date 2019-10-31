@@ -2,6 +2,8 @@
  * those belonging to the Toy Makers alliance.
 */
 
+const aesjs = require('aes-js');
+
 //error messages
 const TELEPHONE_ERR_NOT_INITIALIZED = -101;
 const TELEPHONE_ERR_WRONG_PLAYER = -102;
@@ -82,42 +84,26 @@ function getTelephone(playerName, protocol) {
 }
 
 //encrypt/decrypt functions built into the telephone system
-function encrypt(content, passcode) {
-	content = JSON.stringify(content);
-	let result = [];
+function encrypt(content, key) {
+	const bytes = aesjs.utils.utf8.toBytes(JSON.stringify(content));
 
-	for(let i = 0; i < content.length; i++) {
-		let passOffset = i % passcode.length;
-		let calcAscii = (content.charCodeAt(i)+passcode.charCodeAt(passOffset));
-		result.push(calcAscii);
-	}
+	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+	const encryptedBytes = aesCtr.encrypt(bytes);
 
-	return JSON.stringify(result);
+	return aesjs.utils.hex.fromBytes(encryptedBytes);
 }
 
 function decrypt(content, passcode) {
-	content = JSON.parse(content);
-	let result = [];
-	let str = '';
+	const encryptedBytes = aesjs.utils.hex.toBytes(encryptedHex);
 
-	for(let i = 0; i < content.length; i++) {
-		let passOffset = i % passcode.length;
-		let calcAscii = (content[i] - passcode.charCodeAt(passOffset));
-		result.push(calcAscii) ;
-	}
+	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+	const decryptedBytes = aesCtr.decrypt(encryptedBytes);
 
-	for(let i = 0; i < result.length; i++) {
-		let ch = String.fromCharCode(result[i]);
-		str += ch;
-	}
-
-	try {
-		str =  str.length ? JSON.parse(str) : TELEPHONE_ERR_NO_DATA;
-	} catch(e) {
+	if (decryptedBytes.length > 0) {
+		return aesjs.utils.utf8.fromBytes(decryptedBytes);
+	} else {
 		return TELEPHONE_ERR_NO_DATA;
 	}
-
-	return str;
 }
 
 module.exports = {
