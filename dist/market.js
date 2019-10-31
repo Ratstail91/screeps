@@ -25,7 +25,7 @@ function handleMarket(spawn) {
 	transactionCount += handleResource(RESOURCE_GHODIUM, terminal);
 
 	if (transactionCount == 0 && terminal.store[RESOURCE_ENERGY] >= 10000) {
-		dumpEnergy(terminal); //get some money from the remaining energy
+//		dumpEnergy(terminal); //get some money from the remaining energy
 	}
 }
 
@@ -50,6 +50,11 @@ function handleResource(resourceType, terminal) {
 		throw new Error("Can't sell energy yet");
 	}
 
+	//cap to prevent runaway code
+	if (terminal.store[resourceType] >= 20000) {
+		return 0;
+	}
+
 	const history = Game.market.getHistory(resourceType);
 	const average = getFortnightlyAverage(resourceType);
 	const sellOrders = Game.market.getAllOrders({ resourceType: resourceType, type: ORDER_SELL })
@@ -65,10 +70,11 @@ function handleResource(resourceType, terminal) {
 
 	if (buyOrders.length > 0 && buyOrders[0].price > average) {
 //		console.log("buy order found");
-		const result = confirmSale(buyOrders[0], terminal, average);
+		const { result, amount } = confirmSale(buyOrders[0], terminal, average);
 
 		switch(result) {
 			case OK:
+				console.log(`Sold ${resourceType} x${amount} for ${buyOrders[0].price}`);
 				transactionCount++;
 				break;
 
@@ -86,10 +92,11 @@ function handleResource(resourceType, terminal) {
 	//process the given data
 	if (sellOrders.length > 0 && sellOrders[0].price <= average) {
 //		console.log("sell order found");
-		const result = confirmPurchase(sellOrders[0], terminal, average);
+		const { result, amount } = confirmPurchase(sellOrders[0], terminal, average);
 
 		switch(result) {
 			case OK:
+				console.log(`Sold ${resourceType} x${amount} for ${buyOrders[0].price}`);
 				transactionCount++;
 				break;
 
@@ -125,17 +132,19 @@ function confirmPurchase(sellOrder, terminal, average) {
 	const amount = Math.min(purchasable, sellOrder.remainingAmount); //how many I can buy
 
 	if (amount <= 100) {
-		return 1;
+		return { result: 1, amount: 0};
 	}
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, sellOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
-		return 2;
+		return { result: 2, amount: 0};
 	}
 
 //	Game.notify(`Buying: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
-	return Game.market.deal(sellOrder.id, amount, terminal.room.name);
+	const result = Game.market.deal(sellOrder.id, amount, terminal.room.name);
+
+	return { result, amount };
 }
 
 function confirmSale(buyOrder, terminal, average) {
@@ -144,17 +153,22 @@ function confirmSale(buyOrder, terminal, average) {
 	const amount = Math.min(salable, buyOrder.remainingAmount); //how many I can sell
 
 	if (amount <= 100) {
-		return 1;
+		return { result: 1, amount: 0};
 	}
 
 	//make sure there's enough energy there to sell
 	if (Game.market.calcTransactionCost(amount, terminal.room.name, buyOrder.roomName) > terminal.store[RESOURCE_ENERGY]) {
-		return 2;
+		return { result: 2, amount: 0};
 	}
 
 //	Game.notify(`Selling: ${sellOrder.resourceType} x${amount} for ${sellOrder.price} per unit (avg ${average})`);
 
-	return Game.market.deal(buyOrder.id, amount, terminal.room.name);
+	const result = Game.market.deal(buyOrder.id, amount, terminal.room.name);
+
+	return { result, amount };
 }
 
-module.exports = handleMarket;
+module.exports = {
+	handleMarket,
+	getFortnightlyAverage,
+};
