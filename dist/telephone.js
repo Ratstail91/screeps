@@ -47,7 +47,7 @@ function setTelephone(protocol, mode, data) {
 		return TELEPHONE_ERR_NOT_INITIALIZED;
 	}
 
-	RawMemory.segments[protocol] = JSON.stringify({
+	RawMemory.segments[protocol] = encrypt({
 		mode: mode,
 		data: data,
 	});
@@ -78,7 +78,39 @@ function getTelephone(playerName, protocol) {
 		return TELEPHONE_ERR_NO_DATA;
 	}
 
-	return JSON.parse(RawMemory.foreignSegment.data);
+	return decrypt(RawMemory.foreignSegment.data);
+}
+
+//encrypt/decrypt functions built into the telephone system
+function encrypt(content, passcode) {
+	let result = [];
+
+	for(let i = 0; i < content.length; i++) {
+		let passOffset = i % passcode.length;
+		let calcAscii = (content.charCodeAt(i)+passcode.charCodeAt(passOffset));
+		result.push(calcAscii);
+	}
+
+	return JSON.stringify(result);
+}
+
+function decrypt(content, passcode) {
+	let result = [];
+	let str = '';
+	let codesArr = JSON.parse(content);
+
+	for(let i = 0; i < codesArr.length; i++) {
+		let passOffset = i % passcode.length;
+		let calcAscii = (codesArr[i] - passcode.charCodeAt(passOffset));
+		result.push(calcAscii) ;
+	}
+
+	for(let i = 0; i < result.length; i++) {
+		let ch = String.fromCharCode(result[i]);
+		str += ch;
+	}
+
+	return JSON.parse(str);
 }
 
 module.exports = {
