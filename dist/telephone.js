@@ -85,7 +85,7 @@ function getTelephone(playerName, protocol) {
 function encrypt(content, passcode) {
 	content = JSON.stringify(content);
 	let result = [];
-//console.log("encrypt: ", content.length, passcode);
+
 	for(let i = 0; i < content.length; i++) {
 		let passOffset = i % passcode.length;
 		let calcAscii = (content.charCodeAt(i)+passcode.charCodeAt(passOffset));
@@ -99,7 +99,7 @@ function decrypt(content, passcode) {
 	content = JSON.parse(content);
 	let result = [];
 	let str = '';
-//console.log("decrypt: ", content, passcode);
+
 	for(let i = 0; i < content.length; i++) {
 		let passOffset = i % passcode.length;
 		let calcAscii = (content[i] - passcode.charCodeAt(passOffset));
