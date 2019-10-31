@@ -8,6 +8,7 @@ logs/**
 /**/*.pwd
 auth.json
 .env
+/dist/telephone.password.js
 
 #log files
 /**/*.log
