@@ -94,7 +94,11 @@ function encrypt(content, key) {
 }
 
 function decrypt(content, key) {
-	const encryptedBytes = aesjs.utils.hex.toBytes(content);
+	try {
+		const encryptedBytes = aesjs.utils.hex.toBytes(content);
+	} catch(e) {
+		//
+	}
 
 	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
 	const decryptedBytes = aesCtr.decrypt(encryptedBytes);
