@@ -50,7 +50,7 @@ function setTelephone(protocol, mode, data) {
 	RawMemory.segments[protocol] = encrypt({
 		mode: mode,
 		data: data,
-	});
+	}, require("telephone.password"));
 
 	return OK;
 }
@@ -78,7 +78,7 @@ function getTelephone(playerName, protocol) {
 		return TELEPHONE_ERR_NO_DATA;
 	}
 
-	return decrypt(RawMemory.foreignSegment.data);
+	return decrypt(RawMemory.foreignSegment.data, require("telephone.password"));
 }
 
 //encrypt/decrypt functions built into the telephone system
