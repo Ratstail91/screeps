@@ -136,7 +136,7 @@ function run(spawn, crash) {
 					})
 				},
 				WITHDRAW: {
-					stores: [CONTAINER, STORAGE]
+					stores: [CONTAINER, STORAGE, TERMINAL]
 				},
 				HARVEST: {
 					skipOnFull: true,
@@ -197,7 +197,7 @@ function run(spawn, crash) {
 				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [CONTAINER, STORAGE, TERMINAL]
 			}
 		});
 
@@ -220,7 +220,7 @@ function run(spawn, crash) {
 					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
 				},
 				WITHDRAW: {
-					stores: [CONTAINER, STORAGE]
+					stores: [CONTAINER, STORAGE, TERMINAL]
 				}
 			});
 		}
@@ -250,7 +250,7 @@ function run(spawn, crash) {
 				rampartHealth: 5000,
 			},
 			WITHDRAW: {
-				stores: [STORAGE, CONTAINER]
+				stores: [STORAGE, CONTAINER, TERMINAL]
 			},
 			HARVEST: {
 				skipOnFull: true,
@@ -268,7 +268,7 @@ function run(spawn, crash) {
 				onSafe: serialize(c => null)
 			},
 			WITHDRAW: {
-				stores: [STORAGE]
+				stores: [STORAGE, TERMINAL]
 			}
 		});
 	}
@@ -301,7 +301,7 @@ function run(spawn, crash) {
 				stores: [STORAGE]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE],
+				stores: [CONTAINER, STORAGE, TERMINAL],
 				skipOriginRoom: true,
 				continueOnSuccess: true,
 			},
@@ -364,7 +364,7 @@ function run(spawn, crash) {
 				rampartHealth: 250000,
 			},
 			WITHDRAW: {
-				stores: [STORAGE, CONTAINER]
+				stores: [STORAGE, TERMINAL, CONTAINER]
 			},
 			HARVEST: {
 				skipOnFull: true,
@@ -382,7 +382,7 @@ function run(spawn, crash) {
 				onSafe: serialize(c => null)
 			},
 			WITHDRAW: {
-				stores: [STORAGE]
+				stores: [STORAGE, TERMINAL]
 			}
 		});
 	}
