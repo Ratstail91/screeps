@@ -96,16 +96,16 @@ function encrypt(content, key) {
 function decrypt(content, key) {
 	try {
 		const encryptedBytes = aesjs.utils.hex.toBytes(content);
+
+		const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
+		const decryptedBytes = aesCtr.decrypt(encryptedBytes);
+
+		if (decryptedBytes.length > 0) {
+			return aesjs.utils.utf8.fromBytes(decryptedBytes);
+		} else {
+			return TELEPHONE_ERR_NO_DATA;
+		}
 	} catch(e) {
-		return TELEPHONE_ERR_NO_DATA;
-	}
-
-	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
-	const decryptedBytes = aesCtr.decrypt(encryptedBytes);
-
-	if (decryptedBytes.length > 0) {
-		return aesjs.utils.utf8.fromBytes(decryptedBytes);
-	} else {
 		return TELEPHONE_ERR_NO_DATA;
 	}
 }
