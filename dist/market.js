@@ -50,11 +50,6 @@ function handleResource(resourceType, terminal) {
 		throw new Error("Can't sell energy yet");
 	}
 
-	//cap to prevent runaway code
-	if (terminal.store[resourceType] >= 20000) {
-		return 0;
-	}
-
 	const history = Game.market.getHistory(resourceType);
 	const average = getFortnightlyAverage(resourceType);
 	const sellOrders = Game.market.getAllOrders({ resourceType: resourceType, type: ORDER_SELL })
@@ -87,6 +82,11 @@ function handleResource(resourceType, terminal) {
 			default:
 				throw new Error(`Unexpected result in confirmSale: result ${result}`);
 		}
+	}
+
+	//cap to prevent runaway code
+	if (terminal.store[resourceType] >= 20000) {
+		return transactionCount;
 	}
 
 	//process the given data
