@@ -5,25 +5,28 @@ function handleMarket(spawn) {
 //		Game.notify(`Report: ${JSON.stringify(terminal.store)} - ${Game.market.credits} credits`);
 	}
 
-	if (true || !terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
+	if (!terminal || terminal.cooldown /* || terminal.store[RESOURCE_ENERGY] < 500 */) {
 		return;
 	}
 
+	let transactionCount = 0;
 
-	handleResource(RESOURCE_CATALYST, terminal);
-	handleResource(RESOURCE_ZYNTHIUM, terminal);
-	handleResource(RESOURCE_KEANIUM, terminal);
-	handleResource(RESOURCE_LEMERGIUM, terminal);
-	handleResource(RESOURCE_UTRIUM, terminal);
-	handleResource(RESOURCE_OXYGEN, terminal);
-	handleResource(RESOURCE_HYDROGEN, terminal);
+	transactionCount += handleResource(RESOURCE_CATALYST, terminal);
+	transactionCount += handleResource(RESOURCE_ZYNTHIUM, terminal);
+	transactionCount += handleResource(RESOURCE_KEANIUM, terminal);
+	transactionCount += handleResource(RESOURCE_LEMERGIUM, terminal);
+	transactionCount += handleResource(RESOURCE_UTRIUM, terminal);
+	transactionCount += handleResource(RESOURCE_OXYGEN, terminal);
+	transactionCount += handleResource(RESOURCE_HYDROGEN, terminal);
 
-	handleResource(RESOURCE_HYDROXIDE, terminal);
-	handleResource(RESOURCE_ZYNTHIUM_KEANITE, terminal);
-	handleResource(RESOURCE_UTRIUM_LEMERGITE, terminal);
-	handleResource(RESOURCE_GHODIUM, terminal);
+	transactionCount += handleResource(RESOURCE_HYDROXIDE, terminal);
+	transactionCount += handleResource(RESOURCE_ZYNTHIUM_KEANITE, terminal);
+	transactionCount += handleResource(RESOURCE_UTRIUM_LEMERGITE, terminal);
+	transactionCount += handleResource(RESOURCE_GHODIUM, terminal);
 
-//	dumpEnergy(terminal); //get some money from the remaining energy
+	if (transactionCount == 0 && terminal.store[RESOURCE_ENERGY] >= 10000) {
+		dumpEnergy(terminal); //get some money from the remaining energy
+	}
 }
 
 function dumpEnergy(terminal) {
@@ -50,11 +53,15 @@ function handleResource(resourceType, terminal) {
 	const history = Game.market.getHistory(resourceType);
 	const average = getFortnightlyAverage(resourceType);
 	const sellOrders = Game.market.getAllOrders({ resourceType: resourceType, type: ORDER_SELL })
+		.filter(so => so.remainingAmount)
 		.sort((a, b) => a.price - b.price) //lowest sell price first
 		;
 	const buyOrders = Game.market.getAllOrders({ resourceType: resourceType, type: ORDER_BUY })
+		.filter(bo => bo.remainingAmount)
 		.sort((a, b) => b.price - a.price) //highest buy price first
 		;
+
+	let transactionCount = 0;
 
 	if (buyOrders.length > 0 && buyOrders[0].price > average) {
 //		console.log("buy order found");
@@ -62,6 +69,7 @@ function handleResource(resourceType, terminal) {
 
 		switch(result) {
 			case OK:
+				transactionCount++;
 				break;
 
 			case 1: //custom error code: no stock to sell
@@ -82,6 +90,7 @@ function handleResource(resourceType, terminal) {
 
 		switch(result) {
 			case OK:
+				transactionCount++;
 				break;
 
 			case 1: //custom error code: no money to buy
@@ -94,6 +103,8 @@ function handleResource(resourceType, terminal) {
 				throw new Error(`Unexpected result in confirmPurchase: result ${result}`);
 		}
 	}
+
+	return transactionCount;
 }
 
 function getFortnightlyAverage(resourceType) {

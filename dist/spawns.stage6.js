@@ -246,8 +246,8 @@ function run(spawn, crash) {
 				})
 			},
 			REPAIR: {
-				wallHealth: 0,
-				rampartHealth: 0,
+				wallHealth: 5000,
+				rampartHealth: 5000,
 			},
 			WITHDRAW: {
 				stores: [STORAGE, CONTAINER]
@@ -266,6 +266,18 @@ function run(spawn, crash) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => null)
+			},
+			WITHDRAW: {
+				stores: [STORAGE]
+			}
+		});
+	}
+
+	//trader
+	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
+		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
+			DEPOSIT: {
+				stores: [TERMINAL]
 			},
 			WITHDRAW: {
 				stores: [STORAGE]
@@ -368,18 +380,6 @@ function run(spawn, crash) {
 		return spawnCreep(spawn, "upgrader", ["upgrader"], [CRY, FEAR, WITHDRAW, UPGRADE], hugeWorkerBody, {
 			FEAR: {
 				onSafe: serialize(c => null)
-			},
-			WITHDRAW: {
-				stores: [STORAGE]
-			}
-		});
-	}
-
-	//trader
-	if ((!tags.trader || tags.trader < 1) && spawn.room.storage && spawn.room.storage.store[RESOURCE_ENERGY] >= energyThreshold) {
-		return spawnCreep(spawn, "trader", ["trader"], [DEPOSIT, WITHDRAW], tinyLorry, {
-			DEPOSIT: {
-				stores: [TERMINAL]
 			},
 			WITHDRAW: {
 				stores: [STORAGE]
