@@ -97,7 +97,7 @@ function decrypt(content, key) {
 	try {
 		const encryptedBytes = aesjs.utils.hex.toBytes(content);
 	} catch(e) {
-		//
+		return TELEPHONE_ERR_NO_DATA;
 	}
 
 	const aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(5));
