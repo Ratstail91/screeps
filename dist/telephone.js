@@ -111,7 +111,13 @@ function decrypt(content, passcode) {
 		str += ch;
 	}
 
-	return str.length ? JSON.parse(str) : TELEPHONE_ERR_NO_DATA;
+	try {
+		str =  str.length ? JSON.parse(str) : TELEPHONE_ERR_NO_DATA;
+	} catch(e) {
+		return TELEPHONE_ERR_NO_DATA;
+	}
+
+	return str;
 }
 
 module.exports = {
