@@ -101,7 +101,7 @@ function decrypt(content, key) {
 		const decryptedBytes = aesCtr.decrypt(encryptedBytes);
 
 		if (decryptedBytes.length > 0) {
-			return aesjs.utils.utf8.fromBytes(decryptedBytes);
+			return JSON.parse(aesjs.utils.utf8.fromBytes(decryptedBytes));
 		} else {
 			return TELEPHONE_ERR_NO_DATA;
 		}

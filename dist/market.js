@@ -96,7 +96,7 @@ function handleResource(resourceType, terminal) {
 
 		switch(result) {
 			case OK:
-				console.log(`Sold ${resourceType} x${amount} for ${sellOrders[0].price}`);
+				console.log(`Bought ${resourceType} x${amount} for ${sellOrders[0].price}`);
 				transactionCount++;
 				break;
 
