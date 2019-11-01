@@ -84,7 +84,9 @@ function defendSpawn(spawn) {
 	}
 
 	const username = hostiles[0].owner.username;
-	Game.notify(`User ${username} spotted near ${spawn.name}`);
+	if (username != "Invader") {
+		Game.notify(`User ${username} spotted near ${spawn.name}`);
+	}
 
 	const towers = spawn.room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TOWER });
 	towers.forEach(t => t.attack(hostiles[0]));

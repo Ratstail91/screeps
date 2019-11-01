@@ -202,7 +202,7 @@ function run(spawn, crash) {
 		});
 
 		//not enough energy for a home lorry, spawn a tiny lorry
-		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
+		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 4)) {
 			let behaviours;
 			let extraTags = [];
 
