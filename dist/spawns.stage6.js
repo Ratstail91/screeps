@@ -300,21 +300,20 @@ function run(spawn, crash) {
 			BESPOKE: {
 				onTick: serialize(c => {
 					const labs = require('store.utils').getStores(c, ['LAB']);
+					const terminals = require('store.utils').getStores(c, ['TERMINAL']);
 
-					if (labs.length < 3) {
+					if (labs.length < 3 || terminals.length < 1) {
 						return false;
 					}
 
-					if (labs[1].store.getFreeCapacity(RESOURCE_OXYGEN) > 0) {
+					if (labs[1].store.getFreeCapacity(RESOURCE_OXYGEN) > 0 && terminals[0].store[RESOURCE_OXYGEN] > 0) {
 						c.memory['WITHDRAW'].resourceType = RESOURCE_OXYGEN;
 						c.memory['DEPOSIT'].resourceType = RESOURCE_OXYGEN;
-						c.memory['DEPOSIT'].index = 1;
-					} else if (labs[2].store.getFreeCapacity(RESOURCE_LEMERGIUM) > 0) {
+						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
+					} else if (labs[2].store.getFreeCapacity(RESOURCE_LEMERGIUM) > 0 && terminals[0].store[RESOURCE_LEMERGIUM] > 0) {
 						c.memory['WITHDRAW'].resourceType = RESOURCE_LEMERGIUM;
 						c.memory['DEPOSIT'].resourceType = RESOURCE_LEMERGIUM;
-						c.memory['DEPOSIT'].index = 2;
-					} else {
-						labs[0].runReaction(labs[1], labs[2]);
+						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
 					}
 
 					return true;

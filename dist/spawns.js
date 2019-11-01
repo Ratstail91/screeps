@@ -46,6 +46,13 @@ function handleSpawn(spawn) {
 
 	handleMarket(spawn);
 
+	//TODO:handleLabs
+	const labs = require('store.utils').getStores(spawn, ['LAB']);
+
+	if (labs.length >= 3) {
+		labs[0].runReaction(labs[1], labs[2]);
+	}
+
 	//TODO: stage 7 & 8
 
 	if (spawn.room.energyCapacityAvailable >= STAGE_6_ENERGY_CAPACITY) {
