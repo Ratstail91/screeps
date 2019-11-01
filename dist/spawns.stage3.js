@@ -17,7 +17,7 @@ const {
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
-const { serialize } = require("behaviour.fear");
+const { serialize } = require("behaviour.bespoke");
 
 //assume 800 is available - medium body is 800e
 const claimerBody = [ //650

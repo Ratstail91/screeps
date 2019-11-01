@@ -15,18 +15,20 @@ function init(creep) {
 		skipOwnRoom: false,
 		skipOriginRoom: false,
 		stores: null,
+		resourceType: RESOURCE_ENERGY,
+		index: 0,
 		continueOnSuccess: false, //HACK: allow patrol to increment
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
 function run(creep) {
 	//skip withdrawing if not empty
-	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && !creep.memory[BEHAVIOUR_NAME].forceIfNotFull && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+	if (creep.memory[BEHAVIOUR_NAME].skipIfNotEmpty && !creep.memory[BEHAVIOUR_NAME].forceIfNotFull && creep.store.getUsedCapacity(creep.memory[BEHAVIOUR_NAME].resourceType) > 0) {
 		return true;
 	}
 
 	//can't withdraw on an full stomach
-	if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+	if (creep.store.getFreeCapacity(creep.memory[BEHAVIOUR_NAME].resourceType) == 0) {
 		return true;
 	}
 
@@ -45,14 +47,14 @@ function run(creep) {
 	//get the stores
 	//WARNING: bad naming
 	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores || [CONTAINER, STORAGE])
-		.filter(store => store.store[RESOURCE_ENERGY] > 0);
+		.filter(store => store.store[creep.memory[BEHAVIOUR_NAME].resourceType] > 0);
 
 	if (stores.length == 0) {
 		//nothing to withdraw from
 		return true;
 	}
 
-	const transferResult = creep.withdraw(stores[0], RESOURCE_ENERGY);
+	const transferResult = creep.withdraw(stores[creep.memory[BEHAVIOUR_NAME].index], creep.memory[BEHAVIOUR_NAME].resourceType);
 
 	switch(transferResult) {
 		case OK:
@@ -60,7 +62,7 @@ function run(creep) {
 			return creep.memory[BEHAVIOUR_NAME].continueOnSuccess;
 
 		case ERR_NOT_IN_RANGE: {
-			const moveResult = creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+			const moveResult = creep.moveTo(stores[creep.memory[BEHAVIOUR_NAME].index], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 
 			if (moveResult == OK || moveResult == ERR_TIRED) {
 				return false;
@@ -73,19 +75,19 @@ function run(creep) {
 
 		case ERR_NOT_ENOUGH_RESOURCES:
 			//something else in there?
-			let transferEverythingResult = false;
-
-			for (let i = 0; i < RESOURCES_ALL.length; i++) {
-				if (creep.withdraw(stores[0], RESOURCES_ALL[i]) == OK) {
-					transferEverythingResult = true;
-				}
-			}
-
-			if (transferEverythingResult) {
-				return false;
-			}
-
-			throw new Error(`Failure to withdraw misc. resources by ${creep.name}`);
+//			let transferEverythingResult = false;
+//
+//			for (let i = 0; i < RESOURCES_ALL.length; i++) {
+//				if (creep.withdraw(stores[0], RESOURCES_ALL[i]) == OK) {
+//					transferEverythingResult = true;
+//				}
+//			}
+//
+//			if (transferEverythingResult) {
+//				return false;
+//			}
+//
+//			throw new Error(`Failure to withdraw misc. resources by ${creep.name}`);
 
 		default:
 			throw new Error(`Unknown state in ${BEHAVIOUR_NAME} for ${creep.name}: transferResult ${transferResult}, stores length ${stores.length}, my controller ${creep.room.controller.my}`);

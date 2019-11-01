@@ -5,13 +5,7 @@ const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
-function serialize(func) {
-	return func.toString().replace(/[\t\n\r]/g, '');
-}
-
-function deserialize(str) {
-	return new Function('return ' + str)();
-}
+const deserialize = require('behaviour.bespoke'); //borrow from here
 
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
@@ -74,6 +68,4 @@ const profiler = require('screepers.profiler');
 module.exports = {
 	init: profiler.registerFN(init, "fear.init"),
 	run: profiler.registerFN(run, "fear.run"),
-	serialize: profiler.registerFN(serialize, "fear.serialize"),
-	deserialize: profiler.registerFN(deserialize, "fear.deserialize"),
 };

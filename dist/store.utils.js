@@ -6,6 +6,7 @@ const EXTENSION = "EXTENSION";
 const CONTAINER = "CONTAINER";
 const STORAGE = "STORAGE";
 const TERMINAL = "TERMINAL";
+const LAB = "LAB";
 const TOMBSTONE = "TOMBSTONE";
 const RUINS = "RUINS";
 
@@ -16,6 +17,7 @@ recognizedStructures = [ //TODO: fix this hack
 	STRUCTURE_CONTAINER,
 	STRUCTURE_STORAGE,
 	STRUCTURE_TERMINAL,
+//	STRUCTURE_LAB, //sorted by position
 	//TOMEBSTONE
 	//RUINS
 ];
@@ -90,6 +92,15 @@ function getStores(point, types) {
 				));
 				break;
 
+			case LAB:
+				result = result.concat(point.room.find(FIND_STRUCTURES, {filter: structure =>
+					structure.structureType == STRUCTURE_LAB && structure.my
+				}).sort((a, b) =>
+					//NOTE: sorted by position, NOT range
+					a.pos.y == b.pos.y ? a.pos.x < b.pos.x : a.pos.y < b.pos.y
+				));
+				break;
+
 			case TOMBSTONE:
 				result = result.concat(point.room.find(FIND_TOMBSTONES)
 					.sort((a, b) => rangeCache[a.id] - rangeCache[b.id])
@@ -115,6 +126,7 @@ module.exports = {
 	CONTAINER,
 	STORAGE,
 	TERMINAL,
+	LAB,
 	TOMBSTONE,
 	RUINS,
 

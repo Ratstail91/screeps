@@ -20,6 +20,8 @@ function init(creep) {
 		forceIfNotEmpty: false, //force, overrides the skip
 		returnHomeFirst: false, //return to origin
 		stores: null, //the stores to deposit into
+		index: 0,
+		resourceType: RESOURCE_ENERGY,
 	}, creep.memory[BEHAVIOUR_NAME]);
 }
 
@@ -28,12 +30,12 @@ function init(creep) {
 */
 function run(creep) {
 	//skip depositing if not full
-	if (creep.store.getFreeCapacity(RESOURCE_ENERGY) != 0 && creep.memory[BEHAVIOUR_NAME].skipIfNotFull && !creep.memory[BEHAVIOUR_NAME].forceIfNotEmpty) {
+	if (creep.store.getFreeCapacity(creep.memory[BEHAVIOUR_NAME].resourceType) != 0 && creep.memory[BEHAVIOUR_NAME].skipIfNotFull && !creep.memory[BEHAVIOUR_NAME].forceIfNotEmpty) {
 		return true;
 	}
 
 	//can't deposit on an empty stomach
-	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+	if (creep.store.getUsedCapacity(creep.memory[BEHAVIOUR_NAME].resourceType) == 0) {
 		return true;
 	}
 
@@ -50,7 +52,7 @@ function run(creep) {
 	//get the stores
 	//WARNING: bad naming here
 	const stores = getStores(creep, creep.memory[BEHAVIOUR_NAME].stores)
-		.filter(s => s.store.getFreeCapacity(RESOURCE_ENERGY) > 0) //WARNING: need to switch to a more generic resource system
+		.filter(s => s.store.getFreeCapacity(creep.memory[BEHAVIOUR_NAME].resourceType) > 0) //WARNING: need to switch to a more generic resource system
 	;
 
 	//if no stores available, pass onwards
@@ -58,7 +60,7 @@ function run(creep) {
 		return true;
 	}
 
-	const transferResult = creep.transfer(stores[0], RESOURCE_ENERGY);
+	const transferResult = creep.transfer(stores[creep.memory[BEHAVIOUR_NAME].index], creep.memory[BEHAVIOUR_NAME].resourceType);
 
 	switch(transferResult) {
 		case OK:
@@ -67,7 +69,7 @@ function run(creep) {
 
 		case ERR_NOT_IN_RANGE:
 			//move to the first available store
-			creep.moveTo(stores[0], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
+			creep.moveTo(stores[creep.memory[BEHAVIOUR_NAME].index], { reusePath: REUSE_PATH, visualizePathStyle: pathStyle });
 			return false;
 
 		case ERR_NOT_ENOUGH_RESOURCES:

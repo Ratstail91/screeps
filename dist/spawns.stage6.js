@@ -9,15 +9,15 @@ const { spawnCreep } = require("creeps");
 
 const {
 	HARVEST, UPGRADE, PICKUP, DROP, DEPOSIT, WITHDRAW, BUILD, REPAIR,
-	PATROL, TARGET, FEAR, BRAVE, CRY, CARE, HEALER, CLAIMER,
+	PATROL, TARGET, FEAR, BRAVE, CRY, CARE, HEALER, CLAIMER, BESPOKE,
 } = require("behaviour_names");
 
 const {
-	TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL,
+	TOWER, SPAWN, EXTENSION, CONTAINER, STORAGE, TERMINAL, LAB,
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
-const { serialize } = require("behaviour.fear");
+const { serialize } = require("behaviour.bespoke");
 
 //assume 2300 is available
 const claimerBody = [ //1300
@@ -290,6 +290,41 @@ function run(spawn, crash) {
 			},
 			WITHDRAW: {
 				stores: [STORAGE]
+			}
+		});
+	}
+
+	//scientist (boosting)
+	if (!(tags.scientist || tags.scientist < 1) && spawn.room.terminal) {
+		return spawnCreep(spawn, "scientist", ["scientist"], [BESPOKE, DEPOSIT, WITHDRAW], tinyLorry, {
+			BESPOKE: {
+				onTick: serialize(c => {
+					const labs = require('store.utils').getStores(c, ['LAB']);
+
+					if (labs.length < 3) {
+						return false;
+					}
+
+					if (labs[1].store.getFreeCapacity(RESOURCE_OXYGEN) > 0) {
+						c.memory['WITHDRAW'].resourceType = RESOURCE_OXYGEN;
+						c.memory['DEPOSIT'].resourceType = RESOURCE_OXYGEN;
+						c.memory['DEPOSIT'].index = 1;
+					} else if (labs[2].store.getFreeCapacity(RESOURCE_LEMERGIUM) > 0) {
+						c.memory['WITHDRAW'].resourceType = RESOURCE_LEMERGIUM;
+						c.memory['DEPOSIT'].resourceType = RESOURCE_LEMERGIUM;
+						c.memory['DEPOSIT'].index = 2;
+					} else {
+						labs[0].runReaction(labs[1], labs[2]);
+					}
+
+					return true;
+				}),
+			},
+			DEPOSIT: {
+				stores: [LAB]
+			},
+			WITHDRAW: {
+				stores: [TERMINAL]
 			}
 		});
 	}

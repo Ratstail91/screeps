@@ -19,7 +19,7 @@ const {
 } = require("store.utils");
 
 const { schematicBuild } = require("schematic");
-const { serialize } = require("behaviour.fear");
+const { serialize } = require("behaviour.bespoke");
 
 //assume 1300 is available
 const claimerBody = [ //1300

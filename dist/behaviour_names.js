@@ -32,6 +32,7 @@ module.exports = {
 	HEALER: 'HEALER',
 
 	//specialized behaviours
+	BESPOKE: 'BESPOKE',
 	CLAIMER: 'CLAIMER',
 //	WRITER: 'WRITER',
 };
