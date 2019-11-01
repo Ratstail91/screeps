@@ -188,6 +188,15 @@ function run(spawn, crash) {
 		});
 	}
 
+	//guards when someone cries for help
+	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
+		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
 	//home lorry (only works in spawn)
 	if (!tags.homeLorry || tags.homeLorry < 1) {
 		//NOTE: not immediately returning this result
@@ -308,15 +317,6 @@ function run(spawn, crash) {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes),
 				stopInRoom: true,
-			}
-		});
-	}
-
-	//guards when someone cries for help
-	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
-		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
-			PATROL: {
-				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 			}
 		});
 	}

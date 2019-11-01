@@ -126,6 +126,15 @@ function run(spawn, crash) {
 		});
 	}
 
+	//guards when someone cries for help
+	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
+		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
+			PATROL: {
+				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
+			}
+		});
+	}
+
 	//lorry
 	if (!tags.lorry || tags.lorry < 1) {
 		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
@@ -145,15 +154,6 @@ function run(spawn, crash) {
 				stores: [CONTAINER, STORAGE],
 				skipOriginRoom: true,
 			},
-			PATROL: {
-				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
-			}
-		});
-	}
-
-	//guards when someone cries for help
-	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
-		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
 			}
