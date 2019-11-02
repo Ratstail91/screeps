@@ -36,6 +36,14 @@ function handleSpawn(spawn) {
 	//skip this spawn if it's spawning
 	if (spawn.spawning) {
 		handleMarket(spawn);
+
+		//TODO:handleLabs
+		const labs = require('store.utils').getStores(spawn, ['LAB']);
+
+		if (labs.length >= 3) {
+			labs[0].runReaction(labs[1], labs[2]);
+		}
+	
 		return;
 	}
 
