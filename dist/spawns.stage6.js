@@ -295,44 +295,44 @@ function run(spawn, crash) {
 	}
 
 	//scientist (boosting)
-	if (!(tags.scientist || tags.scientist < 1) && spawn.room.terminal) {
-		return spawnCreep(spawn, "scientist", ["scientist"], [BESPOKE, DEPOSIT, WITHDRAW], tinyLorry, {
-			BESPOKE: {
-				onTick: serialize(c => {
-					if (c.store.getUsedCapacity(RESOURCE_OXYGEN) > 0 || c.store.getUsedCapacity(RESOURCE_LEMERGIUM) > 0) {
-						return true;
-					}
-
-					const labs = require('store.utils').getStores(c, ['LAB']);
-					const terminals = require('store.utils').getStores(c, ['TERMINAL']);
-
-					if (labs.length < 3 || terminals.length < 1) {
-						return false;
-					}
-
-					if (labs[1].store.getFreeCapacity(RESOURCE_OXYGEN) > 0 && terminals[0].store[RESOURCE_OXYGEN] > 0) {
-						c.memory['WITHDRAW'].resourceType = RESOURCE_OXYGEN;
-						c.memory['DEPOSIT'].resourceType = RESOURCE_OXYGEN;
-						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
-						return true;
-					} else if (labs[2].store.getFreeCapacity(RESOURCE_LEMERGIUM) > 0 && terminals[0].store[RESOURCE_LEMERGIUM] > 0) {
-						c.memory['WITHDRAW'].resourceType = RESOURCE_LEMERGIUM;
-						c.memory['DEPOSIT'].resourceType = RESOURCE_LEMERGIUM;
-						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
-						return true;
-					}
-
-					return false;
-				}),
-			},
-			DEPOSIT: {
-				stores: [LAB]
-			},
-			WITHDRAW: {
-				stores: [TERMINAL]
-			}
-		});
-	}
+//	if (!(tags.scientist || tags.scientist < 1) && spawn.room.terminal) {
+//		return spawnCreep(spawn, "scientist", ["scientist"], [BESPOKE, DEPOSIT, WITHDRAW], tinyLorry, {
+//			BESPOKE: {
+//				onTick: serialize(c => {
+//					if (c.store.getUsedCapacity(RESOURCE_OXYGEN) > 0 || c.store.getUsedCapacity(RESOURCE_LEMERGIUM) > 0) {
+//						return true;
+//					}
+//
+//					const labs = require('store.utils').getStores(c, ['LAB']);
+//					const terminals = require('store.utils').getStores(c, ['TERMINAL']);
+//
+//					if (labs.length < 3 || terminals.length < 1) {
+//						return false;
+//					}
+//
+//					if (labs[1].store.getFreeCapacity(RESOURCE_OXYGEN) > 0 && terminals[0].store[RESOURCE_OXYGEN] > 0) {
+//						c.memory['WITHDRAW'].resourceType = RESOURCE_OXYGEN;
+//						c.memory['DEPOSIT'].resourceType = RESOURCE_OXYGEN;
+//						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
+//						return true;
+//					} else if (labs[2].store.getFreeCapacity(RESOURCE_LEMERGIUM) > 0 && terminals[0].store[RESOURCE_LEMERGIUM] > 0) {
+//						c.memory['WITHDRAW'].resourceType = RESOURCE_LEMERGIUM;
+//						c.memory['DEPOSIT'].resourceType = RESOURCE_LEMERGIUM;
+//						c.memory['DEPOSIT'].index = labs[0].store.getUsedCapacity() != 0 ? 0 : 1;
+//						return true;
+//					}
+//
+//					return false;
+//				}),
+//			},
+//			DEPOSIT: {
+//				stores: [LAB]
+//			},
+//			WITHDRAW: {
+//				stores: [TERMINAL]
+//			}
+//		});
+//	}
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 4) {

@@ -14,9 +14,9 @@ function handleMarket(spawn) {
 	transactionCount += handleResource(RESOURCE_CATALYST, terminal);
 	transactionCount += handleResource(RESOURCE_ZYNTHIUM, terminal);
 	transactionCount += handleResource(RESOURCE_KEANIUM, terminal);
-//	transactionCount += handleResource(RESOURCE_LEMERGIUM, terminal);
+	transactionCount += handleResource(RESOURCE_LEMERGIUM, terminal);
 	transactionCount += handleResource(RESOURCE_UTRIUM, terminal);
-//	transactionCount += handleResource(RESOURCE_OXYGEN, terminal);
+	transactionCount += handleResource(RESOURCE_OXYGEN, terminal);
 	transactionCount += handleResource(RESOURCE_HYDROGEN, terminal);
 
 	transactionCount += handleResource(RESOURCE_HYDROXIDE, terminal);
