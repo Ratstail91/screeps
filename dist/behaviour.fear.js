@@ -5,7 +5,7 @@ const { REUSE_PATH } = require('constants');
 
 const pathStyle = { stroke: '#ff00ff' };
 
-const deserialize = require('behaviour.bespoke'); //borrow from here
+const { deserialize } = require('behaviour.bespoke'); //borrow from here
 
 function init(creep) {
 	creep.memory[BEHAVIOUR_NAME] = _.merge({
