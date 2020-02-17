@@ -199,7 +199,7 @@ function run(spawn, crash) {
 	}
 
 	//guards when someone cries for help
-	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
+	if (!tags.guard || tags.guard < 1) { //TODO: origin-based cries
 		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -208,49 +208,27 @@ function run(spawn, crash) {
 	}
 
 	//home lorry (only works in spawn)
-	if (!tags.homeLorry || tags.homeLorry < 2) {
-		let behaviours;
-		let extraTags = [];
-
-		//only one creep should lack the PICKUP behaviour
-		if (!tags.nopickup || tags.nopickup < 1) {
-			behaviours = [CRY, DEPOSIT, WITHDRAW];
-			extraTags.push("nopickup");
-		} else {
-			behaviours = [CRY, DEPOSIT, PICKUP, WITHDRAW];
-		}
-
+	if (!tags.homeLorry || tags.homeLorry < 1) {
 		//NOTE: not immediately returning this result
-		let result = spawnCreep(spawn, "homeLorry", ["homeLorry", ...extraTags], behaviours, specializedLorryBody, {
+		let result = spawnCreep(spawn, "homeLorry", ["homeLorry"], [CRY, DEPOSIT, WITHDRAW], specializedLorryBody, {
 			DEPOSIT: {
 				returnHomeFirst: true,
-				stores: [EXTENSION, SPAWN, TOWER, STORAGE]
+				stores: [TOWER, EXTENSION, SPAWN]
 			},
 			WITHDRAW: {
-				stores: [CONTAINER, STORAGE]
+				stores: [STORAGE, CONTAINER, TERMINAL]
 			}
 		});
 
-		//not enough energy for a lorry, spawn a tiny lorry
-		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 2)) {
-			let behaviours;
-			let extraTags = [];
-
-			//only one creep should lack the PICKUP behaviour
-			if (!tags.nopickup || tags.nopickup < 1) {
-				behaviours = [CRY, DEPOSIT, WITHDRAW];
-				extraTags.push("nopickup");
-			} else {
-				behaviours = [CRY, DEPOSIT, PICKUP, WITHDRAW];
-			}
-
-			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny", ...extraTags], behaviours, tinyLorry, {
+		//not enough energy for a home lorry, spawn a tiny lorry
+		if (result == ERR_NOT_ENOUGH_ENERGY && (!tags.tinyLorry || tags.tinyLorry < 4)) {
+			return spawnCreep(spawn, "tinyLorry", ["tinyLorry", "tiny"], [CRY, DEPOSIT, WITHDRAW], tinyLorry, {
 				DEPOSIT: {
 					returnHomeFirst: true,
-					stores: [EXTENSION, SPAWN, TOWER, STORAGE]
+					stores: [TOWER, EXTENSION, SPAWN]
 				},
 				WITHDRAW: {
-					stores: [CONTAINER, STORAGE]
+					stores: [STORAGE, CONTAINER, TERMINAL]
 				}
 			});
 		}
@@ -263,7 +241,7 @@ function run(spawn, crash) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 4) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, PICKUP, DEPOSIT, WITHDRAW, PATROL], specializedLorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
@@ -278,7 +256,7 @@ function run(spawn, crash) {
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
-				skipOriginRoom: true,
+				skipOriginRoom: false,
 				continueOnSuccess: true,
 			},
 			PATROL: {

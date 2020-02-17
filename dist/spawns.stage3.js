@@ -127,7 +127,7 @@ function run(spawn, crash) {
 	}
 
 	//guards when someone cries for help
-	if ((!tags.guard || tags.guard < 1) && Memory._cries.length > 0) { //TODO: origin-based cries
+	if (!tags.guard || tags.guard < 1) { //TODO: origin-based cries
 		return spawnCreep(spawn, "guard", ["guard"], [CARE, BRAVE, PATROL], tankBody, {
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
@@ -137,7 +137,7 @@ function run(spawn, crash) {
 
 	//lorry
 	if (!tags.lorry || tags.lorry < 1) {
-		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
+		return spawnCreep(spawn, "lorry", ["lorry"], [CRY, FEAR, PICKUP, DEPOSIT, WITHDRAW, PATROL], lorryBody, {
 			FEAR: {
 				onSafe: serialize(c => {
 					c.memory['PATROL']._targetCounter++;
@@ -148,11 +148,11 @@ function run(spawn, crash) {
 			},
 			DEPOSIT: {
 				returnHomeFirst: true,
-				stores: [EXTENSION, SPAWN, TOWER]
+				stores: [TOWER, EXTENSION, SPAWN]
 			},
 			WITHDRAW: {
 				stores: [CONTAINER, STORAGE],
-				skipOriginRoom: true,
+				skipOriginRoom: false,
 			},
 			PATROL: {
 				targetFlags: Object.keys(Memory.spawns[spawn.name].remotes)
