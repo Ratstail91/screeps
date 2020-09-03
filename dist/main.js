@@ -16,6 +16,11 @@ module.exports.loop = () => {
 	for (const name in Game.creeps) {
 		//get this creep
 		const creep = Game.creeps[name];
+		
+		//don't confuse the instruction sets
+		if (creep.spawning) {
+			continue nextCreep;
+		}
 
 		for (const index in creep.memory.instructions) {
 			const fileName = `creeps.${creep.memory.instructions[index].toLowerCase()}`;

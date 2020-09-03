@@ -3,6 +3,14 @@ const think = creep => {
 	if (!creep.memory.harvest) {
 		creep.memory.harvest = {};
 	}
+	
+	if (creep.memory.harvest.locked) {
+		if (!act(creep)) {
+			return false; //short-circuit
+		}
+		
+		creep.memory.harvest.locked = false;
+	}
 
 	return true;
 }
@@ -14,7 +22,10 @@ const act = creep => {
 		
 		if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(target);
+			return false;
 		}
+		
+		creep.memory.harvest.locked = true;
 		
 		return false;
 	}

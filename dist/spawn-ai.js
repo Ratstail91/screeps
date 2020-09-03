@@ -1,17 +1,25 @@
 const imperatives = require('spawn-imperatives');
 
 const think = spawn => {
-	//enough energy to spawn a small creep
-	if (spawn.room.energyAvailable < 300) {
-		return true;
-	}
-
 	const myCreeps = _.filter(Game.creeps, c => c.memory.spawnId == spawn.id);
+	
+	//enough upgraders?
+	const upgraderLength = _.filter(myCreeps, c => c.memory.tags.includes('UPGRADER')).length;
+
+	if (upgraderLength < 2 && spawn.room.energyAvailable >= 250) {
+		//determine which source to target
+		const sources = spawn.room.find(FIND_SOURCES);
+		spawn.memory.sourceIncrement = spawn.memory.sourceIncrement || 1;
+		spawn.memory.harvesterTargetId = sources[spawn.memory.sourceIncrement % sources.length].id;
+		spawn.memory.sourceIncrement++;
+
+		return spawn.memory.imperative = imperatives.SPAWN_UPGRADER_SMALL;
+	}
 	
 	//enough harvesters?
 	const harvesterLength = _.filter(myCreeps, c => c.memory.tags.includes('HARVESTER')).length;
 	
-	if (harvesterLength < 2) {
+	if (harvesterLength < 2 && spawn.room.energyAvailable >= 250) {
 		//determine which source to target
 		const sources = spawn.room.find(FIND_SOURCES);
 		spawn.memory.sourceIncrement = spawn.memory.sourceIncrement || 1;
@@ -25,7 +33,7 @@ const think = spawn => {
 	if (spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
 		const builderLength = _.filter(myCreeps, c => c.memory.tags.includes('BUILDER')).length;
 		
-		if (builderLength < 2) {
+		if (builderLength < 2 && spawn.room.energyAvailable >= 250) {
 			//determine which source to target
 			const sources = spawn.room.find(FIND_SOURCES);
 			spawn.memory.sourceIncrement = spawn.memory.sourceIncrement || 1;
@@ -34,19 +42,6 @@ const think = spawn => {
 
 			return spawn.memory.imperative = imperatives.SPAWN_BUILDER_SMALL;
 		}
-	}
-	
-	//enough upgraders?
-	const upgraderLength = _.filter(myCreeps, c => c.memory.tags.includes('UPGRADER')).length;
-
-	if (upgraderLength < 1) {
-		//determine which source to target
-		const sources = spawn.room.find(FIND_SOURCES);
-		spawn.memory.sourceIncrement = spawn.memory.sourceIncrement || 1;
-		spawn.memory.harvesterTargetId = sources[spawn.memory.sourceIncrement % sources.length].id;
-		spawn.memory.sourceIncrement++;
-
-		return spawn.memory.imperative = imperatives.SPAWN_UPGRADER_SMALL;
 	}
 	
 	//default: idle
@@ -79,9 +74,10 @@ const act = spawn => {
 			spawn.spawnCreep([WORK, CARRY, CARRY, MOVE], 'builder' + Game.time, {
 				memory: {
 					spawnId: spawn.id, //know where your home is
-					tags: ['HARVESTER'],
+					tags: ['BUILDER'],
 					instructions: [
 						'HARVEST',
+						'REPAIR',
 						'BUILD',
 						'STASH'
 					],

@@ -1,24 +1,34 @@
 const think = creep => {
-	//DO NOTHING
+	//init
+	if (!creep.memory.upgrade) {
+		creep.memory.upgrade = {};
+	}
+	
+	if (creep.memory.upgrade.locked) {
+		if (!act(creep)) {
+			return false; //short-circuit
+		}
+		
+		creep.memory.upgrade.locked = false;
+	}
+
 	return true;
 }
 
 const act = creep => {
-	//go home
-	if (!creep.room.controller.my) {
-		const spawn = Game.getObjectById(creep.memory.spawnId);
-		
-		creep.moveTo(spawn);
-		
-		return false;
-	} else {
+	if (creep.room.controller.my) {
 		//dump into the controller
 		if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(creep.room.controller);
+			return false;
 		}
+		
+		creep.memory.upgrade.locked = true;
 		
 		return false;
 	}
+	
+	return true;
 }
 
 module.exports = {
