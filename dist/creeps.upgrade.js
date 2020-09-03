@@ -16,7 +16,7 @@ const think = creep => {
 }
 
 const act = creep => {
-	if (creep.room.controller.my) {
+	if (creep.room.controller.my && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		//dump into the controller
 		if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
 			creep.moveTo(creep.room.controller);
