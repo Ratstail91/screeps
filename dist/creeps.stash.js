@@ -6,7 +6,7 @@ const think = creep => {
 
 	//find the closest extension
 	const extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		filter: { structureType: STRUCTURE_EXTENSION }
+		filter: s => s.structureType == STRUCTURE_EXTENSION && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 	});
 	
 	if (extension) {
