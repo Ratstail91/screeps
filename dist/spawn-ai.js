@@ -2,7 +2,7 @@ const imperatives = require('spawn-imperatives');
 
 const think = spawn => {
 	const myCreeps = _.filter(Game.creeps, c => c.memory.spawnId == spawn.id);
-	
+
 	//enough upgraders?
 	const upgraderLength = _.filter(myCreeps, c => c.memory.tags.includes('UPGRADER')).length;
 
@@ -15,10 +15,10 @@ const think = spawn => {
 
 		return spawn.memory.imperative = imperatives.SPAWN_UPGRADER_SMALL;
 	}
-	
+
 	//enough harvesters?
 	const harvesterLength = _.filter(myCreeps, c => c.memory.tags.includes('HARVESTER')).length;
-	
+
 	if (harvesterLength < 2 && spawn.room.energyAvailable >= 250) {
 		//determine which source to target
 		const sources = spawn.room.find(FIND_SOURCES);
@@ -28,11 +28,11 @@ const think = spawn => {
 
 		return spawn.memory.imperative = imperatives.SPAWN_HARVESTER_SMALL;
 	}
-	
+
 	//enough builders for the construction sites?
 	if (spawn.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0) {
 		const builderLength = _.filter(myCreeps, c => c.memory.tags.includes('BUILDER')).length;
-		
+
 		if (builderLength < 2 && spawn.room.energyAvailable >= 250) {
 			//determine which source to target
 			const sources = spawn.room.find(FIND_SOURCES);
@@ -53,7 +53,7 @@ const act = spawn => {
 		case imperatives.IDLE:
 			//DO NOTHING
 			break;
-		
+
 		case imperatives.SPAWN_HARVESTER_SMALL:
 			spawn.spawnCreep([WORK, CARRY, CARRY, MOVE], 'harvester' + Game.time, {
 				memory: {
@@ -69,7 +69,7 @@ const act = spawn => {
 				}
 			});
 			break;
-		
+
 		case imperatives.SPAWN_BUILDER_SMALL:
 			spawn.spawnCreep([WORK, CARRY, CARRY, MOVE], 'builder' + Game.time, {
 				memory: {
@@ -87,7 +87,7 @@ const act = spawn => {
 				}
 			});
 			break;
-		
+
 		case imperatives.SPAWN_UPGRADER_SMALL:
 			spawn.spawnCreep([WORK, CARRY, CARRY, MOVE], 'upgrader' + Game.time, {
 				memory: {
@@ -103,7 +103,7 @@ const act = spawn => {
 				}
 			});
 			break;
-		
+
 		default:
 			//TODO: throw an error
 	}

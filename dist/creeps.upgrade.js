@@ -3,12 +3,12 @@ const think = creep => {
 	if (!creep.memory.upgrade) {
 		creep.memory.upgrade = {};
 	}
-	
+
 	if (creep.memory.upgrade.locked) {
 		if (!act(creep)) {
 			return false; //short-circuit
 		}
-		
+
 		creep.memory.upgrade.locked = false;
 	}
 
@@ -22,12 +22,12 @@ const act = creep => {
 			creep.moveTo(creep.room.controller);
 			return false;
 		}
-		
+
 		creep.memory.upgrade.locked = true;
-		
+
 		return false;
 	}
-	
+
 	return true;
 }
 
