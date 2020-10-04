@@ -5,7 +5,7 @@ const findPerchesInRoom = room => {
 	//find source perches
 	let sourcePerches = [];
 
-	room.sources.forEach(source => {
+	Game.live[room.name].sources.forEach(source => {
 		//look around this source
 		outer:
 		for (let i = -1; i <= 1; i++) {
@@ -17,7 +17,7 @@ const findPerchesInRoom = room => {
 
 				//if this is not a wall, it's good enough for a perch
 				if (!hasWall) {
-					sourcePerches.push(new RoomPosition(source.pos.x + i, source.pos.y + j, room.name));
+					sourcePerches.push({ x: source.pos.x + i, y: source.pos.y + j, id: source.id });
 					break outer;
 				}
 			}
@@ -25,7 +25,7 @@ const findPerchesInRoom = room => {
 	});
 
 	//save the perches
-	room.memory.perches.sources = sourcePerches.map(sp => { return { x: sp.x, y: sp.y }; });
+	room.memory.perches.sources = sourcePerches;
 };
 
 const setupPerchesInRoom = room => {

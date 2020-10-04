@@ -27,7 +27,7 @@ const act = spawn => {
 						instructions.STASH,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: Game.live[spawn.room.name].sources[++spawn.room.memory.sourceCounter % Game.live[spawn.room.name].sources.length].id
 					}
 				}
 			});
@@ -47,7 +47,7 @@ const act = spawn => {
 						instructions.STASH,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: Game.live[spawn.room.name].sources[++spawn.room.memory.sourceCounter % Game.live[spawn.room.name].sources.length].id
 					}
 				}
 			});
@@ -65,7 +65,7 @@ const act = spawn => {
 						instructions.UPGRADE,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: Game.live[spawn.room.name].sources[++spawn.room.memory.sourceCounter % Game.live[spawn.room.name].sources.length].id
 					}
 				}
 			});

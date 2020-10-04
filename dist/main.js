@@ -2,16 +2,17 @@ const roomAI = require('room-ai');
 
 module.exports.loop = () => {
 	//setup some custom references for the API to utilize
-	Game.myRooms = _.filter(Game.rooms, r => r.controller && r.controller.level > 0 && r.controller.my);
+	Game.live = {};
+	Game.live.myRooms = _.filter(Game.rooms, r => r.controller && r.controller.level > 0 && r.controller.my);
 
 	//process my rooms
-	for (const name in Game.myRooms) {
-		roomAI.think(Game.myRooms[name]);
+	for (const name in Game.live.myRooms) {
+		roomAI.think(Game.live.myRooms[name]);
 	}
 
 	//process my rooms
-	for (const name in Game.myRooms) {
-		roomAI.act(Game.myRooms[name]);
+	for (const name in Game.live.myRooms) {
+		roomAI.act(Game.live.myRooms[name]);
 	}
 
 	//process the creeps based on their given instructions
