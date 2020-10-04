@@ -1,6 +1,7 @@
 //spawn stuff
 const spawnImperatives = require('spawn-imperatives');
 const spawnAI = require('spawn-ai');
+const spawnSchematics = require('spawn-schematics');
 
 const think = room => {
 	//some references to be used below
@@ -19,19 +20,11 @@ const think = room => {
 	//TODO: change the imperative based on development stage
 //	if (room.energyCapacityAvailable >= 1000) {
 //		//
-//	}
+//	} else
 
 	//assume only 300 energy is available
 
-	/* else */ {
-		if (upgraders.length < 2 && room.energyAvailable >= 250) {
-			spawnImerative = spawnImperatives.SPAWN_UPGRADER_SMALL;
-		} else
-
-		if (harvesters.length < 2 && room.energyAvailable >= 250) {
-			spawnImerative = spawnImperatives.SPAWN_HARVESTER_SMALL;
-		} else
-
+	{
 		//TODO: handle construction sites in remote rooms
 		if (builders.length < 2 && room.energyAvailable >= 250) {
 			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
@@ -39,6 +32,14 @@ const think = room => {
 			if (sites.length > 0) {
 				spawnImerative = spawnImperatives.SPAWN_BUILDER_SMALL;
 			}
+		} else
+
+		if (upgraders.length < 2 && room.energyAvailable >= 250) {
+			spawnImerative = spawnImperatives.SPAWN_UPGRADER_SMALL;
+		} else
+
+		if (harvesters.length < 2 && room.energyAvailable >= 250) {
+			spawnImerative = spawnImperatives.SPAWN_HARVESTER_SMALL;
 		}
 	}
 
@@ -53,6 +54,15 @@ const think = room => {
 
 	//pump the room's structure's AI
 	room.mySpawns.forEach(spawn => spawnAI.think(spawn));
+
+	//place any construction sites that are needed
+	if (room.mySpawns.length > 0) {
+		const center = room.mySpawns[0];
+
+		spawnSchematics.every(schema => {
+			return room.createConstructionSite(center.pos.x + schema.x, center.pos.y + schema.y, schema.structureType) != ERR_RCL_NOT_ENOUGH;
+		});
+	}
 
 	//continue to the next room
 	return true;

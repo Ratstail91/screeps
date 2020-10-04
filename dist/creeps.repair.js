@@ -27,7 +27,7 @@ const think = creep => {
 
 	//don't repair afterall if your store is empty
 	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
-		creep.memory.target.targetId = null;
+		creep.memory.repair.targetId = null;
 	}
 
 	return true;
@@ -42,7 +42,7 @@ const act = creep => {
 			return false;
 		}
 
-		creep.memory.target.locked = true;
+		creep.memory.repair.locked = true;
 
 		return false;
 	}
