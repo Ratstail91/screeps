@@ -25,6 +25,7 @@ const act = spawn => {
 					instructions: [
 						instructions.HARVEST,
 						instructions.STASH,
+						instructions.UPGRADE,
 					],
 					harvest: {
 						targetId: Game.live[spawn.room.name].sources[++spawn.room.memory.sourceCounter % Game.live[spawn.room.name].sources.length].id
@@ -45,6 +46,7 @@ const act = spawn => {
 						instructions.REPAIR,
 						instructions.BUILD,
 						instructions.STASH,
+						instructions.UPGRADE,
 					],
 					harvest: {
 						targetId: Game.live[spawn.room.name].sources[++spawn.room.memory.sourceCounter % Game.live[spawn.room.name].sources.length].id

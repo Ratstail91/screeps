@@ -30,7 +30,7 @@ const think = creep => {
 			creep.memory.stash.targetId = targetSpawns[0].id;
 		} else {
 			//TODO: error?
-			console.log(creep.name + ': Nowhere to stash this energy!');
+//			console.log(creep.name + ': Nowhere to stash this energy!');
 			creep.memory.stash.targetId = null;
 		}
 	}
