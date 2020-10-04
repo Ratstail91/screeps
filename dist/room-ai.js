@@ -5,12 +5,13 @@ const { findPerchesInRoom: findPerchesInRoom, setupPerchesInRoom: setupPerchesIn
 const spawnImperatives = require('spawn-imperatives');
 const spawnAI = require('spawn-ai');
 const spawnSchematics = require('spawn-schematics');
+const tags = require('constants.tags');
 
 const think = room => {
 	//some references to be used below
 	Game.live[room.name] = {};
 	Game.live[room.name].mySpawns = room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_SPAWN });
-	Game.live[room.name].myCreeps = _.filter(Game.creeps, { filter: c => c.memory.homeId == room.id });
+	Game.live[room.name].myCreeps = _.filter(Game.creeps, c => c.memory.homeId == room.id);
 	Game.live[room.name].sources = room.find(FIND_SOURCES);
 	room.memory.sourceCounter = room.memory.sourceCounter || 1;
 
@@ -89,7 +90,7 @@ const act = room => {
 
 //utilities
 const requestNewSourceId = room => {
-	return Game.live[room.name].sources[++room.memory.sourceCounter % room.sources.length].id
+	return Game.live[room.name].sources[++room.memory.sourceCounter % Game.live[room.name].sources.length].id
 };
 
 module.exports = {
