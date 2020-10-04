@@ -23,11 +23,11 @@ const think = creep => {
 	} else {
 		//no "my" targets found, instead try repairing a neutral structure
 		const neutralTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-			filter: s => s.hits < s.hitsMax * (s.structureType == STRUCTURE_WALL ? 0.1 : 1) //NOTE: don't repair walls to their full value
+			filter: s => s.hits < s.hitsMax * (s.structureType == STRUCTURE_WALL ? 0 : 1) //NOTE: don't repair walls to their full value
 		});
 
 		if (neutralTarget) {
-			creep.memory.repair.targetId = neutralTarget;
+			creep.memory.repair.targetId = neutralTarget.id;
 		} else {
 			//finally
 			creep.memory.repair.targetId = null;
