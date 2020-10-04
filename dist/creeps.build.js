@@ -30,9 +30,16 @@ const act = creep => {
 	if (creep.memory.build.targetId && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		const target = Game.getObjectById(creep.memory.build.targetId);
 
-		if (creep.build(target) == ERR_NOT_IN_RANGE) {
+		const result = creep.build(target);
+
+		if (result == ERR_NOT_IN_RANGE) {
 			creep.moveTo(target);
 			return false;
+		}
+
+		//probably finished building
+		if (result == ERR_INVALID_TARGET) {
+			return true;
 		}
 
 		//lock into this action

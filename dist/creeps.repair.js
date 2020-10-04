@@ -41,7 +41,13 @@ const act = creep => {
 	if (creep.memory.repair.targetId && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		const target = Game.getObjectById(creep.memory.repair.targetId);
 
-		if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+		if (target.hits == target.hitsMax) {
+			return true;
+		}
+
+		const result = creep.repair(target);
+
+		if (result == ERR_NOT_IN_RANGE) {
 			creep.moveTo(target);
 			return false;
 		}

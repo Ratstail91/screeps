@@ -24,7 +24,9 @@ const act = creep => {
 	if (creep.memory.harvest.targetId && creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
 		const target = Game.getObjectById(creep.memory.harvest.targetId);
 
-		if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
+		const result = creep.harvest(target);
+
+		if (result == ERR_NOT_IN_RANGE) {
 			const move = creep.moveTo(target);
 
 			if (move == ERR_NO_PATH) {

@@ -43,7 +43,9 @@ const act = creep => {
 	if (creep.memory.stash.targetId) {
 		const target = Game.getObjectById(creep.memory.stash.targetId);
 
-		if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+		const result = creep.transfer(target, RESOURCE_ENERGY);
+
+		if (result == ERR_NOT_IN_RANGE) {
 			creep.moveTo(target);
 		}
 
