@@ -1,9 +1,10 @@
 const think = creep => {
-	//init
+	//init memory
 	if (!creep.memory.build) {
 		creep.memory.build = {};
 	}
 
+	//process locking
 	if (creep.memory.build.locked) {
 		if (!act(creep)) {
 			return false; //short-circuit
@@ -22,8 +23,13 @@ const think = creep => {
 		creep.memory.build.targetId = null;
 	}
 
+	//don't build afterall if your store is empty
+	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+		creep.memory.build.targetId = null;
+	}
+
 	return true;
-}
+};
 
 const act = creep => {
 	if (creep.memory.build.targetId) {
@@ -34,17 +40,14 @@ const act = creep => {
 			return false;
 		}
 
+		//lock into this action
 		creep.memory.build.locked = true;
-
-		if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
-			creep.memory.build.targetId = null;
-		}
 
 		return false;
 	}
 
 	return true;
-}
+};
 
 module.exports = {
 	think,

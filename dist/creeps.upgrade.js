@@ -1,9 +1,10 @@
 const think = creep => {
-	//init
+	//init memory
 	if (!creep.memory.upgrade) {
 		creep.memory.upgrade = {};
 	}
 
+	//process locking
 	if (creep.memory.upgrade.locked) {
 		if (!act(creep)) {
 			return false; //short-circuit
@@ -13,9 +14,10 @@ const think = creep => {
 	}
 
 	return true;
-}
+};
 
 const act = creep => {
+	//TODO: handle controllers when working remotely
 	if (creep.room.controller.my && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		//dump into the controller
 		if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
@@ -23,13 +25,14 @@ const act = creep => {
 			return false;
 		}
 
+		//lock into this action
 		creep.memory.upgrade.locked = true;
 
 		return false;
 	}
 
 	return true;
-}
+};
 
 module.exports = {
 	think,

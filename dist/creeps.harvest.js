@@ -1,9 +1,10 @@
 const think = creep => {
-	//DO NOTHING
+	//init memory
 	if (!creep.memory.harvest) {
 		creep.memory.harvest = {};
 	}
 
+	//process locking
 	if (creep.memory.harvest.locked) {
 		if (!act(creep)) {
 			return false; //short-circuit
@@ -13,7 +14,7 @@ const think = creep => {
 	}
 
 	return true;
-}
+};
 
 const act = creep => {
 	//assume harvest.targetId is set elsewhere
@@ -25,13 +26,14 @@ const act = creep => {
 			return false;
 		}
 
+		//lock into this action
 		creep.memory.harvest.locked = true;
 
 		return false;
 	}
 
 	return true;
-}
+};
 
 module.exports = {
 	think,

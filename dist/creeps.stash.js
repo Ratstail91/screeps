@@ -1,10 +1,13 @@
 const think = creep => {
-	//init
+	//init memory
 	if (!creep.memory.stash) {
 		creep.memory.stash = {};
 	}
 
+	//TODO: stash in more locations
+
 	//find the closest extension
+	//TODO: handle extensions when working remotely
 	const extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
 		filter: s => s.structureType == STRUCTURE_EXTENSION && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 	});
@@ -17,9 +20,10 @@ const think = creep => {
 	}
 
 	return true;
-}
+};
 
 const act = creep => {
+	//assume stash.targetId is set elsewhere
 	if (creep.memory.stash.targetId) {
 		const target = Game.getObjectById(creep.memory.stash.targetId);
 
@@ -31,7 +35,7 @@ const act = creep => {
 	}
 
 	return true;
-}
+};
 
 module.exports = {
 	think,

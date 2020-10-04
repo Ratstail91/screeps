@@ -1,0 +1,7 @@
+module.exports = {
+	BUILD: 'BUILD',
+	HARVEST: 'HARVEST',
+	REPAIR: 'REPAIR',
+	STASH: 'STASH',
+	UPGRADE: 'UPGRADE',
+};

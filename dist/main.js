@@ -1,14 +1,17 @@
-const spawnAI = require('spawn-ai');
+const roomAI = require('room-ai');
 
 module.exports.loop = () => {
-	//let each spawn think about it's imperatives
-	for (const name in Game.spawns) {
-		spawnAI.think(Game.spawns[name]);
+	//setup some custom references for the API to utilize
+	Game.myRooms = _.filter(Game.rooms, r => r.controller && r.controller.level > 0 && r.controller.my);
+
+	//process my rooms
+	for (const name in Game.myRooms) {
+		roomAI.think(Game.myRooms[name]);
 	}
 
-	//process the spawn based on it's imperatives
-	for (const name in Game.spawns) {
-		spawnAI.act(Game.spawns[name]);
+	//process my rooms
+	for (const name in Game.myRooms) {
+		roomAI.act(Game.myRooms[name]);
 	}
 
 	//process the creeps based on their given instructions
