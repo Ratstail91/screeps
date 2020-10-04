@@ -1,6 +1,8 @@
 //utilities
 const { findPerchesInRoom: findPerchesInRoom, setupPerchesInRoom: setupPerchesInRoom } = require('util.perchfinder');
 
+//TODO: determine how many structures need repairing
+
 //spawn stuff
 const spawnImperatives = require('spawn-imperatives');
 const spawnAI = require('spawn-ai');
