@@ -1,22 +1,38 @@
+/* DOCS: stash is explicitly for taking to a spawn or extension
+*/
+
 const think = creep => {
 	//init memory
 	if (!creep.memory.stash) {
 		creep.memory.stash = {};
 	}
 
-	//TODO: stash in more locations
+	//don't bother stashing if you're empty
+	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+		creep.memory.stash.targetId = null;
+		return true;
+	}
 
-	//find the closest extension
-	//TODO: handle extensions when working remotely
+	//find the closest extension in home room
+	const homeRoom = _.filter(Game.rooms, r => r.id == creep.memory.homeId)[0]; //NOTE: would probably break if I lose a room
+
 	const extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		filter: s => s.structureType == STRUCTURE_EXTENSION && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+		filter: s => s.structureType == STRUCTURE_EXTENSION && s.room.id == homeRoom.id && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 	});
 
 	if (extension) {
 		creep.memory.stash.targetId = extension.id;
 	} else {
-		//no extension, stash at home
-		creep.memory.stash.targetId = creep.memory.spawnId;
+		//no extension, stash at a spawn
+		const targetSpawns = _.filter(homeRoom.spawns, s => s.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+
+		if (targetSpawns.length > 0) {
+			creep.memory.stash.targetId = targetSpawns[0];
+		} else {
+			//TODO: error?
+//			console.log(creep.name + ': Nowhere to stash this energy!');
+			creep.memory.stash.targetId = null;
+		}
 	}
 
 	return true;

@@ -1,3 +1,6 @@
+//utilities
+const { requestNewSourceId: requestNewSourceId } = require('room-ai');
+
 const think = creep => {
 	//init memory
 	if (!creep.memory.harvest) {
@@ -22,7 +25,13 @@ const act = creep => {
 		const target = Game.getObjectById(creep.memory.harvest.targetId);
 
 		if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
-			creep.moveTo(target);
+			const move = creep.moveTo(target);
+
+			if (move == ERR_NO_PATH) {
+				//request a new source
+				creep.memory.harvest.targetId = requestNewSourceId(creep.room);
+			}
+
 			return false;
 		}
 

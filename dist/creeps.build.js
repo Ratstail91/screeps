@@ -23,16 +23,11 @@ const think = creep => {
 		creep.memory.build.targetId = null;
 	}
 
-	//don't build afterall if your store is empty
-	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
-		creep.memory.build.targetId = null;
-	}
-
 	return true;
 };
 
 const act = creep => {
-	if (creep.memory.build.targetId) {
+	if (creep.memory.build.targetId && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		const target = Game.getObjectById(creep.memory.build.targetId);
 
 		if (creep.build(target) == ERR_NOT_IN_RANGE) {

@@ -5,7 +5,6 @@ const instructions = require('constants.instructions');
 const think = spawn => {
 	//init memory
 	spawn.memory.imperative = spawn.memory.imperative || imperatives.IDLE;
-	spawn.memory.sourceCounter = spawn.memory.sourceCounter || 1;
 
 	return true;
 };
@@ -28,7 +27,7 @@ const act = spawn => {
 						instructions.STASH,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
 					}
 				}
 			});
@@ -48,7 +47,7 @@ const act = spawn => {
 						instructions.STASH,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
 					}
 				}
 			});
@@ -66,7 +65,7 @@ const act = spawn => {
 						instructions.UPGRADE,
 					],
 					harvest: {
-						targetId: spawn.room.sources[++spawn.memory.sourceCounter % spawn.room.sources.length].id
+						targetId: spawn.room.sources[++spawn.room.memory.sourceCounter % spawn.room.sources.length].id
 					}
 				}
 			});
@@ -77,7 +76,7 @@ const act = spawn => {
 		default:
 			throw new Error('Unknown imperative: ' + spawn.memory.imperative);
 	}
-}
+};
 
 module.exports = {
 	think,

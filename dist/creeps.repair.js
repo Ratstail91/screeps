@@ -21,20 +21,24 @@ const think = creep => {
 	if (target) {
 		creep.memory.repair.targetId = target.id;
 	} else {
-		//no targets found
-		creep.memory.repair.targetId = null;
-	}
+		//no "my" targets found, instead try repairing a neutral structure
+		const neutralTarget = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+			filter: s => s.hits < s.hitsMax * (s.structureType == STRUCTURE_WALL ? 0.1 : 1) //NOTE: don't repair walls to their full value
+		});
 
-	//don't repair afterall if your store is empty
-	if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
-		creep.memory.repair.targetId = null;
+		if (neutralTarget) {
+			creep.memory.repair.targetId = neutralTarget;
+		} else {
+			//finally
+			creep.memory.repair.targetId = null;
+		}
 	}
 
 	return true;
 };
 
 const act = creep => {
-	if (creep.memory.repair.targetId) {
+	if (creep.memory.repair.targetId && creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
 		const target = Game.getObjectById(creep.memory.repair.targetId);
 
 		if (creep.repair(target) == ERR_NOT_IN_RANGE) {
