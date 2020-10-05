@@ -97,6 +97,7 @@ const act = spawn => {
 					tags: [tags.BUILDER],
 					instructions: [
 						instructions.GRAB,
+						instructions.HARVEST,
 						instructions.REPAIR,
 						instructions.BUILD,
 						instructions.STASH,
@@ -136,6 +137,7 @@ const act = spawn => {
 					tags: [tags.UPGRADER],
 					instructions: [
 						instructions.GRAB,
+						instructions.HARVEST,
 						instructions.UPGRADE,
 					],
 					harvest: {
