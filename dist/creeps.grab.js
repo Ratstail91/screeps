@@ -7,7 +7,9 @@ const think = creep => {
 	//TODO: handle remote when grabbing?
 	const targets = creep.room.find(FIND_STRUCTURES, {
 		filter: s => s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 0
-	});
+	})
+	//WOW
+	.sort((a, b) => (creep.pos.getRangeTo(a) * 10 - a.store.getUsedCapacity(RESOURCE_ENERGY)) > (creep.pos.getRangeTo(b) * 10 - b.store.getUsedCapacity(RESOURCE_ENERGY)));
 
 	if (targets.length > 0) {
 		creep.memory.grab.targetId = targets[0].id;

@@ -8,6 +8,14 @@ const think = spawn => {
 	//init memory
 	spawn.memory.imperative = spawn.memory.imperative || imperatives.IDLE;
 
+	//pop a safe mode in an emergency
+	if (spawn.hits < spawn.hitsMax) {
+		const safeMode = spawn.room.controller.activateSafeMode();
+
+		console.log('Safe mode triggered: ' + safeMode);
+		Game.notify('Safe mode triggered: ' + safeMode);
+	}
+
 	return true;
 };
 
@@ -51,7 +59,7 @@ const act = spawn => {
 			spawn.spawnCreep(workBody, 'harvester' + Game.time, {
 				memory: {
 					homeName: spawn.room.name, //know where your home is
-					tags: [tags.HARVESTER],
+					tags: [tags.HARVESTER, tags.HARVESTER_STATIC],
 					instructions: [
 						instructions.SIT,
 						instructions.HARVEST,

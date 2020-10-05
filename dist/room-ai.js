@@ -61,7 +61,7 @@ const think = room => {
 		});
 	}
 
-	//find the perches TODO: remotes too
+	//find the perches TODO: find perches in remotes too
 	findPerchesInRoom(room);
 	setupPerchesInRoom(room);
 
@@ -132,11 +132,7 @@ const thinkStages = {
 
 		//need at least 1 builder or you might get soft-locked
 		if (spawnImperative == spawnImperatives.IDLE && builders.length < 6 && room.energyAvailable >= 250) {
-			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-
-			if (sites.length > 0) {
-				spawnImperative = spawnImperatives.SPAWN_BUILDER_SMALL;
-			}
+			spawnImperative = spawnImperatives.SPAWN_BUILDER_SMALL;
 		}
 
 		//carry to the spawn
@@ -146,7 +142,7 @@ const thinkStages = {
 
 		//miners
 		//TODO: one miner for each source in the remotes
-		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 2 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 3 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_HARVESTER_STATIC;
 		}
 
@@ -170,16 +166,16 @@ const thinkStages = {
 
 		//need at least 1 builder or you might neglect automated construction sites
 		if (spawnImperative == spawnImperatives.IDLE && builders.length < 1 && room.energyAvailable >= 250) {
-			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-
-			if (sites.length > 0) {
-				spawnImperative = spawnImperatives.SPAWN_BUILDER_SMALL;
-			}
+			spawnImperative = spawnImperatives.SPAWN_BUILDER_SMALL;
 		}
 
-		//miners
-		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 2 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
-			spawnImperative = spawnImperatives.SPAWN_HARVESTER_STATIC;
+		//static miners take priority
+		if (harvesters.length < 3) {
+			if (spawnImperative == spawnImperatives.IDLE && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
+				spawnImperative = spawnImperatives.SPAWN_HARVESTER_STATIC;
+			}
+
+			return spawnImperative;
 		}
 
 		//carry to the spawn
@@ -188,7 +184,7 @@ const thinkStages = {
 		}
 
 		//upgrade the controller
-		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 10 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 16 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_UPGRADER;
 		}
 

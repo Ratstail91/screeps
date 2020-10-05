@@ -1,6 +1,8 @@
 /* DOCS: Sit is used exclusively by static harvesters
 */
 
+const tags = require('constants.tags');
+
 //utilities
 const { requestNewSourceId: requestNewSourceId } = require('util.room-ai');
 
@@ -22,11 +24,12 @@ const act = creep => {
 
 		const dest = new RoomPosition(creep.memory.sit.x, creep.memory.sit.y, creep.memory.sit.roomName);
 
-		let blocked = _.filter(dest.look(), obj => obj.type == 'creep').length > 0;
+		//occupied by a harvester (anything else will move eventually)
+		let occupied = _.filter(dest.look(), obj => obj.type == 'creep' && obj.creep.memory.tags.includes(tags.HARVESTER_STATIC)).length > 0;
 
 		const move = creep.moveTo(dest);
 
-		if (move == ERR_NO_PATH || blocked) {
+		if (move == ERR_NO_PATH || (occupied && creep.pos.getRangeTo(dest) <= 3)) {
 			//request a new source & perch
 			creep.memory.harvest.targetId = requestNewSourceId(creep.room);
 
