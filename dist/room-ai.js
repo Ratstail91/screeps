@@ -6,7 +6,7 @@ const energyAvailable = require('constants.energy-available');
 //TODO: determine how many structures need repairing
 
 //spawn stuff
-const spawnImperatives = require('spawn-imperatives');
+const spawnImperatives = require('constants.spawn-imperatives');
 const spawnAI = require('spawn-ai');
 const spawnSchematics = require('spawn-schematics');
 const tags = require('constants.tags');
@@ -15,13 +15,9 @@ const think = room => {
 	//some references to be used below
 	Game.live[room.name] = {};
 	Game.live[room.name].mySpawns = room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_SPAWN });
-	Game.live[room.name].myCreeps = _.filter(Game.creeps, c => c.memory.homeId == room.id);
+	Game.live[room.name].myCreeps = _.filter(Game.creeps, c => c.memory.homeName == room.name);
 	Game.live[room.name].sources = room.find(FIND_SOURCES);
 	room.memory.sourceCounter = room.memory.sourceCounter || 1;
-
-	//find the perches TODO: remotes too
-	findPerchesInRoom(room);
-	setupPerchesInRoom(room);
 
 	let spawnImperative = spawnImperatives.IDLE;
 
@@ -60,6 +56,10 @@ const think = room => {
 		});
 	}
 
+	//find the perches TODO: remotes too
+	findPerchesInRoom(room);
+	setupPerchesInRoom(room);
+
 	//continue to the next room
 	return true;
 };
@@ -69,6 +69,7 @@ const act = room => {
 	Game.live[room.name].mySpawns.forEach(spawn => spawnAI.act(spawn));
 };
 
+//TODO: more sophisticated later stages
 //stages
 const thinkStages = {
 	begin: room => {
@@ -110,8 +111,18 @@ const thinkStages = {
 			spawnImperative = spawnImperatives.SPAWN_HARVESTER_SMALL;
 		}
 
+		//TODO: handle construction sites in remote rooms
+		//build & repair the structures
+		if (spawnImperative == spawnImperatives.IDLE && builders.length < 6 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
+
+			if (sites.length > 0) {
+				spawnImperative = spawnImperatives.SPAWN_BUILDER;
+			}
+		}
+
 		//need at least 1 builder or you might get soft-locked
-		if (spawnImperative == spawnImperatives.IDLE && builders.length == 0 && room.energyAvailable >= 250) {
+		if (spawnImperative == spawnImperatives.IDLE && builders.length < 6 && room.energyAvailable >= 250) {
 			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
 
 			if (sites.length > 0) {
@@ -120,18 +131,9 @@ const thinkStages = {
 		}
 
 		//miners
+		//TODO: one miner for each source in the remotes
 		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 2 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_HARVESTER_STATIC;
-		}
-
-		//TODO: handle construction sites in remote rooms
-		//build & repair the structures
-		if (spawnImperative == spawnImperatives.IDLE && builders.length < 4 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
-			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-
-			if (sites.length > 0) {
-				spawnImperative = spawnImperatives.SPAWN_BUILDER;
-			}
 		}
 
 		return spawnImperative;
@@ -142,6 +144,7 @@ const thinkStages = {
 		const upgraders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.UPGRADER));
 		const harvesters = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.HARVESTER));
 		const builders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.BUILDER));
+		const lorries = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.LORRY));
 
 		//default spawn imperative
 		let spawnImperative = spawnImperatives.IDLE;
@@ -157,7 +160,12 @@ const thinkStages = {
 		}
 
 		//upgrade the controller
-		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 4 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && lorries.length < 4 && room.energyAvailable >= 300) { //[CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]
+			spawnImperative = spawnImperatives.SPAWN_LORRY;
+		}
+
+		//upgrade the controller
+		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 16 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_UPGRADER;
 		}
 

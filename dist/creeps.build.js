@@ -14,10 +14,10 @@ const think = creep => {
 	}
 
 	//find a construction site
-	const site = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+	const sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
 
-	if (site) {
-		creep.memory.build.targetId = site.id;
+	if (sites.length > 0) {
+		creep.memory.build.targetId = sites[0].id;
 	} else {
 		//no sites found
 		creep.memory.build.targetId = null;

@@ -1,4 +1,4 @@
-const imperatives = require('spawn-imperatives');
+const imperatives = require('constants.spawn-imperatives');
 const tags = require('constants.tags');
 const instructions = require('constants.instructions');
 
@@ -15,6 +15,7 @@ const act = spawn => {
 	const smallBody = [WORK, CARRY, MOVE, MOVE]; //250 energy
 	const loadBody = [CARRY, CARRY, CARRY, CARRY, WORK, MOVE]; //350 energy
 	const workBody = [WORK, WORK, WORK, WORK, WORK, MOVE]; //55 energy
+	const lorryBody = [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //300 energy
 
 	switch(spawn.memory.imperative) {
 		case imperatives.IDLE:
@@ -24,7 +25,7 @@ const act = spawn => {
 		case imperatives.SPAWN_HARVESTER_SMALL:
 			spawn.spawnCreep(smallBody, 'harvester' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.HARVESTER],
 					instructions: [
 						instructions.HARVEST,
@@ -49,7 +50,7 @@ const act = spawn => {
 
 			spawn.spawnCreep(workBody, 'harvester' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.HARVESTER],
 					instructions: [
 						instructions.SIT,
@@ -73,7 +74,7 @@ const act = spawn => {
 		case imperatives.SPAWN_BUILDER_SMALL:
 			spawn.spawnCreep(smallBody, 'builder' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.BUILDER],
 					instructions: [
 						instructions.HARVEST,
@@ -94,7 +95,7 @@ const act = spawn => {
 		case imperatives.SPAWN_BUILDER:
 			spawn.spawnCreep(loadBody, 'builder' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.BUILDER],
 					instructions: [
 						instructions.GRAB,
@@ -116,7 +117,7 @@ const act = spawn => {
 		case imperatives.SPAWN_UPGRADER_SMALL:
 			spawn.spawnCreep(smallBody, 'upgrader' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.UPGRADER],
 					instructions: [
 						instructions.HARVEST,
@@ -134,7 +135,7 @@ const act = spawn => {
 		case imperatives.SPAWN_UPGRADER:
 			spawn.spawnCreep(loadBody, 'upgrader' + Game.time, {
 				memory: {
-					homeId: spawn.room.id, //know where your home is
+					homeName: spawn.room.name, //know where your home is
 					tags: [tags.UPGRADER],
 					instructions: [
 						instructions.GRAB,
@@ -144,6 +145,21 @@ const act = spawn => {
 					harvest: {
 						targetId: requestNewSourceId(spawn.room)
 					}
+				}
+			});
+
+			spawn.memory.imperative = imperatives.IDLE;
+			return false;
+
+		case imperatives.SPAWN_LORRY:
+			spawn.spawnCreep(lorryBody, 'lorry' + Game.time, {
+				memory: {
+					homeName: spawn.room.name, //know where your home is
+					tags: [tags.LORRY],
+					instructions: [
+						instructions.GRAB,
+						instructions.STASH,
+					]
 				}
 			});
 

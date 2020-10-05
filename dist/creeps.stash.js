@@ -14,10 +14,10 @@ const think = creep => {
 	}
 
 	//find the closest extension in home room
-	const homeRoom = _.filter(Game.rooms, r => r.id == creep.memory.homeId)[0]; //NOTE: would probably break if I lose a room
+	const homeRoom = Game.rooms[creep.memory.homeName]; //NOTE: would probably break if I lose a room
 
 	const extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-		filter: s => s.structureType == STRUCTURE_EXTENSION && s.room.id == homeRoom.id && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+		filter: s => s.structureType == STRUCTURE_EXTENSION && s.room.name == homeRoom.name && s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
 	});
 
 	if (extension) {
@@ -34,6 +34,19 @@ const think = creep => {
 		}
 	}
 
+	//process locking
+	if (creep.memory.stash.targetId == null) {
+		creep.memory.stash.locked = false;
+	}
+
+	if (creep.memory.stash.locked) {
+		if (!act(creep)) {
+			return false; //short-circuit
+		}
+
+		creep.memory.stash.locked = false;
+	}
+
 	return true;
 };
 
@@ -47,6 +60,9 @@ const act = creep => {
 		if (result == ERR_NOT_IN_RANGE) {
 			creep.moveTo(target);
 		}
+
+		//lock into this action
+		creep.memory.stash.locked = true;
 
 		return false;
 	}

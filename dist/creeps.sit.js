@@ -1,6 +1,9 @@
 /* DOCS: Sit is used exclusively by static harvesters
 */
 
+//utilities
+const { requestNewSourceId: requestNewSourceId } = require('util.room-ai');
+
 const think = creep => {
 	//init memory
 	if (!creep.memory.sit) {
@@ -27,13 +30,13 @@ const act = creep => {
 			//request a new source & perch
 			creep.memory.harvest.targetId = requestNewSourceId(creep.room);
 
-			const room = Game.getObjectById(creep.memory.homeId);
+			const homeRoom = Game.rooms[creep.memory.homeName];
 
-			const perch = _.filter(room.memory.perches.sources, perch => perch.id == creep.memory.harvest.targetId)[0];
+			const perch = _.filter(homeRoom.memory.perches.sources, perch => perch.id == creep.memory.harvest.targetId)[0];
 
 			creep.memory.sit.x = perch.x;
 			creep.memory.sit.y = perch.y;
-			creep.memory.sit.roomName = room.name;
+			creep.memory.sit.roomName = homeRoom.name;
 		}
 
 		return false;
