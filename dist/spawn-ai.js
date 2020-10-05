@@ -157,6 +157,7 @@ const act = spawn => {
 					homeName: spawn.room.name, //know where your home is
 					tags: [tags.LORRY],
 					instructions: [
+						instructions.RELOADDEFENSES,
 						instructions.GRAB,
 						instructions.STASH,
 					]

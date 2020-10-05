@@ -9,6 +9,7 @@ const energyAvailable = require('constants.energy-available');
 const spawnImperatives = require('constants.spawn-imperatives');
 const spawnAI = require('spawn-ai');
 const spawnSchematics = require('spawn-schematics');
+const defenseSchematics = require('defense-schematics');
 const tags = require('constants.tags');
 
 const think = room => {
@@ -54,11 +55,17 @@ const think = room => {
 		spawnSchematics.every(schema => {
 			return room.createConstructionSite(center.pos.x + schema.x, center.pos.y + schema.y, schema.structureType) != ERR_RCL_NOT_ENOUGH;
 		});
+
+		defenseSchematics.every(schema => {
+			return room.createConstructionSite(center.pos.x + schema.x, center.pos.y + schema.y, schema.structureType) != ERR_RCL_NOT_ENOUGH;
+		});
 	}
 
 	//find the perches TODO: remotes too
 	findPerchesInRoom(room);
 	setupPerchesInRoom(room);
+
+	defendRoom(room);
 
 	//continue to the next room
 	return true;
@@ -77,6 +84,7 @@ const thinkStages = {
 		const upgraders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.UPGRADER));
 		const harvesters = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.HARVESTER));
 		const builders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.BUILDER));
+		const lorries = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.LORRY));
 
 		//default spawn imperative
 		let spawnImperative = spawnImperatives.IDLE;
@@ -102,6 +110,7 @@ const thinkStages = {
 		const upgraders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.UPGRADER));
 		const harvesters = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.HARVESTER));
 		const builders = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.BUILDER));
+		const lorries = _.filter(Game.live[room.name].myCreeps, c => c.memory.tags.includes(tags.LORRY));
 
 		//default spawn imperative
 		let spawnImperative = spawnImperatives.IDLE;
@@ -130,6 +139,11 @@ const thinkStages = {
 			}
 		}
 
+		//carry to the spawn
+		if (spawnImperative == spawnImperatives.IDLE && lorries.length < 4 && room.energyAvailable >= 300) { //[CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]
+			spawnImperative = spawnImperatives.SPAWN_LORRY;
+		}
+
 		//miners
 		//TODO: one miner for each source in the remotes
 		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 2 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
@@ -154,12 +168,21 @@ const thinkStages = {
 			spawnImperative = spawnImperatives.SPAWN_HARVESTER_SMALL;
 		}
 
+		//need at least 1 builder or you might neglect automated construction sites
+		if (spawnImperative == spawnImperatives.IDLE && builders.length < 1 && room.energyAvailable >= 250) {
+			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
+
+			if (sites.length > 0) {
+				spawnImperative = spawnImperatives.SPAWN_BUILDER_SMALL;
+			}
+		}
+
 		//miners
 		if (spawnImperative == spawnImperatives.IDLE && harvesters.length < 2 && room.energyAvailable >= 500 + 50) { //[WORK, WORK, WORK, WORK, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_HARVESTER_STATIC;
 		}
 
-		//upgrade the controller
+		//carry to the spawn
 		if (spawnImperative == spawnImperatives.IDLE && lorries.length < 4 && room.energyAvailable >= 300) { //[CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_LORRY;
 		}
@@ -171,6 +194,16 @@ const thinkStages = {
 
 		return spawnImperative;
 	},
+};
+
+const defendRoom = room => {
+	const hostiles = room.find(FIND_HOSTILE_CREEPS);
+
+	if (hostiles.length > 0) {
+		const towers = room.find(FIND_MY_STRUCTURES, { filter: s => s.structureType == STRUCTURE_TOWER });
+
+		towers.forEach(tower => tower.attack(hostiles[0]));
+	}
 };
 
 module.exports = {
