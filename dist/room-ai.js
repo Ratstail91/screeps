@@ -165,7 +165,7 @@ const thinkStages = {
 		}
 
 		//upgrade the controller
-		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 16 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 10 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_UPGRADER;
 		}
 

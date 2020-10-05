@@ -1,6 +1,8 @@
 /* DOCS: stash is explicitly for taking to a spawn or extension
 */
 
+//TODO: refill towers in a separate behaviour
+
 const think = creep => {
 	//init memory
 	if (!creep.memory.stash) {
