@@ -1,5 +1,5 @@
 //utilities
-const { requestNewSourceId: requestNewSourceId } = require('room-ai');
+const { requestNewSourceId: requestNewSourceId } = require('util.room-ai');
 
 const think = creep => {
 	//init memory
