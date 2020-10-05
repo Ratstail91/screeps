@@ -6,4 +6,5 @@ module.exports = {
 
 	STASH: 'STASH',
 	GRAB: 'GRAB',
+	SIT: 'SIT',
 };

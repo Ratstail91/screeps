@@ -31,7 +31,7 @@ const think = room => {
 		spawnImperative = thinkStages.begin(room); //handle initial setup
 	} else
 
-	if (energyAvailable[room.controller.level] < room.energyCapacityAvailable) {
+	if (energyAvailable[room.controller.level] <= room.energyCapacityAvailable) {
 		spawnImperative = thinkStages.upgrade(room);
 	} else
 
@@ -126,7 +126,7 @@ const thinkStages = {
 
 		//TODO: handle construction sites in remote rooms
 		//build & repair the structures
-		if (spawnImperative == spawnImperatives.IDLE && builders.length < 2 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && builders.length < 4 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
 			const sites = room.find(FIND_MY_CONSTRUCTION_SITES);
 
 			if (sites.length > 0) {
@@ -157,7 +157,7 @@ const thinkStages = {
 		}
 
 		//upgrade the controller
-		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 2 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
+		if (spawnImperative == spawnImperatives.IDLE && upgraders.length < 4 && room.energyAvailable >= 200 + 100 + 50) { //[CARRY, CARRY, CARRY, CARRY, WORK, MOVE]
 			spawnImperative = spawnImperatives.SPAWN_UPGRADER;
 		}
 

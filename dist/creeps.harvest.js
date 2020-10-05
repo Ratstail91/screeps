@@ -21,7 +21,7 @@ const think = creep => {
 
 const act = creep => {
 	//assume harvest.targetId is set elsewhere
-	if (creep.memory.harvest.targetId && creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+	if (creep.memory.harvest.targetId && (creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0 || creep.store.getCapacity() == null)) {
 		const target = Game.getObjectById(creep.memory.harvest.targetId);
 
 		const result = creep.harvest(target);

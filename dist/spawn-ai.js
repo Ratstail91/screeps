@@ -47,7 +47,7 @@ const act = spawn => {
 			//determine perch
 			const perch = _.filter(spawn.room.memory.perches.sources, perch => perch.id == newSourceId)[0];
 
-			spawn.spawnCreep(smallBody, 'harvester' + Game.time, {
+			spawn.spawnCreep(workBody, 'harvester' + Game.time, {
 				memory: {
 					homeId: spawn.room.id, //know where your home is
 					tags: [tags.HARVESTER],
@@ -57,7 +57,8 @@ const act = spawn => {
 					],
 					sit: {
 						x: perch.x,
-						y: perch.y
+						y: perch.y,
+						roomName: spawn.room.name
 					},
 					harvest: {
 						targetId: newSourceId
