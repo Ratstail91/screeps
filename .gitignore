@@ -1,0 +1,18 @@
+#directories
+logs/**
+/**/coverage
+/**/node_modules
+/**/dl
+
+#passwords
+/**/*.pwd
+auth.json
+.env
+/dist/telephone.password.js
+
+#log files
+/**/*.log
+
+#output files
+*.bundle.js
+*.js.map

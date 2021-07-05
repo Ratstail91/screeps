@@ -1,0 +1,11 @@
+{
+  "name": "screeps-v7",
+  "version": "7.0.0",
+  "description": "My Screeps code",
+  "author": "Kayne Ruse",
+  "license": "ISC",
+  "dependencies": {
+    "grunt": "^1.4.1",
+    "grunt-screeps": "^1.5.0"
+  }
+}
